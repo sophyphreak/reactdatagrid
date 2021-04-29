@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { TypeDataSource } from '../../types';
 
 type DataPromiseResult = { data: any[]; count: number };
@@ -81,7 +81,7 @@ const useLoadDataEffect = (
     });
   }
 
-  let pendingRef = useRef(new Set<DataPromise>());
+  const [pendingSet] = useState(() => new Set<DataPromise>());
 
   const intercept = useCallback(
     (promise: DataPromise, dataSource: TypeDataSource) => {
@@ -89,18 +89,21 @@ const useLoadDataEffect = (
         typeof dataSource === 'function' || (dataSource as any)?.then;
 
       if (!isRemote) {
-        return promise;
+        // we should early return,
+        // but if we do, we create a race condition in situations when dataSource is an array
+        // and is always a new reference - see issue https://github.com/inovua/reactdatagrid/issues/116
+        // return promise;
       }
 
       // clear the set in order to cancel any in-progress promises
-      pendingRef.current.clear();
-      pendingRef.current.add(promise);
+      pendingSet.clear();
+      pendingSet.add(promise);
 
       return promise.then(r => {
-        if (pendingRef.current.has(promise)) {
+        if (pendingSet.has(promise)) {
           // no new request came in since this promise originated
           // so we can clear the pending set and return the result
-          pendingRef.current.delete(promise);
+          pendingSet.delete(promise);
           return r;
         }
 
