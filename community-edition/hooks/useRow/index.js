@@ -181,6 +181,9 @@ export default (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        if (computedProps.isInEdit.current) {
+            return;
+        }
         event.preventDefault();
         if (props.onBlur) {
             props.onBlur(event);

@@ -1286,6 +1286,7 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   gotoNextPage: () => boolean;
   computedHasColSpan: boolean;
   updateMainMenuPosition?: (alignTo: any) => void;
+  isInEdit?: any;
 };
 
 export default TypeDataGridProps;

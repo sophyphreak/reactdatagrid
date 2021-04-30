@@ -249,6 +249,11 @@ export default (
     if (!computedProps) {
       return;
     }
+
+    if (computedProps.isInEdit.current) {
+      return;
+    }
+
     event.preventDefault();
 
     if (props.onBlur) {

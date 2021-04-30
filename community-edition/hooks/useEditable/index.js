@@ -7,6 +7,7 @@
 import { useRef, useCallback } from 'react';
 const useEditable = (props, computedProps, computedPropsRef) => {
     const editInfoRef = useRef(null);
+    const isInEdit = useRef(false);
     const onEditStop = useCallback((editProps) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -28,6 +29,7 @@ const useEditable = (props, computedProps, computedPropsRef) => {
         if (computedProps.initialProps.onEditCancel) {
             computedProps.initialProps.onEditCancel(editProps);
         }
+        computedProps.isInEdit.current = false;
     }, []);
     const onEditComplete = useCallback((editProps) => {
         const { current: computedProps } = computedPropsRef;
@@ -40,6 +42,7 @@ const useEditable = (props, computedProps, computedPropsRef) => {
         if (computedProps.initialProps.onEditComplete) {
             computedProps.initialProps.onEditComplete(editProps);
         }
+        computedProps.isInEdit.current = false;
     }, []);
     const onEditValueChange = useCallback((editProps) => {
         const { current: computedProps } = computedPropsRef;
@@ -76,6 +79,7 @@ const useEditable = (props, computedProps, computedPropsRef) => {
             }
             computedProps.scrollToColumn(col.computedVisibleIndex, {});
         });
+        computedProps.isInEdit.current = true;
     }, []);
     const tryStartEdit = useCallback(({ rowIndex, rowId, columnId, dir, } = { rowIndex: undefined, rowId: undefined, columnId: '', dir: 1 }) => {
         const { current: computedProps } = computedPropsRef;
@@ -213,6 +217,7 @@ const useEditable = (props, computedProps, computedPropsRef) => {
         completeEdit,
         cancelEdit,
         tryStartEdit,
+        isInEdit,
     };
 };
 export default useEditable;

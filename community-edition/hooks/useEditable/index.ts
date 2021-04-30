@@ -20,6 +20,7 @@ const useEditable = (
   computedPropsRef: MutableRefObject<TypeComputedProps | null>
 ): {} => {
   const editInfoRef = useRef<TypeEditInfo | null>(null);
+  const isInEdit = useRef<Boolean>(false);
 
   const onEditStop = useCallback((editProps: TypeEditInfo) => {
     const { current: computedProps } = computedPropsRef;
@@ -43,6 +44,7 @@ const useEditable = (
     if (computedProps.initialProps.onEditCancel) {
       computedProps.initialProps.onEditCancel(editProps);
     }
+    computedProps.isInEdit.current = false;
   }, []);
 
   const onEditComplete = useCallback((editProps: TypeEditInfo) => {
@@ -57,6 +59,7 @@ const useEditable = (
     if (computedProps.initialProps.onEditComplete) {
       computedProps.initialProps.onEditComplete(editProps);
     }
+    computedProps.isInEdit.current = false;
   }, []);
 
   const onEditValueChange = useCallback((editProps: TypeEditInfo) => {
@@ -98,6 +101,7 @@ const useEditable = (
 
       computedProps.scrollToColumn(col.computedVisibleIndex, {});
     });
+    computedProps.isInEdit.current = true;
   }, []);
 
   const tryStartEdit = useCallback(
@@ -318,6 +322,7 @@ const useEditable = (
     completeEdit,
     cancelEdit,
     tryStartEdit,
+    isInEdit,
   };
 };
 
