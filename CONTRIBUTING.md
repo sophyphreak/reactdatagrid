@@ -29,7 +29,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Contributing to ReactDataGrid Community Edition](#contributing-to-reactdatagrid-community-edition)
 - [Contributing to ReactDataGrid Enterprise Edition](#contributing-to-reactdatagrid-enterprise-edition)
 - [Got a question or problem?](#got-a-question-or-problem)

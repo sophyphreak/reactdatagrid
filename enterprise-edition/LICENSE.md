@@ -43,7 +43,6 @@ The Licensor’s website expressly determines the software packages that are inc
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [1. SOFTWARE COMMERCIAL LICENSE](#1-software-commercial-license)
 - [2. LICENSE FEE AND PAYMENT METHOD](#2-license-fee-and-payment-method)
 - [3. DELIVERY](#3-delivery)

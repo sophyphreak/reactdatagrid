@@ -13,7 +13,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [ReactDataGrid Community Edition](#reactdatagrid-community-edition)
 - [Installation & Getting Started](#installation--getting-started)
 - [TypeScript support](#typescript-support)
