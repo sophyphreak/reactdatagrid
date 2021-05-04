@@ -99,7 +99,7 @@ const useEditable = (
         return;
       }
 
-      computedProps.scrollToColumn(col.computedVisibleIndex, {});
+      computedProps.scrollToColumn(col.computedVisibleIndex, { duration: 50 });
     });
     computedProps.isInEdit.current = true;
   }, []);
