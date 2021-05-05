@@ -23,13 +23,12 @@ export default (cellProps, rowProps) => {
     totalColumnCount,
     firstLockedEndIndex,
     firstUnlockedIndex,
-    expandColumnIndex,
     groupColumn,
     hasLockedEnd,
     hasLockedStart,
   } = rowProps;
 
-  const { computedVisibleIndex, computedLocked } = cellProps;
+  const { computedVisibleIndex, computedLocked, expandColumnIndex } = cellProps;
   const expandColumn = computedVisibleIndex === expandColumnIndex;
 
   let { expandGroupTitle } = rowProps;
