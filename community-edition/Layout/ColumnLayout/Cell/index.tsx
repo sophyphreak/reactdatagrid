@@ -918,13 +918,19 @@ export default class InovuaDataGridCell extends React.Component {
       this.stopEdit();
       if (newIndex != props.rowIndex) {
         this.props.tryNextRowEdit(dir, props.columnIndex, true);
-        props.setActiveIndex(newIndex);
+        setTimeout(() => {
+          // we need this timeout for live pagination
+          props.setActiveIndex(newIndex);
+        }, 50);
       }
     } else {
       this.onEditorComplete();
       if (newIndex != props.rowIndex) {
         this.props.tryNextRowEdit(dir, props.columnIndex, true);
-        props.setActiveIndex(newIndex);
+        setTimeout(() => {
+          // we need this timeout for live pagination
+          props.setActiveIndex(newIndex);
+        }, 50);
       }
     }
   }
