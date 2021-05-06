@@ -59,6 +59,10 @@ export default class InovuaDataGridList extends Component {
             if (!row) {
                 return;
             }
+            setTimeout(() => {
+                // we need this timeout for live pagination
+                this.props.setActiveIndex(nextEditRowIndex);
+            }, 50);
             row.tryRowCellEdit(columnEditIndex, dir, isEnterNavigation);
         };
         this.isEditing = () => {

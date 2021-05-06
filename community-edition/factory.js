@@ -929,7 +929,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
                 ? rowHeightManager.getRowHeight(computedProps.computedActiveIndex)
                 : computedPropsRef.rowHeight;
         computedProps.activeRowHeight = activeRowHeight || computedProps.rowHeight;
-        if (computedFocused) {
+        if (computedFocused && !computedProps.isInEdit.current) {
             computedProps.renderActiveRowIndicator = (handle) => {
                 return (React.createElement(ActiveRowIndicator, { handle: handle, rtl: computedProps.rtl, rtlOffset: computedProps.rtlOffset, getDOMNode: computedProps.getDOMNode, dataSourceCount: computedProps.data.length, width: computedProps.minRowWidth || 0, computedRowHeights: computedProps.computedRowHeights, computedExpandedRows: computedProps.computedExpandedRows, computedExpandedNodes: computedProps.computedExpandedNodes, activeRowHeight: computedProps.activeRowHeight, activeIndex: computedProps.computedActiveIndex, activeRowRef: computedProps.activeRowRef }));
             };

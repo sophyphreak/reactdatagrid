@@ -1412,7 +1412,7 @@ const GridFactory = (
         : computedPropsRef.rowHeight;
     computedProps.activeRowHeight = activeRowHeight || computedProps.rowHeight;
 
-    if (computedFocused) {
+    if (computedFocused && !computedProps.isInEdit.current) {
       computedProps.renderActiveRowIndicator = (
         handle: (
           handleProps: {
