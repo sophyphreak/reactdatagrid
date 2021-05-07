@@ -29,7 +29,9 @@ const useEditable = (props, computedProps, computedPropsRef) => {
         if (computedProps.initialProps.onEditCancel) {
             computedProps.initialProps.onEditCancel(editProps);
         }
-        computedProps.isInEdit.current = false;
+        setTimeout(() => {
+            computedProps.isInEdit.current = false;
+        }, 50);
     }, []);
     const onEditComplete = useCallback((editProps) => {
         const { current: computedProps } = computedPropsRef;

@@ -22,6 +22,8 @@ const DEFAULT_SCROLL_POS = {
     scrollLeft: 0,
     scrollTop: 0,
 };
+let initialSkip = 0;
+let timeout = false;
 const VirtualListClassName = 'InovuaReactDataGrid__virtual-list';
 export default class InovuaDataGridList extends Component {
     constructor(props) {
@@ -59,10 +61,18 @@ export default class InovuaDataGridList extends Component {
             if (!row) {
                 return;
             }
-            setTimeout(() => {
-                // we need this timeout for live pagination
-                this.props.setActiveIndex(nextEditRowIndex);
-            }, 50);
+            const setActiveIndex = () => this.props.setActiveIndex(nextEditRowIndex);
+            if (this.props.livePagination) {
+                const skip = this.props.computedSkip;
+                if (skip !== initialSkip) {
+                    initialSkip = skip;
+                    timeout = true;
+                }
+                timeout ? setTimeout(() => setActiveIndex(), 50) : setActiveIndex();
+            }
+            else {
+                setActiveIndex();
+            }
             row.tryRowCellEdit(columnEditIndex, dir, isEnterNavigation);
         };
         this.isEditing = () => {
