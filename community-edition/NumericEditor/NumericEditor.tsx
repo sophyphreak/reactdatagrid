@@ -33,9 +33,13 @@ type NumberEditorProps = {
   onComplete?: Function;
   onCancel?: Function;
   onTabNavigation?: Function;
+  editorProps?: any;
 };
 
 const NumericEditor = (props: NumberEditorProps) => {
+  const { editorProps } = props;
+  const editorPropsStyle = editorProps ? editorProps.style : null;
+
   return (
     <div
       className={
@@ -43,11 +47,13 @@ const NumericEditor = (props: NumberEditorProps) => {
       }
     >
       <NumericInput
+        {...editorProps}
         autoFocus={props.autoFocus}
         defaultValue={props.value}
         onChange={props.onChange}
         theme={props.theme}
         style={{
+          ...editorPropsStyle,
           minWidth: Math.max(0, props.cellProps.computedWidth - 30),
         }}
         onBlur={props.onComplete}

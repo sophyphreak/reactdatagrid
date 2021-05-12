@@ -800,6 +800,17 @@ class InovuaNumericInput extends Component {
         value,
       });
     }
+
+    const { allowNegative } = this.props;
+
+    const isPositive = checkPositive(value, {
+      allowNegative,
+    });
+
+    if (!allowNegative && !isPositive) {
+      return;
+    }
+
     if (this.props.onChange) {
       this.props.onChange(value);
     }
@@ -1055,10 +1066,17 @@ class InovuaNumericInput extends Component {
     const props = this.props;
     const step = config.step || props.step;
 
+    const { allowNegative } = props;
+
     if (step != null) {
       const stepFn =
         typeof props.stepFn === 'function' ? props.stepFn : this.getStepValue;
       const value = stepFn(props, direction, config);
+      const isPositive = checkPositive(value, { allowNegative });
+
+      if (!allowNegative && !isPositive) {
+        return;
+      }
       this.spinValue = value;
 
       if (config.triggerChangeOnSpin) {

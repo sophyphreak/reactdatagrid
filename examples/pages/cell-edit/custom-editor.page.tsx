@@ -61,6 +61,7 @@ const columns = [
     minWidth: 150,
     type: 'number',
     editor: NumericEditor,
+    editorProps: { allowNegative: false },
   },
   {
     name: 'student',
