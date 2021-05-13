@@ -95,6 +95,10 @@ const useActiveIndex = (
       return;
     }
 
+    if (!computedProps.computedFocused) {
+      return;
+    }
+
     if (oldActiveIndex !== computedActiveIndex) {
       const top = computedActiveIndex < oldActiveIndex;
 

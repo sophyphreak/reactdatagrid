@@ -61,6 +61,9 @@ const useActiveIndex = (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        if (!computedProps.computedFocused) {
+            return;
+        }
         if (oldActiveIndex !== computedActiveIndex) {
             const top = computedActiveIndex < oldActiveIndex;
             computedProps.scrollToIndexIfNeeded(computedActiveIndex, { top });
