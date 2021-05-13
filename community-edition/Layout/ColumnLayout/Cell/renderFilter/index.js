@@ -50,6 +50,7 @@ class GenericFilter extends React.Component {
   }
 
   onSettingsClick(e) {
+    e.preventDefault();
     this.props.cellInstance.showFilterContextMenu(this.settings);
     this.setState({
       focused: true,
