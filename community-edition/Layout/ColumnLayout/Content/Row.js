@@ -1186,9 +1186,11 @@ export default class DataGridRow extends React.Component {
         });
     }
     tryNextRowEdit(dir, columnIndex, isEnterNavigation) {
-        if (this.props.tryNextRowEdit) {
-            this.props.tryNextRowEdit(this.props.rowIndex + dir, dir, columnIndex, isEnterNavigation);
-        }
+        this.props.scrollToIndexIfNeeded(this.props.rowIndex + 2 * dir, { direction: dir == -1 ? 'top' : 'bottom' }, () => {
+            if (this.props.tryNextRowEdit) {
+                this.props.tryNextRowEdit(this.props.rowIndex + dir, dir, columnIndex, isEnterNavigation);
+            }
+        });
     }
     onTransitionEnd(cellProps, columnProps, e) {
         e.stopPropagation();
@@ -1464,6 +1466,7 @@ DataGridRow.propTypes = {
     naturalRowHeight: PropTypes.bool,
     renderDetailsGrid: PropTypes.func,
     scrollToColumn: PropTypes.func,
+    scrollToIndexIfNeeded: PropTypes.func,
     renderNodeTool: PropTypes.func,
     computedEnableRowspan: PropTypes.bool,
     setRowSpan: PropTypes.func,

@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
-import Button from '@inovua/reactdatagrid-community/packages/Button';
 
 const DATASET_URL = 'https://demos.reactdatagrid.io/api/v1/contacts';
 
@@ -16,7 +15,18 @@ const columns = [
     type: 'number',
     maxWidth: 40,
   },
-  { name: 'firstName', defaultFlex: 1, header: 'First Name' },
+  {
+    name: 'firstName',
+    defaultFlex: 1,
+    header: 'First Name',
+    render: ({ value, rowIndex }) => {
+      return (
+        <>
+          {rowIndex} - {value}
+        </>
+      );
+    },
+  },
   { name: 'lastName', defaultFlex: 1, header: 'Last Name' },
   { name: 'email', groupBy: false, defaultFlex: 1, header: 'Email' },
 ];

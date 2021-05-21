@@ -655,6 +655,11 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             if (needed) {
                 scrollToIndex(index, config, callback);
             }
+            else {
+                if (callback) {
+                    callback();
+                }
+            }
             return needed;
         };
         const isRowFullyVisible = (rowIndex) => {
