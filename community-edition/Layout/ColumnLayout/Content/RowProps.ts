@@ -155,6 +155,11 @@ export type RowProps = {
   renderDetailsGrid?: func;
 
   scrollToColumn?: func;
+  scrollToIndexIfNeeded?: (
+    index: number,
+    config?: { direction: 'top' | 'bottom' },
+    callback?: VoidFunction
+  ) => void;
   renderNodeTool?: func;
   computedEnableRowspan?: boolean;
   setRowSpan?: func;

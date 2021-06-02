@@ -1016,6 +1016,10 @@ const GridFactory = (
       }
       if (needed) {
         scrollToIndex(index, config, callback);
+      } else {
+        if (callback) {
+          callback();
+        }
       }
 
       return needed;
