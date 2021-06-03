@@ -65,9 +65,9 @@
     "patch:beta": "npm version prepatch --preid=beta && npm run registry-publish:beta",
     "nobump:beta": "npm version prerelease --preid=beta && npm run registry-publish:beta",
     "//**** registry publishing": "****//",
-    "registry-publish": "npm run doctoc && npm run build:package && npm publish --access public lib/community-edition && npm publish --access public lib/enterprise-edition && npm run update-timestamp",
-    "registry-publish:canary": "npm run doctoc && npm run build:package && npm publish --access public --tag canary lib/community-edition && npm publish --access public --tag canary lib/enterprise-edition",
-    "registry-publish:beta": "npm run doctoc && npm run build:package && npm publish --access public --tag beta lib/community-edition && npm publish --access public --tag beta lib/enterprise-edition",
+    "registry-publish": "npm run doctoc && npm run build:package && npm publish --access public ./lib/community-edition && npm publish --access public ./lib/enterprise-edition && npm run update-timestamp",
+    "registry-publish:canary": "npm run doctoc && npm run build:package && npm publish --access public --tag canary ./lib/community-edition && npm publish --access public --tag canary ./lib/enterprise-edition",
+    "registry-publish:beta": "npm run doctoc && npm run build:package && npm publish --access public --tag beta ./lib/community-edition && npm publish --access public --tag beta ./lib/enterprise-edition",
     "//**** run this when updating readme files": "****//",
     "doctoc": "npx doctoc README.md CONTRIBUTING.md community-edition/README.md enterprise-edition/README.md enterprise-edition/LICENSE.md"
   },
