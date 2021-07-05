@@ -1517,11 +1517,11 @@ export default class InovuaVirtualList extends Component<TypeProps> {
   };
 
   getFirstVisibleRowIndexForSticky(scrollTop: number = this.scrollTopPos) {
-    const { rowHeightManager } = this.props;
+    const { rowHeightManager }: any = this.props;
 
     const stickyHeight = this.currentStickyRows
-      ? this.currentStickyRows.reduce((sum, row: TypeStickyRowInfo) => {
-          return sum + rowHeightManager.getRowHeight(row.index);
+      ? this.currentStickyRows.reduce((_, row: TypeStickyRowInfo) => {
+          return rowHeightManager.getRowHeight(row.index);
         }, 0)
       : 0;
 

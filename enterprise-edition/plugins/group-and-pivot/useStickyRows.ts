@@ -26,7 +26,7 @@ const useStickyRows = (
 
   let stickyRows: { [key: number]: number } | null;
 
-  if (computedProps.computedTreeEnabled) {
+  if (props.treeEnabled || !!props.treeColumn) {
     stickyRows = props.stickyTreeNodes ? stickyIndexes : null;
   } else {
     stickyRows = props.stickyGroupRows ? stickyIndexes : null;

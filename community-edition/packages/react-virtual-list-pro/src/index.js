@@ -1231,8 +1231,8 @@ export default class InovuaVirtualList extends Component {
     getFirstVisibleRowIndexForSticky(scrollTop = this.scrollTopPos) {
         const { rowHeightManager } = this.props;
         const stickyHeight = this.currentStickyRows
-            ? this.currentStickyRows.reduce((sum, row) => {
-                return sum + rowHeightManager.getRowHeight(row.index);
+            ? this.currentStickyRows.reduce((_, row) => {
+                return rowHeightManager.getRowHeight(row.index);
             }, 0)
             : 0;
         const rowIndex = Math.max(0, rowHeightManager.getRowAt(scrollTop + stickyHeight) - 1);
