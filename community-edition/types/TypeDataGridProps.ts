@@ -1287,6 +1287,8 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   computedHasColSpan: boolean;
   updateMainMenuPosition?: (alignTo: any) => void;
   isInEdit?: any;
+  onColumnOrderChange?: (columnOrder: string[]) => void;
+  reorderColumns?: boolean;
 };
 
 export default TypeDataGridProps;
