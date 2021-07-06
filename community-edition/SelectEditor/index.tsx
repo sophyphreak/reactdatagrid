@@ -45,17 +45,27 @@ const SelectEditor = (props: SelectEditorProps) => {
       <ComboBox
         {...editorProps}
         collapseOnSelect
+        focusOnClick={false}
+        autoFocus={false}
         renderListScroller={props.nativeScroll ? undefined : renderListScroller}
         defaultValue={props.value}
         onChange={(value: string) => {
           props.onChange && props.onChange(value);
         }}
-        constrainTo=".InovuaReactDataGrid__virtual-list"
+        constrainTo=".inovua-react-virtual-list__view-container"
         style={{
           ...editorPropsStyle,
           minWidth: Math.max(0, props.cellProps.computedWidth - 30),
         }}
         onBlur={props.onComplete}
+        onItemClick={(item: any) => {
+          const value = item.id;
+          props.onChange && props.onChange(value);
+          if (props.onComplete) {
+            // give time to value to change, then onComplete it is triggered
+            setTimeout(props.onComplete, 0);
+          }
+        }}
         onKeyDown={(e: any, combo: any) => {
           const { key } = e;
 

@@ -786,6 +786,9 @@ export default class InovuaVirtualList extends Component<TypeProps> {
 
     const updateScroll = (top = scrollTop) => {
       const parentNodeStyle = this.containerNode.parentNode.style;
+      this.containerNode.parentNode.classList.add(
+        `${BASE_CLASS_NAME}__view-container`
+      );
       const scrollLeftTranslateValue = -scrollLeft;
 
       if (useTransformPosition) {

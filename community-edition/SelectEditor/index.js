@@ -14,12 +14,19 @@ const SelectEditor = (props) => {
     const { editorProps } = props;
     const editorPropsStyle = editorProps ? editorProps.style : null;
     return (React.createElement("div", { className: 'InovuaReactDataGrid__cell__editor InovuaReactDataGrid__cell__editor--select' },
-        React.createElement(ComboBox, Object.assign({}, editorProps, { collapseOnSelect: true, renderListScroller: props.nativeScroll ? undefined : renderListScroller, defaultValue: props.value, onChange: (value) => {
+        React.createElement(ComboBox, Object.assign({}, editorProps, { collapseOnSelect: true, focusOnClick: false, autoFocus: false, renderListScroller: props.nativeScroll ? undefined : renderListScroller, defaultValue: props.value, onChange: (value) => {
                 props.onChange && props.onChange(value);
-            }, constrainTo: ".InovuaReactDataGrid__virtual-list", style: {
+            }, constrainTo: ".inovua-react-virtual-list__view-container", style: {
                 ...editorPropsStyle,
                 minWidth: Math.max(0, props.cellProps.computedWidth - 30),
-            }, onBlur: props.onComplete, onKeyDown: (e, combo) => {
+            }, onBlur: props.onComplete, onItemClick: (item) => {
+                const value = item.id;
+                props.onChange && props.onChange(value);
+                if (props.onComplete) {
+                    // give time to value to change, then onComplete it is triggered
+                    setTimeout(props.onComplete, 0);
+                }
+            }, onKeyDown: (e, combo) => {
                 const { key } = e;
                 if (key === 'Escape') {
                     if (!combo.getExpanded()) {
