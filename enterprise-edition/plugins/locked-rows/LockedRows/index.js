@@ -40,7 +40,7 @@ const renderCellsMaybeLocked = (cells, row, computedProps) => {
     }
     return [
         React.createElement("div", { key: "locked-start", "data-name": "start", style: { width: totalLockedStartWidth }, className: join(`${defaultClassName}-group ${defaultClassName}-group--locked-start ${defaultClassName}-group--${rtl ? 'rtl' : 'ltr'}`) }, lockedStartCells),
-        React.createElement("div", { className: `${defaultClassName}-group ${defaultClassName}-group--unlocked ${defaultClassName}-group--${rtl ? 'rtl' : 'ltr'}`, style: {
+        React.createElement("div", { key: "locked_rows_group", className: `${defaultClassName}-group ${defaultClassName}-group--unlocked ${defaultClassName}-group--${rtl ? 'rtl' : 'ltr'}`, style: {
                 width: totalUnlockedWidth,
             } }, unlockedCells),
         React.createElement("div", { key: "locked-end", "data-name": "end", style: { width: totalLockedEndWidth }, className: join(`${defaultClassName}-group ${defaultClassName}-group--locked-end  ${defaultClassName}-group--${rtl ? 'rtl' : 'ltr'}`) }, lockedEndCells),

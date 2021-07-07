@@ -88,6 +88,9 @@ class InovuaNotifyResize extends React.Component {
     this.refExpandToolInner = node => {
       this.expandToolInnerNode = node;
     };
+    this.refContractToolInner = node => {
+      this.contractToolInnerNode = node;
+    };
 
     this.state = {
       notifyResizeWidth: 0,
@@ -224,7 +227,7 @@ class InovuaNotifyResize extends React.Component {
   renderContractTool() {
     return (
       <div ref={this.refContractTool} style={contractToolStyle}>
-        <div ref="contractInner" style={contractToolInnerStyle} />
+        <div ref={this.refContractToolInner} style={contractToolInnerStyle} />
       </div>
     );
   }

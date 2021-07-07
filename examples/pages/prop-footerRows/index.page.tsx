@@ -125,7 +125,7 @@ const App = () => {
       columnDefaultWidth={500}
       footerRows={footerRows}
       lockedRows={lockedRows}
-      theme="default-light"
+      theme="default-dark"
       dataSource={dataSource}
     />
   );

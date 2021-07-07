@@ -88,6 +88,7 @@ const renderCellsMaybeLocked = (
       {lockedStartCells}
     </div>,
     <div
+      key="locked_rows_group"
       className={`${defaultClassName}-group ${defaultClassName}-group--unlocked ${defaultClassName}-group--${
         rtl ? 'rtl' : 'ltr'
       }`}
@@ -289,6 +290,7 @@ const renderLockedRow = (
     </div>
   );
 };
+
 export default ({
   rows,
   position,

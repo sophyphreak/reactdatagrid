@@ -88,6 +88,7 @@ const renderCellsMaybeLocked = (
       {lockedStartCells}
     </div>,
     <div
+      key="footer_group"
       className={`${defaultClassName}-group ${defaultClassName}-group--unlocked ${defaultClassName}-group--${
         rtl ? 'rtl' : 'ltr'
       }`}
