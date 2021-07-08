@@ -204,6 +204,20 @@ export type RowProps = {
   theme: string;
   onContextMenu?: () => void;
   setActiveIndex?: func;
+  renderTreeCollapseTool?: ({
+    domProps,
+    size,
+  }: {
+    domProps: any;
+    size: number;
+  }) => void;
+  renderTreeExpandTool?: ({
+    domProps,
+    size,
+  }: {
+    domProps: any;
+    size: number;
+  }) => void;
 };
 
 export type EnhancedRowProps = RowProps & {

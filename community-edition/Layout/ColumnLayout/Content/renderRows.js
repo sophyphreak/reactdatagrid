@@ -123,6 +123,8 @@ export default (
     computedUnselected,
     treeColumn,
     renderNodeTool,
+    renderTreeCollapseTool,
+    renderTreeExpandTool,
     isRowExpanded,
     rowExpandHeight,
     isRowExpandedById,
@@ -360,6 +362,8 @@ export default (
       theme,
       onContextMenu,
       setActiveIndex,
+      renderTreeCollapseTool,
+      renderTreeExpandTool,
     };
 
     if (rowProps.rowIndex === editRowIndex) {

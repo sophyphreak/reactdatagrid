@@ -1013,6 +1013,8 @@ export default class DataGridRow extends React.Component<RowProps> {
       theme,
       onContextMenu,
       setActiveIndex,
+      renderTreeCollapseTool,
+      renderTreeExpandTool,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1183,6 +1185,8 @@ export default class DataGridRow extends React.Component<RowProps> {
         theme,
         onContextMenu,
         setActiveIndex,
+        renderTreeCollapseTool,
+        renderTreeExpandTool,
       };
 
       if (computedCellSelection) {
@@ -2137,4 +2141,6 @@ DataGridRow.propTypes = {
   renderLockedStartCells: PropTypes.func,
   renderLockedEndCells: PropTypes.func,
   setActiveIndex: PropTypes.func,
+  renderTreeCollapseTool: PropTypes.func,
+  renderTreeExpandTool: PropTypes.func,
 };

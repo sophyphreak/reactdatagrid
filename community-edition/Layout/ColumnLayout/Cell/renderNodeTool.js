@@ -28,6 +28,8 @@ export default (
     toggleNodeExpand,
     style,
     size,
+    renderTreeCollapseTool,
+    renderTreeExpandTool,
   },
   cellProps
 ) => {
@@ -85,17 +87,45 @@ export default (
     );
   }
 
+  const renderCollapseToolHandle = () => {
+    let result;
+
+    if (renderTreeCollapseTool) {
+      result = renderTreeCollapseTool({ domProps, size });
+    }
+
+    if (result === undefined) {
+      result = (
+        <svg {...domProps} height={size} viewBox="0 0 24 24" width={size}>
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+        </svg>
+      );
+    }
+
+    return result;
+  };
+
+  const renderExpandToolHandle = () => {
+    let result;
+
+    if (renderTreeExpandTool) {
+      result = renderTreeExpandTool({ domProps, size });
+    }
+
+    if (result === undefined) {
+      result = (
+        <svg {...domProps} height={size} viewBox="0 0 24 24" width={size}>
+          <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+        </svg>
+      );
+    }
+
+    return result;
+  };
+
   if (nodeCollapsed) {
-    return (
-      <svg {...domProps} height={size} viewBox="0 0 24 24" width={size}>
-        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-      </svg>
-    );
+    return renderCollapseToolHandle();
   }
 
-  return (
-    <svg {...domProps} height={size} viewBox="0 0 24 24" width={size}>
-      <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
-    </svg>
-  );
+  return renderExpandToolHandle();
 };

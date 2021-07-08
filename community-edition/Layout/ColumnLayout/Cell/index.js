@@ -510,7 +510,7 @@ export default class InovuaDataGridCell extends React.Component {
         return headerCell ? (RENDER_HEADER(cellProps, domProps, this, this.state)) : (React.createElement("div", Object.assign({}, domProps, { children: cellProps.children, id: null, name: null, value: null, title: null, data: null })));
     }
     renderNodeTool(props) {
-        const { data } = props;
+        const { data, renderTreeCollapseTool, renderTreeExpandTool } = props;
         const nodeProps = data.__nodeProps || emptyObject;
         const leafNode = nodeProps.leafNode;
         const loading = nodeProps.loading;
@@ -534,6 +534,8 @@ export default class InovuaDataGridCell extends React.Component {
             size: 20,
             style,
             toggleNodeExpand: props.toggleNodeExpand,
+            renderTreeCollapseTool,
+            renderTreeExpandTool,
         }, props);
         return cloneElement(element, { key: 'nodeTool' });
     }
