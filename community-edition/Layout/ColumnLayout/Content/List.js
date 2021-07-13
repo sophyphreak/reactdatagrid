@@ -129,7 +129,7 @@ export default class InovuaDataGridList extends Component {
                 // so only the editing row is being re-rendered by the update
                 this.virtualList.getRows().forEach(r => {
                     const row = r.getInstance();
-                    if (row.props.rowIndex === rowIndex) {
+                    if (row && row.props.rowIndex === rowIndex) {
                         r.update();
                     }
                 });
