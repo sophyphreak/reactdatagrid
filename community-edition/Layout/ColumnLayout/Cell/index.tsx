@@ -1698,4 +1698,6 @@ InovuaDataGridCell.propTypes = {
   getEditCompleteValue: PropTypes.func,
   editStartEvent: PropTypes.string,
   setActiveIndex: PropTypes.func,
+
+  renderColumnReorderProxy: PropTypes.func,
 };

@@ -670,6 +670,8 @@ type TypeDataGridPropsNoI18n = {
     dropRowData: any;
   }) => void;
   updateMenuPositionOnColumnsChange?: boolean;
+  reorderColumns?: boolean;
+  renderColumnReorderProxy?: (props: any) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
@@ -1288,7 +1290,6 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   updateMainMenuPosition?: (alignTo: any) => void;
   isInEdit?: any;
   onColumnOrderChange?: (columnOrder: string[]) => void;
-  reorderColumns?: boolean;
 };
 
 export default TypeDataGridProps;

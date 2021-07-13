@@ -221,6 +221,7 @@ export type CellProps = {
   onContextMenu?: () => void;
   showContextMenu?: (menuTool: any, onHide: any) => void;
   setActiveIndex?: func;
+  renderColumnReorderProxy?: (props: any) => void;
 };
 
 export type EnhancedCellProps = CellProps & {

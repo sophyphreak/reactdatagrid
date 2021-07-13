@@ -20,6 +20,18 @@ const HEADER_CONTENT_CLASS_NAME = 'InovuaReactDataGrid__column-header__content';
 
 const EMPTY_OBJECT = {};
 
+const renderContent = (props: any) => {
+  if (!props) {
+    return;
+  }
+
+  if (props.renderColumnReorderProxy) {
+    return props.renderColumnReorderProxy(props);
+  }
+
+  return props.children;
+};
+
 const renderHeader = (
   props,
   domProps,
@@ -41,6 +53,7 @@ const renderHeader = (
     rtl,
     virtualizeColumns,
   } = props;
+
   let content = (
     <div
       key="content"
@@ -49,7 +62,7 @@ const renderHeader = (
           ? 'InovuaReactDataGrid__box--ellipsis'
           : ''
       }`}
-      children={props.children}
+      children={renderContent(props)}
     />
   );
 

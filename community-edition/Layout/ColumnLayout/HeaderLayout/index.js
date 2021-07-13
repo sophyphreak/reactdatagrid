@@ -995,7 +995,15 @@ export default class InovuaDataGridHeaderLayout extends Component {
       [rtl ? 'right' : 'left']: rtl ? headerRegion.right : headerRegion.left,
     };
 
-    dragProxy.setProps(dragBoxProps);
+    let extendedDragBoxProps = { ...dragBoxProps };
+
+    if (this.props.renderColumnReorderProxy) {
+      Object.assign(extendedDragBoxProps, {
+        renderColumnReorderProxy: this.props.renderColumnReorderProxy,
+      });
+    }
+
+    dragProxy.setProps(extendedDragBoxProps);
 
     const dragProxyPosition = {
       top: dragBoxInitialRegion.top - dragBoxOffsets.top,
@@ -1598,4 +1606,5 @@ InovuaDataGridHeaderLayout.propTypes = {
   renderDragGroupItem: PropTypes.func,
   getScrollLeftMax: PropTypes.func.isRequired,
   setScrollLeft: PropTypes.func.isRequired,
+  renderColumnReorderProxy: PropTypes.func,
 };

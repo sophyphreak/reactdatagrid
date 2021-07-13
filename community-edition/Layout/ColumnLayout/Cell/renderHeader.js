@@ -12,13 +12,22 @@ import renderMenuTool from './renderMenuTool';
 const RESIZE_WRAPPER_CLASS_NAME = 'InovuaReactDataGrid__column-header__resize-wrapper';
 const HEADER_CONTENT_CLASS_NAME = 'InovuaReactDataGrid__column-header__content';
 const EMPTY_OBJECT = {};
+const renderContent = (props) => {
+    if (!props) {
+        return;
+    }
+    if (props.renderColumnReorderProxy) {
+        return props.renderColumnReorderProxy(props);
+    }
+    return props.children;
+};
 const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
     const dragging = props.dragging !== undefined ? props.dragging : state.dragging;
     const last = props.last || props.computedVisibleIndex == props.computedVisibleCount - 1;
     const { depth, showBorderRight, showBorderLeft, computedLocked, firstInSection, lastInSection, group, rtl, virtualizeColumns, } = props;
     let content = (React.createElement("div", { key: "content", className: `${HEADER_CONTENT_CLASS_NAME} ${props.headerEllipsis !== false
             ? 'InovuaReactDataGrid__box--ellipsis'
-            : ''}`, children: props.children }));
+            : ''}`, children: renderContent(props) }));
     const menuTool = renderMenuTool(props, cellInstance);
     const headerAlign = props.headerAlign != null ? props.headerAlign : props.textAlign;
     content = [
