@@ -99,7 +99,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
                 return;
             }
             const props = this.lastComputedProps;
-            const { onRowReorder, rowReorderColumn, computedPagination, computedSortInfo, computedFiltered, dataSource, data, computedPivot, computedGroupBy, } = props;
+            const { onRowReorder, rowReorderColumn, computedPagination, computedSortInfo, computedFiltered, dataSource, data, computedPivot, computedGroupBy, computedFocused, computedSetFocused, setActiveIndex, } = props;
             if (!onRowReorder &&
                 (typeof onRowReorder !== 'function' || typeof onRowReorder !== 'boolean')) {
                 if (!rowReorderColumn) {
@@ -140,6 +140,10 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             const node = cellNode && cellNode.current;
             const cellRegion = Region.from(node);
             this.dragRowArrow.setOffset(headerHeight);
+            if (!computedFocused) {
+                computedSetFocused(true);
+            }
+            setActiveIndex(index);
             this.setupDrag(ev, { dragIndex, contentRegion, headerHeight, cellRegion }, props);
         };
         this.setupDrag = (event, { dragIndex, contentRegion, headerHeight, cellRegion, }, props) => {
@@ -320,7 +324,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         };
         this.onRowDrop = (event, config, props) => {
             const { dropIndex } = this;
-            const { onRowReorder, data, setOriginalData } = props;
+            const { onRowReorder, data, setOriginalData, setActiveIndex } = props;
             if (dropIndex === undefined) {
                 if (DRAG_INFO) {
                     DRAG_INFO.dragProxy.setVisible(false);
@@ -336,6 +340,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             this.dragBoxInitialHeight = 0;
             this.setReorderArrowVisible(false);
             dragProxy.setVisible(false);
+            setActiveIndex(dropIndex);
             if (this.scrollTopRegionRef.current) {
                 this.scrollTopRegionRef.current.setVisible(false);
             }

@@ -84,7 +84,8 @@ const useActiveIndex = (
       return -1;
     }
     const scrollTop = computedProps.getScrollTop();
-    return Math.ceil(scrollTop / props.rowHeight);
+    const rowHeight: any = props.rowHeight;
+    return Math.ceil(scrollTop / rowHeight);
   }, [props.rowHeight]);
 
   const oldActiveIndex = usePrevious<number>(computedActiveIndex, -1);

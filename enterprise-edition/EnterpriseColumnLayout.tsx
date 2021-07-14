@@ -228,6 +228,9 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       data,
       computedPivot,
       computedGroupBy,
+      computedFocused,
+      computedSetFocused,
+      setActiveIndex,
     } = props;
 
     if (
@@ -284,6 +287,12 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     const cellRegion = Region.from(node);
 
     this.dragRowArrow.setOffset(headerHeight);
+
+    if (!computedFocused) {
+      computedSetFocused(true);
+    }
+
+    setActiveIndex(index);
 
     this.setupDrag(
       ev,
@@ -556,7 +565,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
   onRowDrop = (event: MouseEvent, config: TypeConfig, props: any) => {
     const { dropIndex } = this;
-    const { onRowReorder, data, setOriginalData } = props;
+    const { onRowReorder, data, setOriginalData, setActiveIndex } = props;
 
     if (dropIndex === undefined) {
       if (DRAG_INFO) {
@@ -576,6 +585,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     this.dragBoxInitialHeight = 0;
     this.setReorderArrowVisible(false);
     dragProxy.setVisible(false);
+
+    setActiveIndex(dropIndex);
 
     if (this.scrollTopRegionRef.current) {
       this.scrollTopRegionRef.current.setVisible(false);
