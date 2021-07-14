@@ -4,7 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import moment from 'moment';
 const emptyObject = {};
+let window = global || globalThis;
+if (window.moment == null) {
+    window.moment = moment;
+}
 export const stringTypes = {
     type: 'string',
     emptyValue: '',

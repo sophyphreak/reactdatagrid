@@ -6,8 +6,15 @@
  */
 
 import { TypeFilterType } from './types';
+import moment from 'moment';
 
 const emptyObject = {};
+
+let window = global || globalThis;
+
+if (window.moment == null) {
+  window.moment = moment;
+}
 
 export const stringTypes: TypeFilterType = {
   type: 'string',
