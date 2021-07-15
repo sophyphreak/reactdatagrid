@@ -71,7 +71,15 @@ class DateFilter extends Component {
             filterEditorProps = filterValue && filterValue.filterEditorProps;
         }
         if (dateFormat === undefined) {
-            dateFormat = (filterEditorProps && filterEditorProps.dateFormat) || '';
+            if (typeof filterEditorProps === 'function') {
+                dateFormat = filterEditorProps(this.props, {
+                    value: this.state.value,
+                    index: 0,
+                }).dateFormat;
+            }
+            else {
+                dateFormat = (filterEditorProps && filterEditorProps.dateFormat) || '';
+            }
         }
         const calendarLabels = {
             todayButtonText: i18n && i18n('calendar.todayButtonText'),

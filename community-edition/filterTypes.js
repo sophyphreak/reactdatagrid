@@ -200,7 +200,7 @@ export const dateTypes = {
             name: 'after',
             fn: ({ value, filterValue, data, column: { dateFormat } }) => filterValue
                 ? window
-                    .moment(value, dateFormat)
+                    .moment(window.moment(value).format(dateFormat), dateFormat)
                     .isAfter(window.moment(filterValue, dateFormat))
                 : true,
         },
@@ -208,7 +208,7 @@ export const dateTypes = {
             name: 'afterOrOn',
             fn: ({ value, filterValue, data, column: { dateFormat } }) => filterValue != null
                 ? window
-                    .moment(value, dateFormat)
+                    .moment(window.moment(value).format(dateFormat), dateFormat)
                     .isSameOrAfter(window.moment(filterValue, dateFormat))
                 : true,
         },
@@ -216,7 +216,7 @@ export const dateTypes = {
             name: 'before',
             fn: ({ value, filterValue, data, column: { dateFormat } }) => filterValue != null
                 ? window
-                    .moment(value, dateFormat)
+                    .moment(window.moment(value).format(dateFormat), dateFormat)
                     .isBefore(window.moment(filterValue, dateFormat))
                 : true,
         },
@@ -224,7 +224,7 @@ export const dateTypes = {
             name: 'beforeOrOn',
             fn: ({ value, filterValue, data, column: { dateFormat } }) => filterValue != null
                 ? window
-                    .moment(value, dateFormat)
+                    .moment(window.moment(value).format(dateFormat), dateFormat)
                     .isSameOrBefore(window.moment(filterValue, dateFormat))
                 : true,
         },
@@ -232,7 +232,7 @@ export const dateTypes = {
             name: 'eq',
             fn: ({ value, filterValue, data, column: { dateFormat } }) => filterValue
                 ? window
-                    .moment(value, dateFormat)
+                    .moment(window.moment(value).format(dateFormat), dateFormat)
                     .isSame(window.moment(filterValue, dateFormat))
                 : true,
         },
@@ -240,7 +240,7 @@ export const dateTypes = {
             name: 'neq',
             fn: ({ value, filterValue, data, column: { dateFormat } }) => filterValue
                 ? !window
-                    .moment(value, dateFormat)
+                    .moment(window.moment(value).format(dateFormat), dateFormat)
                     .isSame(window.moment(filterValue, dateFormat))
                 : true,
         },
@@ -250,20 +250,20 @@ export const dateTypes = {
                 const { start, end } = filterValue || emptyObject;
                 if (start && end) {
                     return (window
-                        .moment(value, dateFormat)
+                        .moment(window.moment(value).format(dateFormat), dateFormat)
                         .isSameOrAfter(window.moment(start, dateFormat)) &&
                         window
-                            .moment(value, dateFormat)
+                            .moment(window.moment(value).format(dateFormat), dateFormat)
                             .isSameOrBefore(window.moment(end, dateFormat)));
                 }
                 if (start) {
                     return window
-                        .moment(value, dateFormat)
+                        .moment(window.moment(value).format(dateFormat), dateFormat)
                         .isSameOrAfter(window.moment(start, dateFormat));
                 }
                 if (end) {
                     return window
-                        .moment(value, dateFormat)
+                        .moment(window.moment(value).format(dateFormat), dateFormat)
                         .isSameOrBefore(window.moment(end, dateFormat));
                 }
                 return true;
@@ -275,20 +275,20 @@ export const dateTypes = {
                 const { start, end } = filterValue || emptyObject;
                 if (start && end) {
                     return (window
-                        .moment(value, dateFormat)
+                        .moment(window.moment(value).format(dateFormat), dateFormat)
                         .isBefore(window.moment(start, dateFormat)) ||
                         window
-                            .moment(value, dateFormat)
+                            .moment(window.moment(value).format(dateFormat), dateFormat)
                             .isAfter(window.moment(end, dateFormat)));
                 }
                 if (start) {
                     return window
-                        .moment(value, dateFormat)
+                        .moment(window.moment(value).format(dateFormat), dateFormat)
                         .isBefore(window.moment(start, dateFormat));
                 }
                 if (end) {
                     return window
-                        .moment(value, dateFormat)
+                        .moment(window.moment(value).format(dateFormat), dateFormat)
                         .isAfter(window.moment(end, dateFormat));
                 }
                 return true;

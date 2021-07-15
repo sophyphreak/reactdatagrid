@@ -150,7 +150,14 @@ class DateFilter extends Component<DateFilterProps, DateFilterState> {
     }
 
     if (dateFormat === undefined) {
-      dateFormat = (filterEditorProps && filterEditorProps.dateFormat) || '';
+      if (typeof filterEditorProps === 'function') {
+        dateFormat = filterEditorProps(this.props, {
+          value: this.state.value,
+          index: 0,
+        }).dateFormat;
+      } else {
+        dateFormat = (filterEditorProps && filterEditorProps.dateFormat) || '';
+      }
     }
 
     const calendarLabels = {
