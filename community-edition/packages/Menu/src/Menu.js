@@ -614,6 +614,7 @@ class InovuaMenu extends Component {
       notifyResizeDelay: props.notifyResizeDelay,
       ref: this.setScrollerRef,
       style,
+      theme: props.theme,
       vertical: true,
       theme: props.theme,
       scrollOnMouseEnter: props.scrollOnMouseEnter,
@@ -1649,7 +1650,7 @@ InovuaMenu.defaultProps = {
   items: null,
 
   // scroll
-  maxHeight: 'none',
+  maxHeight: 'auto',
   // submenuMaxHeight: 'none',
   scrollArrowIncrementType: 'step',
 
