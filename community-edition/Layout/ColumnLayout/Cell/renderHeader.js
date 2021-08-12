@@ -24,8 +24,11 @@ const renderContent = (props) => {
 const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
     const dragging = props.dragging !== undefined ? props.dragging : state.dragging;
     const last = props.last || props.computedVisibleIndex == props.computedVisibleCount - 1;
-    const { depth, showBorderRight, showBorderLeft, computedLocked, firstInSection, lastInSection, group, rtl, virtualizeColumns, } = props;
-    let content = (React.createElement("div", { key: "content", className: `${HEADER_CONTENT_CLASS_NAME} ${props.headerEllipsis !== false
+    const { depth, showBorderRight, showBorderLeft, computedLocked, firstInSection, lastInSection, group, rtl, virtualizeColumns, headerProps, } = props;
+    const style = headerProps && headerProps.headerCellStyle
+        ? headerProps.headerCellStyle
+        : null;
+    let content = (React.createElement("div", { key: "content", style: style, className: `${HEADER_CONTENT_CLASS_NAME} ${props.headerEllipsis !== false
             ? 'InovuaReactDataGrid__box--ellipsis'
             : ''}`, children: renderContent(props) }));
     const menuTool = renderMenuTool(props, cellInstance);

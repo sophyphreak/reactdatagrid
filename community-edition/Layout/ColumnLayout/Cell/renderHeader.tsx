@@ -52,11 +52,18 @@ const renderHeader = (
     group,
     rtl,
     virtualizeColumns,
+    headerProps,
   } = props;
+
+  const style =
+    headerProps && headerProps.headerCellStyle
+      ? headerProps.headerCellStyle
+      : null;
 
   let content = (
     <div
       key="content"
+      style={style}
       className={`${HEADER_CONTENT_CLASS_NAME} ${
         props.headerEllipsis !== false
           ? 'InovuaReactDataGrid__box--ellipsis'
