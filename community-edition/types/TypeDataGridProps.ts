@@ -672,6 +672,8 @@ type TypeDataGridPropsNoI18n = {
   updateMenuPositionOnColumnsChange?: boolean;
   reorderColumns?: boolean;
   renderColumnReorderProxy?: (props: any) => void;
+  columnOrder?: string[];
+  onColumnOrderChange?: (columnOrder: string[]) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
@@ -1289,7 +1291,6 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   computedHasColSpan: boolean;
   updateMainMenuPosition?: (alignTo: any) => void;
   isInEdit?: any;
-  onColumnOrderChange?: (columnOrder: string[]) => void;
 };
 
 export default TypeDataGridProps;

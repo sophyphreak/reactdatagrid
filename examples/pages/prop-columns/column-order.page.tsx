@@ -7,7 +7,8 @@
 
 import React from 'react';
 
-import DataGrid from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
+import Button from '../../../community-edition/packages/Button';
 
 import people from '../people';
 
@@ -35,29 +36,32 @@ const App = () => {
 
   return (
     <>
-      <button
+      <Button
+        theme="default-dark"
         onClick={() => {
           setColumnOrder(['firstName', 'age']);
         }}
       >
         firstName, age
-      </button>
-      <button
+      </Button>{' '}
+      <Button
+        theme="default-dark"
         onClick={() => {
           setColumnOrder(['firstName', 'age', 'id']);
         }}
       >
         firstName, age, id
-      </button>
+      </Button>
       <DataGrid
         idProperty="id"
         style={gridStyle}
-        theme="default-light"
+        theme="default-dark"
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         columns={columns}
         columnOrder={columnOrder}
         onColumnOrderChange={setColumnOrder}
         dataSource={people}
+        showColumnMenuTool
       />
     </>
   );
