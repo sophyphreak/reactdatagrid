@@ -1343,7 +1343,6 @@ export default class DataGridRow extends React.Component {
     onClick(event) {
         const props = this.props;
         const { passedProps } = props;
-        console.log('props', props);
         if (props.computedTreeEnabled && props.expandOnMouseDown) {
             this.toggleNodeExpand(props.rowIndex);
         }
