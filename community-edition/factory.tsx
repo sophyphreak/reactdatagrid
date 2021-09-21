@@ -1608,6 +1608,7 @@ const GridFactory = (
     rowReorderAutoScroll: false,
     rowReorderAutoScrollSpeed: 40,
     reorderProxySize: 3,
+    expandOnMouseDown: false,
     columnMaxWidth: null,
     editStartEvent: 'dblclick',
     hideGroupByColumns: true,
