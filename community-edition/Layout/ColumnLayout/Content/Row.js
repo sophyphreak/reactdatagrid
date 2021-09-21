@@ -637,7 +637,7 @@ export default class DataGridRow extends React.Component {
         const initialColumns = this.props.columns;
         let columns = initialColumns;
         const { props } = this;
-        const { hasLockedStart, data, onGroupToggle, computedPivot, rowHeight, remoteRowIndex, initialRowHeight, lastLockedStartIndex, lastLockedEndIndex, lastUnlockedIndex, minRowHeight, realIndex, showHorizontalCellBorders, showVerticalCellBorders, empty, treeColumn, groupColumn, totalDataCount, depth, dataSourceArray, computedGroupBy, groupProps, summaryProps, indexInGroup, firstUnlockedIndex, firstLockedEndIndex, selectAll, deselectAll, columnUserSelect, multiSelect, selection, setRowSelected, computedRowExpandEnabled, rtl, last: lastRow, computedCellSelection, lastNonEmpty, maxVisibleRows, onCellClick, editStartEvent, naturalRowHeight, renderNodeTool, computedTreeEnabled, expanded: rowExpanded, expandGroupTitle, expandColumn: expandColumnFn, onCellSelectionDraggerMouseDown, onCellMouseDown, onCellEnter, computedCellMultiSelectionEnabled, getCellSelectionKey, lastCellInRange, computedRowspans, renderIndex, nativeScroll, onDragRowMouseDown, theme, onContextMenu, setActiveIndex, renderTreeCollapseTool, renderTreeExpandTool, } = props;
+        const { hasLockedStart, data, onGroupToggle, computedPivot, rowHeight, remoteRowIndex, initialRowHeight, lastLockedStartIndex, lastLockedEndIndex, lastUnlockedIndex, minRowHeight, realIndex, showHorizontalCellBorders, showVerticalCellBorders, empty, treeColumn, groupColumn, totalDataCount, depth, dataSourceArray, computedGroupBy, groupProps, summaryProps, indexInGroup, firstUnlockedIndex, firstLockedEndIndex, selectAll, deselectAll, columnUserSelect, multiSelect, selection, setRowSelected, computedRowExpandEnabled, rtl, last: lastRow, computedCellSelection, lastNonEmpty, maxVisibleRows, onCellClick, editStartEvent, naturalRowHeight, renderNodeTool, computedTreeEnabled, expanded: rowExpanded, expandGroupTitle, expandColumn: expandColumnFn, onCellSelectionDraggerMouseDown, onCellMouseDown, onCellEnter, computedCellMultiSelectionEnabled, getCellSelectionKey, lastCellInRange, computedRowspans, renderIndex, nativeScroll, onDragRowMouseDown, theme, onContextMenu, setActiveIndex, renderTreeCollapseTool, renderTreeExpandTool, renderTreeLoadingTool, } = props;
         const expandColumnId = expandColumnFn
             ? expandColumnFn({ data })
             : undefined;
@@ -778,6 +778,7 @@ export default class DataGridRow extends React.Component {
                 setActiveIndex,
                 renderTreeCollapseTool,
                 renderTreeExpandTool,
+                renderTreeLoadingTool,
             };
             if (computedCellSelection && getCellSelectionKey) {
                 cellProps.cellSelected =
@@ -1342,6 +1343,10 @@ export default class DataGridRow extends React.Component {
     onClick(event) {
         const props = this.props;
         const { passedProps } = props;
+        console.log('props', props);
+        if (props.computedTreeEnabled && props.expandOnMouseDown) {
+            this.toggleNodeExpand(props.rowIndex);
+        }
         if (props.onClick) {
             props.onClick(event, props);
         }
@@ -1443,6 +1448,7 @@ DataGridRow.propTypes = {
     setRowExpanded: PropTypes.func,
     toggleRowExpand: PropTypes.func,
     toggleNodeExpand: PropTypes.func,
+    expandOnMouseDown: PropTypes.bool,
     loadNodeAsync: PropTypes.func,
     showAllGroupCells: PropTypes.bool,
     computedShowCellBorders: PropTypes.oneOfType([
@@ -1520,4 +1526,5 @@ DataGridRow.propTypes = {
     setActiveIndex: PropTypes.func,
     renderTreeCollapseTool: PropTypes.func,
     renderTreeExpandTool: PropTypes.func,
+    renderTreeLoadingTool: PropTypes.func,
 };

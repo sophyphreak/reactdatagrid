@@ -219,6 +219,16 @@ export type RowProps = {
     domProps: any;
     size: number;
   }) => void;
+  renderTreeLoadingTool?: ({
+    domProps,
+    className,
+    size,
+  }: {
+    domProps: any;
+    className: string;
+    size: number;
+  }) => void;
+  expandOnMouseDown?: boolean;
 };
 
 export type EnhancedRowProps = RowProps & {

@@ -808,6 +808,7 @@ export default class DataGridRow extends React.Component<RowProps> {
     }
     this.props.toggleRowExpand(rowIndex!);
   }
+
   toggleNodeExpand(rowIndex?: number) {
     if (typeof rowIndex !== 'number') {
       rowIndex = this.props.realIndex;
@@ -1012,6 +1013,7 @@ export default class DataGridRow extends React.Component<RowProps> {
       setActiveIndex,
       renderTreeCollapseTool,
       renderTreeExpandTool,
+      renderTreeLoadingTool,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1185,6 +1187,7 @@ export default class DataGridRow extends React.Component<RowProps> {
         setActiveIndex,
         renderTreeCollapseTool,
         renderTreeExpandTool,
+        renderTreeLoadingTool,
       };
 
       if (computedCellSelection && getCellSelectionKey) {
@@ -1970,6 +1973,11 @@ export default class DataGridRow extends React.Component<RowProps> {
   onClick(event: MouseEvent) {
     const props = this.props;
     const { passedProps } = props;
+    console.log('props', props);
+
+    if (props.computedTreeEnabled && props.expandOnMouseDown) {
+      this.toggleNodeExpand(props.rowIndex);
+    }
 
     if (props.onClick) {
       props.onClick(event, props);
@@ -2076,6 +2084,7 @@ DataGridRow.propTypes = {
   setRowExpanded: PropTypes.func,
   toggleRowExpand: PropTypes.func,
   toggleNodeExpand: PropTypes.func,
+  expandOnMouseDown: PropTypes.bool,
   loadNodeAsync: PropTypes.func,
   showAllGroupCells: PropTypes.bool,
   computedShowCellBorders: PropTypes.oneOfType([
@@ -2159,4 +2168,5 @@ DataGridRow.propTypes = {
   setActiveIndex: PropTypes.func,
   renderTreeCollapseTool: PropTypes.func,
   renderTreeExpandTool: PropTypes.func,
+  renderTreeLoadingTool: PropTypes.func,
 };
