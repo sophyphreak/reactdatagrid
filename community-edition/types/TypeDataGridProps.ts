@@ -1232,7 +1232,8 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
     property: string,
     value: any
   ) => void;
-  setItemAt: (
+  setItemAt: (items: any, config?: { replace?: boolean }) => void;
+  setItemsAt: (
     index: number,
     item: any,
     config?: { replace?: boolean; property?: string; value?: any }
