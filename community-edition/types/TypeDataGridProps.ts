@@ -647,7 +647,7 @@ type TypeDataGridPropsNoI18n = {
 
   sorty?: (sortInfo: TypeSortInfo, data: any[]) => void;
 
-  rowReorderColumn?: IColumn;
+  rowReorderColumn?: IColumn | boolean;
   onRowReorder?: TypeRowReorder;
   renderRowReorderProxy?: ({
     data,
