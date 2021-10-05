@@ -673,7 +673,7 @@ export default (
       return;
     }
 
-    const newItems: any[] = [];
+    const newIds: any = {};
     for (let i = 0; i < items.length; i++) {
       const oldId = computedProps.getItemId(items[i]);
       let newItem = computedProps.getItemAt(oldId);
@@ -691,16 +691,16 @@ export default (
         continue;
       }
 
-      newItems.push(newItem);
+      newIds[newId] = newItem;
     }
 
-    if (!newItems || newItems.length === 0) {
+    if (!items.length) {
       return;
     }
 
     setDataSourceCache({
       ...computedProps.computedDataSourceCache,
-      ...newItems,
+      ...newIds,
     });
   };
 
