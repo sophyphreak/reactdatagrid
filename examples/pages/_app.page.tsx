@@ -10,6 +10,8 @@ import '../../community-edition/style/base.scss';
 import '../../community-edition/style/theme/default-light/index.scss';
 import '../../community-edition/style/theme/default-dark/index.scss';
 
+import '../pages/prop-checkboxColumn/prop-checkboxColumns.scss';
+
 export default function MyApp({ Component, pageProps }) {
   if (!(process as any).browser) {
     return null;
