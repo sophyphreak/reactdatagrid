@@ -25,12 +25,12 @@ import { RowProps, EnhancedRowProps } from './RowProps';
 // import diff from '../../../packages/shallow-changes';
 
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-const rowClean = (p: any) => {
-  const result = { ...p };
+// const rowClean = (p: any) => {
+//   const result = { ...p };
 
-  delete result.activeRowRef;
-  return result;
-};
+//   delete result.activeRowRef;
+//   return result;
+// };
 
 const skipSelect = (event: SyntheticEvent) => {
   (event.nativeEvent as any).skipSelect = true;

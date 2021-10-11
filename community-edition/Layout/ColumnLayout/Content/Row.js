@@ -16,11 +16,11 @@ import renderCellsMaybeLocked from './renderCellsMaybeLocked';
 import adjustCellProps from './adjustCellProps';
 // import diff from '../../../packages/shallow-changes';
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-const rowClean = (p) => {
-    const result = { ...p };
-    delete result.activeRowRef;
-    return result;
-};
+// const rowClean = (p: any) => {
+//   const result = { ...p };
+//   delete result.activeRowRef;
+//   return result;
+// };
 const skipSelect = (event) => {
     event.nativeEvent.skipSelect = true;
 };
