@@ -469,6 +469,7 @@ type TypeDataGridPropsNoI18n = {
   __parentRowInfo?: any;
 
   onSelectionChange?: (config: TypeOnSelectionChangeArg) => void;
+  onCellSelectionChange?: (value: { [key: string]: boolean }) => void;
   keyPageStep: number;
   activeIndex?: number;
   multiSelect?: boolean;

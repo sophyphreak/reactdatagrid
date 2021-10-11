@@ -208,9 +208,9 @@ const useTreeColumn = (props, computedProps, computedPropsRef) => {
     const getExpandedNodes = () => {
         return computedPropsRef.current.computedExpandedNodes;
     };
-    const loadNodeAsync = (data, callback) => {
+    const loadNodeAsync = useCallback((data, callback) => {
         return loadNodeAsync_FromProps(computedPropsRef, data, callback);
-    };
+    }, []);
     const clearNodeChildrenCache = (nodeId, recursive = true, treeCache, clearedMap) => {
         const { current: computedProps } = computedPropsRef;
         clearedMap = clearedMap || {};

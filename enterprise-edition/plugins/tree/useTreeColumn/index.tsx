@@ -285,9 +285,12 @@ const useTreeColumn = (
     return computedPropsRef.current!.computedExpandedNodes;
   };
 
-  const loadNodeAsync = (data: number | object, callback?: () => void) => {
-    return loadNodeAsync_FromProps(computedPropsRef, data, callback);
-  };
+  const loadNodeAsync = useCallback(
+    (data: number | object, callback?: () => void) => {
+      return loadNodeAsync_FromProps(computedPropsRef, data, callback);
+    },
+    []
+  );
 
   const clearNodeChildrenCache = (
     nodeId: string | number,

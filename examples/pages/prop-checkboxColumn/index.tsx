@@ -8,7 +8,7 @@ const colsString = 'abcdefghijk';
 
 const largeCmp = ({ value, data }: any) => {
   const start = Date.now();
-  while (Date.now() < start + 100) {}
+  // while (Date.now() < start + 100) {}
   return <div className="prop-checkboxColumns__large-comp">{value}</div>;
 };
 
@@ -58,11 +58,11 @@ const dataSource = buildDataSource(1000, colsString);
 const columns = buildColumns(colsString);
 
 const App = () => {
-  // const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState();
 
-  // const onSelectionChange = useCallback(({ selected }) => {
-  //   setSelected(selected);
-  // }, []);
+  const onSelectionChange = useCallback(({ selected }) => {
+    setSelected(selected);
+  }, []);
 
   return (
     <div>
@@ -71,9 +71,9 @@ const App = () => {
         idProperty="id"
         theme="default-dark"
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        // selected={selected}
+        selected={selected}
         checkboxColumn
-        // onSelectionChange={onSelectionChange}
+        onSelectionChange={onSelectionChange}
         style={gridStyle}
         columns={columns}
         dataSource={dataSource}

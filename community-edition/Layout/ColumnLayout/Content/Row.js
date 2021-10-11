@@ -14,6 +14,7 @@ import clamp from '../../../utils/clamp';
 import Cell from '../Cell';
 import renderCellsMaybeLocked from './renderCellsMaybeLocked';
 import adjustCellProps from './adjustCellProps';
+// import diff from '../../../packages/shallow-changes';
 const CLASS_NAME = 'InovuaReactDataGrid__row';
 const rowClean = (p) => {
     const result = { ...p };
@@ -97,8 +98,17 @@ export default class DataGridRow extends React.Component {
             maxVisibleRows: 1,
             onClick: 1,
             style: 1,
+            loadNodeAsync: 1,
+            scrollToIndexIfNeeded: 1,
         });
         if (!areEqual.result) {
+            // console.log(
+            //   'UPDATE ROW',
+            //   areEqual.key,
+            //   // this.props[areEqual.key!],
+            //   // nextProps[areEqual.key!],
+            //   diff(rowClean(nextProps), rowClean(this.props))
+            // );
             return true;
         }
         if (this.props.active !== nextProps.active) {

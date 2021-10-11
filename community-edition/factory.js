@@ -615,7 +615,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             const stickyContainerHeight = stickyContainer?.scrollHeight ?? 0;
             return stickyContainerHeight;
         };
-        const scrollToIndexIfNeeded = (index, config, callback) => {
+        const scrollToIndexIfNeeded = useCallback((index, config, callback) => {
             let needed = !isRowFullyVisible(index);
             if (!needed) {
                 const { current: computedProps } = computedPropsRef;
@@ -661,7 +661,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
                 }
             }
             return needed;
-        };
+        }, []);
         const isRowFullyVisible = (rowIndex) => {
             const list = getVirtualList();
             if (!list) {

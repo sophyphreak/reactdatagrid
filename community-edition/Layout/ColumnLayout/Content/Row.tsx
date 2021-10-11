@@ -22,6 +22,7 @@ import { CellProps } from '../Cell/CellProps';
 import { TypeComputedColumn } from '../../../types';
 import InovuaDataGridCell from '../Cell';
 import { RowProps, EnhancedRowProps } from './RowProps';
+// import diff from '../../../packages/shallow-changes';
 
 const CLASS_NAME = 'InovuaReactDataGrid__row';
 const rowClean = (p: any) => {
@@ -110,9 +111,18 @@ export default class DataGridRow extends React.Component<RowProps> {
       maxVisibleRows: 1,
       onClick: 1,
       style: 1,
+      loadNodeAsync: 1,
+      scrollToIndexIfNeeded: 1,
     });
 
     if (!areEqual.result) {
+      // console.log(
+      //   'UPDATE ROW',
+      //   areEqual.key,
+      //   // this.props[areEqual.key!],
+      //   // nextProps[areEqual.key!],
+      //   diff(rowClean(nextProps), rowClean(this.props))
+      // );
       return true;
     }
 

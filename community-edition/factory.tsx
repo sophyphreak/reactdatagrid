@@ -962,68 +962,71 @@ const GridFactory = (
       return stickyContainerHeight;
     };
 
-    const scrollToIndexIfNeeded = (
-      index: number,
-      config?: {
-        top?: boolean;
-        direction?: 'top' | 'bottom';
-        force?: boolean;
-        duration?: number;
-        offset?: number;
-      },
-      callback?: (...args: any) => any
-    ): boolean => {
-      let needed = !isRowFullyVisible(index);
+    const scrollToIndexIfNeeded = useCallback(
+      (
+        index: number,
+        config?: {
+          top?: boolean;
+          direction?: 'top' | 'bottom';
+          force?: boolean;
+          duration?: number;
+          offset?: number;
+        },
+        callback?: (...args: any) => any
+      ): boolean => {
+        let needed = !isRowFullyVisible(index);
 
-      if (!needed) {
-        const { current: computedProps } = computedPropsRef;
+        if (!needed) {
+          const { current: computedProps } = computedPropsRef;
 
-        if (computedProps?.computedStickyRows) {
-          if (computedProps.computedStickyRows[index]) {
-            needed = false;
-          } else {
-            const stickyContainerHeight = getStickyContainerHeight();
+          if (computedProps?.computedStickyRows) {
+            if (computedProps.computedStickyRows[index]) {
+              needed = false;
+            } else {
+              const stickyContainerHeight = getStickyContainerHeight();
 
-            const scrollTop = getScrollTop();
-            const relativeScrollTop = scrollTop + stickyContainerHeight;
-            const rowOffset = computedProps.rowHeightManager.getRowOffset(
-              index
-            );
+              const scrollTop = getScrollTop();
+              const relativeScrollTop = scrollTop + stickyContainerHeight;
+              const rowOffset = computedProps.rowHeightManager.getRowOffset(
+                index
+              );
 
-            if (relativeScrollTop > rowOffset) {
-              needed = true;
-              config = config || {
-                direction: 'top',
-              };
+              if (relativeScrollTop > rowOffset) {
+                needed = true;
+                config = config || {
+                  direction: 'top',
+                };
 
-              config.offset =
-                relativeScrollTop -
-                rowOffset +
-                rowHeightManager.getRowHeight(index);
+                config.offset =
+                  relativeScrollTop -
+                  rowOffset +
+                  rowHeightManager.getRowHeight(index);
+              }
+            }
+          }
+        } else {
+          if (computedProps?.computedStickyRows) {
+            config = config || {
+              direction: 'top',
+            };
+            config.offset = config.offset || 0;
+            if (config.direction === 'top' || config.top) {
+              config.offset += getStickyContainerHeight();
             }
           }
         }
-      } else {
-        if (computedProps?.computedStickyRows) {
-          config = config || {
-            direction: 'top',
-          };
-          config.offset = config.offset || 0;
-          if (config.direction === 'top' || config.top) {
-            config.offset += getStickyContainerHeight();
+        if (needed) {
+          scrollToIndex(index, config, callback);
+        } else {
+          if (callback) {
+            callback();
           }
         }
-      }
-      if (needed) {
-        scrollToIndex(index, config, callback);
-      } else {
-        if (callback) {
-          callback();
-        }
-      }
 
-      return needed;
-    };
+        return needed;
+      },
+      []
+    );
 
     const isRowFullyVisible = (rowIndex: number) => {
       const list = getVirtualList();

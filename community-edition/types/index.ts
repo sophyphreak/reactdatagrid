@@ -109,7 +109,7 @@ export type TypeGroupDataItem = {
 
 export type TypeRowProps = {
   rowIndex: number;
-  remoteRowIndex: number;
+  remoteRowIndex?: number;
   realIndex?: number;
   groupProps?: any;
   data: any;

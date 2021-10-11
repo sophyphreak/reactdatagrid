@@ -12,7 +12,7 @@ import getRowSpans from './getRowSpans';
 
 const emptyObject = Object.freeze ? Object.freeze({}) : {};
 
-export default (
+const renderRows = (
   {
     from,
     to,
@@ -463,3 +463,5 @@ export default (
     return row;
   });
 };
+
+export default renderRows;
