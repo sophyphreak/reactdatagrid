@@ -8,14 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "9.4.4",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "next": "^11.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@zeit/next-css": "^1.0.1",
-    "@zeit/next-sass": "^1.0.1",
-    "sass": "^1.26.10",
-    "sass-loader": "^9.0.3"
+    "sass": "^1.42.1",
+    "sass-loader": "^12.1.0"
   }
 }
