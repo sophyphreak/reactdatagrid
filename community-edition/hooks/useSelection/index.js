@@ -236,7 +236,9 @@ export default (props, computedProps, computedPropsRef) => {
             vl.updateStickyRows(undefined, undefined, { force: true });
         }
         notifySelection(computedProps, computedProps.computedRemoteData || computedProps.computedPagination
-            ? true
+            ? data.length === 0
+                ? false
+                : true
             : dataMap, data, null);
     }, []);
     const deselectAll = useCallback(() => {

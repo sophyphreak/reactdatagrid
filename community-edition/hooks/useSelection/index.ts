@@ -512,7 +512,9 @@ export default (
     notifySelection(
       computedProps,
       computedProps.computedRemoteData || computedProps.computedPagination
-        ? true
+        ? data.length === 0
+          ? false
+          : true
         : dataMap,
       data,
       null
