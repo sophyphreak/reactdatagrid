@@ -380,6 +380,22 @@ export default (props, computedProps, computedPropsRef) => {
     const reload = () => {
         setReloadTimestamp(Date.now());
     };
+    const getFilteredRows = useCallback((dataCount) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        const { filteredRowsCount } = computedProps;
+        if (dataCount === undefined) {
+            return;
+        }
+        if (filteredRowsCount) {
+            filteredRowsCount(dataCount);
+        }
+    }, [dataCountAfterFilter]);
+    if (computedProps.filteredRowsCount) {
+        getFilteredRows(dataCountAfterFilter);
+    }
     const lastSkipRef = useRef(computedSkip);
     const lastFilterValueRef = useRef(computedProps.computedFilterValue);
     const lastLimitRef = useRef(computedLimit);

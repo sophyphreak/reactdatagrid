@@ -150,6 +150,7 @@ export type EnumRowDetailsWidth =
 type TypeGridPublicAPI = any;
 
 type TypeDataGridPropsNoI18n = {
+  filteredRowsCount?: (filteredRows: number) => void;
   renderRow?: (rowProps: {
     id?: string | number;
     data?: any;
@@ -688,6 +689,8 @@ export type TypePivotUniqueValuesDescriptor = {
   values: { [key: string]: TypePivotUniqueValuesDescriptor } | null;
 };
 export type TypeComputedProps = TypeDataGridPropsNoI18n & {
+  filteredRowsCount?: (filteredRows: number) => number;
+  dataCountAfterFilter?: number;
   computedLastActiveIndex: number | null;
   doSetLastActiveIndex: (lastActiveIndex: number | null) => void;
   columnContextMenuInstanceProps?: any;

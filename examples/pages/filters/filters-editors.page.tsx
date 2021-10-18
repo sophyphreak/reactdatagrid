@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import ReactDataGrid from '../../../enterprise-edition';
 
@@ -6,6 +6,8 @@ import NumberFilter from '@inovua/reactdatagrid-community/NumberFilter';
 import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter';
 import DateFilter from '@inovua/reactdatagrid-community/DateFilter';
 import BoolFilter from '../../../community-edition/BoolFilter';
+
+import filter from '../../../community-edition/filter';
 
 import people from '../people';
 import flags from '../flags';
@@ -31,9 +33,9 @@ const countries = people.reduce((countries, p) => {
   return countries;
 }, []);
 
-const filterValue = [
+const defaultFilterValue = [
   { name: 'name', operator: 'startsWith', type: 'string', value: '' },
-  { name: 'age', operator: 'gte', type: 'number', value: 21 },
+  { name: 'age', operator: 'gte', type: 'number', value: null },
   { name: 'city', operator: 'startsWith', type: 'string', value: '' },
   {
     name: 'birthDate',
@@ -42,7 +44,7 @@ const filterValue = [
     value: '',
   },
   { name: 'student', operator: 'eq', type: 'bool', value: null },
-  { name: 'country', operator: 'eq', type: 'select', value: 'ca' },
+  { name: 'country', operator: 'eq', type: 'select', value: null },
 ];
 
 const columns = [
@@ -105,6 +107,20 @@ const columns = [
 ];
 
 const App = () => {
+  const [dataSource, setDataSource] = useState(people);
+  const [filterValue, setFilterValue] = useState(defaultFilterValue);
+
+  const onFilterValueChange = useCallback(filterValue => {
+    const data: any = filter(people, filterValue);
+
+    setFilterValue(filterValue);
+    setDataSource(data);
+  }, []);
+
+  const filteredRowsCount = useCallback((filteredRows: number) => {
+    console.log('filteredRows', filteredRows);
+  }, []);
+
   return (
     <div>
       <h3>Grid with default filter value</h3>
@@ -113,9 +129,11 @@ const App = () => {
         theme="default-dark"
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         style={gridStyle}
-        defaultFilterValue={filterValue}
+        onFilterValueChange={onFilterValueChange}
+        filterValue={filterValue}
         columns={columns}
-        dataSource={people}
+        dataSource={dataSource}
+        filteredRowsCount={filteredRowsCount}
       />
       <p>
         Delete the filters if you want to show all data. You can click the

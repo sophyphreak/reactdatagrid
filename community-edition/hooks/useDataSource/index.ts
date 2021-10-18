@@ -765,6 +765,30 @@ export default (
     setReloadTimestamp(Date.now());
   };
 
+  const getFilteredRows = useCallback(
+    (dataCount?: number): void => {
+      const { current: computedProps } = computedPropsRef;
+      if (!computedProps) {
+        return;
+      }
+
+      const { filteredRowsCount } = computedProps;
+
+      if (dataCount === undefined) {
+        return;
+      }
+
+      if (filteredRowsCount) {
+        filteredRowsCount(dataCount);
+      }
+    },
+    [dataCountAfterFilter]
+  );
+
+  if (computedProps.filteredRowsCount) {
+    getFilteredRows(dataCountAfterFilter);
+  }
+
   const lastSkipRef = useRef<number>(computedSkip);
   const lastFilterValueRef = useRef<TypeFilterValue>(
     computedProps.computedFilterValue
