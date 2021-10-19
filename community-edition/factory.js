@@ -94,7 +94,7 @@ const renderLoadMask = (props) => {
         visible: props.computedLoading,
         livePagination: props.computedLivePagination,
         loadingText: props.loadingText || 'Loading',
-        zIndex: 10000,
+        zIndex: 10_000,
         theme: props.theme,
     };
     let loadMask;
@@ -104,7 +104,7 @@ const renderLoadMask = (props) => {
     if (loadMask !== undefined) {
         return loadMask;
     }
-    return React.createElement(LoadMask, Object.assign({}, loadMaskProps));
+    return React.createElement(LoadMask, { ...loadMaskProps });
 };
 const reducePlugins = (acc, plugin) => {
     if (!plugin.name || typeof plugin.hook !== 'function') {
@@ -1173,7 +1173,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         }, []);
         const Context = useMemo(() => React.createContext(contextValue), []);
         return (React.createElement(Context.Provider, { value: contextValue },
-            React.createElement(Grid, Object.assign({}, props, { context: Context }))));
+            React.createElement(Grid, { ...props, context: Context })));
     };
     TheGrid.defaultProps = defaultProps;
     return TheGrid;

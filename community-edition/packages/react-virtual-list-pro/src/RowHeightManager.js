@@ -8,9 +8,22 @@ import binarySearch from '../../../packages/binary-search';
 import EventEmitter from 'events';
 const sortAsc = (a, b) => a - b;
 class RowHeightManager extends EventEmitter {
+    rowHeight;
+    rowHeightFn;
+    map;
+    heights;
+    indexes;
+    offsets;
+    minHeight;
+    maxHeight;
+    indexesToOffsets;
+    offsetsToIndexes;
+    lazyRowHeightRafId;
+    rowToOffsetCache;
+    cache;
+    __id = '';
     constructor(rowHeight, rowHeightsMap = {}, config) {
         super();
-        this.__id = '';
         this.rowHeight =
             typeof rowHeight === 'object'
                 ? typeof rowHeight.rowHeight === 'number'

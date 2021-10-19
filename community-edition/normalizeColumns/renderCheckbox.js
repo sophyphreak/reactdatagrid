@@ -66,5 +66,5 @@ export default (cellProps, { headerProps } = emptyObject) => {
         }
     }
     delete checkboxProps.isIndeterminate;
-    return React.createElement(Checkbox, Object.assign({}, checkboxProps));
+    return React.createElement(Checkbox, { ...checkboxProps });
 };

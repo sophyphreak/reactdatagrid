@@ -12,11 +12,12 @@ const defaultProps = {
     relativeToViewport: false,
 };
 class DateEditor extends React.Component {
+    static defaultProps = defaultProps;
+    domRef;
+    domNode;
+    constrainToNode;
     constructor(props) {
         super(props);
-        this.constrainTo = () => {
-            return this.constrainToNode;
-        };
         this.domRef = React.createRef();
         this.state = {
             position: 'bottom',
@@ -40,6 +41,9 @@ class DateEditor extends React.Component {
             });
         }
     }
+    constrainTo = () => {
+        return this.constrainToNode;
+    };
     onExpandChange(expanded) {
         this.setState({
             expanded,
@@ -65,5 +69,4 @@ class DateEditor extends React.Component {
                 } })));
     }
 }
-DateEditor.defaultProps = defaultProps;
 export default DateEditor;

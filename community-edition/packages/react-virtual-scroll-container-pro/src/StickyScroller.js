@@ -36,225 +36,6 @@ const IS_EDGE = ua.indexOf('Edge/') !== -1;
 class StickyVirtualScrollContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.initializeScrollLeftForRtl = () => {
-            const fixScrollLeft = () => {
-                if (this.scroller && this.scrollLeftMax) {
-                    this.scroller.getScrollerNode().scrollLeft = 1000000000;
-                    return;
-                }
-                requestAnimationFrame(fixScrollLeft);
-            };
-            requestAnimationFrame(fixScrollLeft);
-        };
-        this.onResize = (...args) => {
-            if (this.props.onResize) {
-                this.props.onResize(...args);
-            }
-            this.sync();
-        };
-        this.sync = () => {
-            this.scroller.sync();
-        };
-        this.rafSync = () => {
-            if (this.scroller.rafSync) {
-                this.scroller.rafSync();
-            }
-            else {
-                this.scroller.sync();
-            }
-        };
-        this.smoothScrollTo = (newValue, config, callback) => {
-            smoothScrollTo(this.scroller, newValue, config, callback);
-        };
-        this.getScrollbars = () => {
-            return {
-                horizontal: this.hasHorizontalScrollbar(),
-                vertical: this.hasVerticalScrollbar(),
-            };
-        };
-        this.hasScrollbar = orientation => {
-            return this.scroller.hasScrollbar.call(this, orientation);
-        };
-        this.hasVerticalScrollbar = () => {
-            return this.hasScrollbar('vertical');
-        };
-        this.hasHorizontalScrollbar = () => {
-            return this.hasScrollbar('horizontal');
-        };
-        this.focus = () => {
-            this.scroller.focus();
-        };
-        this.onFocus = event => {
-            if (event.target === this.domNode) {
-                this.focus();
-            }
-            if (this.props.onFocus) {
-                this.props.onFocus(event);
-            }
-        };
-        this.getTransformNode = () => {
-            return this.viewNode.children[0].children[0];
-        };
-        this.getScrollSize = () => {
-            const node = this.getTransformNode();
-            let size;
-            if (this.props.getScrollSize) {
-                size = this.props.getScrollSize(node);
-            }
-            else {
-                size = {
-                    width: node.scrollWidth,
-                    height: node.scrollHeight,
-                };
-            }
-            return size;
-        };
-        this.getScrollPosition = () => {
-            return this.scroller.getScrollPosition();
-        };
-        this.updateScrollStyle = (scrollPos, prevScrollPos) => {
-            scrollPos = scrollPos || this.getScrollPosition();
-            const { scrollTop, scrollLeft, scrollLeftMax } = scrollPos;
-            this.scrollLeftMaxValue = scrollLeftMax;
-            if (this.props.onContainerScroll) {
-                this.props.onContainerScroll(scrollPos, prevScrollPos);
-            }
-            const node = this.getTransformNode();
-            let shouldApplyDefaultTransform = true;
-            if (this.props.applyScrollStyle) {
-                shouldApplyDefaultTransform =
-                    this.props.applyScrollStyle({ scrollLeft, scrollTop, scrollLeftMax }, node) !== false;
-            }
-            if (shouldApplyDefaultTransform) {
-                node.style.willChange = `transform`;
-                node.style.backfaceVisibility = `hidden`;
-                if (this.props.useTransformToScroll) {
-                    node.style.transform = `translate3d(${-scrollLeft}px, ${-scrollTop}px, 0px)`;
-                }
-                else {
-                    node.style.top = `${-scrollTop}px`;
-                    node.style.left = `${-scrollLeft}px`;
-                }
-            }
-        };
-        this.getBeforeHeight = () => {
-            return this.props.before ? this.state.beforeElementSize.height || 0 : 0;
-        };
-        this.getAfterHeight = () => {
-            return this.props.after ? this.state.afterElementSize.height || 0 : 0;
-        };
-        this.getBeforeAndAfterHeight = () => {
-            return this.getBeforeHeight() + this.getAfterHeight();
-        };
-        this.onViewResize = (...args) => {
-            const [size] = args;
-            this.setState({
-                size,
-            }, () => {
-                this.rafSync();
-            });
-            if (this.props.onViewResize) {
-                this.props.onViewResize(...args);
-            }
-        };
-        this.renderScrollerSpacer = () => {
-            const spacerProps = {
-                key: 'spacer',
-                'data-name': 'spacer--sticky-scroller',
-                style: {
-                    pointerEvents: 'none',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    ...this.state.size,
-                },
-            };
-            let result;
-            if (this.props.renderScrollerSpacer) {
-                result = this.props.renderScrollerSpacer(spacerProps, this.state.size);
-            }
-            if (result === undefined) {
-                result = React.createElement("div", Object.assign({}, spacerProps));
-            }
-            return result;
-        };
-        this.renderScroller = scrollerProps => {
-            const scrollerOffset = this.props.nativeScroll
-                ? 0
-                : -this.getEmptyScrollOffset();
-            // -this.props.emptyScrollOffset - this.nativeScrollbarWidth;
-            const props = {
-                ...scrollerProps,
-                'data-name': 'scroller',
-                className: '',
-                style: {
-                    display: 'block',
-                    position: 'absolute',
-                    WebkitOverflowScrolling: 'touch',
-                    top: 0,
-                    left: 0,
-                    // right: this.props.rtl && !this.props.nativeScroll ? 0 : scrollerOffset,
-                    right: scrollerOffset,
-                    bottom: scrollerOffset,
-                    overflow: this.props.nativeScroll ? 'auto' : 'scroll',
-                },
-                children: [
-                    this.props.extraChildren,
-                    scrollerProps.children,
-                    this.renderScrollerSpacer(),
-                ],
-            };
-            let result;
-            if (this.props.renderScroller) {
-                result = this.props.renderScroller(props);
-            }
-            if (result === undefined) {
-                result = React.createElement("div", Object.assign({}, props));
-            }
-            return result;
-        };
-        this.getBefore = () => {
-            const { before } = this.props;
-            if (!before) {
-                return null;
-            }
-            return React.cloneElement(before, {
-                style: {
-                    position: 'absolute',
-                    top: 0,
-                    ...before.props.style,
-                },
-                children: (React.createElement(React.Fragment, null,
-                    before.props.children,
-                    React.createElement(NotifyResize, { notifyOnMount: true, onResize: this.onBeforeElementResize }))),
-            });
-        };
-        this.getAfter = () => {
-            const { after } = this.props;
-            if (!after) {
-                return null;
-            }
-            return React.cloneElement(after, {
-                style: {
-                    position: 'absolute',
-                    bottom: 0,
-                    ...after.props.style,
-                },
-                children: (React.createElement(React.Fragment, null,
-                    after.props.children,
-                    React.createElement(NotifyResize, { notifyOnMount: true, onResize: this.onAfterElementResize }))),
-            });
-        };
-        this.onBeforeElementResize = size => {
-            this.setState({
-                beforeElementSize: size,
-            });
-        };
-        this.onAfterElementResize = size => {
-            this.setState({
-                afterElementSize: size,
-            });
-        };
         this.refView = c => {
             this.viewNode = c ? findDOMNode(c) : null;
         };
@@ -277,6 +58,16 @@ class StickyVirtualScrollContainer extends React.Component {
     getDOMNode() {
         return this.scroller.getDOMNode();
     }
+    initializeScrollLeftForRtl = () => {
+        const fixScrollLeft = () => {
+            if (this.scroller && this.scrollLeftMax) {
+                this.scroller.getScrollerNode().scrollLeft = 1000000000;
+                return;
+            }
+            requestAnimationFrame(fixScrollLeft);
+        };
+        requestAnimationFrame(fixScrollLeft);
+    };
     componentDidUpdate(prevProps) {
         if (this.props.rtl) {
             if (prevProps.rtl !== this.props.rtl ||
@@ -285,6 +76,23 @@ class StickyVirtualScrollContainer extends React.Component {
             }
         }
     }
+    onResize = (...args) => {
+        if (this.props.onResize) {
+            this.props.onResize(...args);
+        }
+        this.sync();
+    };
+    sync = () => {
+        this.scroller.sync();
+    };
+    rafSync = () => {
+        if (this.scroller.rafSync) {
+            this.scroller.rafSync();
+        }
+        else {
+            this.scroller.sync();
+        }
+    };
     get scrollTop() {
         return this.scroller.scrollTop;
     }
@@ -306,11 +114,203 @@ class StickyVirtualScrollContainer extends React.Component {
         this.scroller.scrollLeft =
             this.props.rtl && value < 0 ? this.scrollLeftMax + value : value;
     }
+    smoothScrollTo = (newValue, config, callback) => {
+        smoothScrollTo(this.scroller, newValue, config, callback);
+    };
+    getScrollbars = () => {
+        return {
+            horizontal: this.hasHorizontalScrollbar(),
+            vertical: this.hasVerticalScrollbar(),
+        };
+    };
+    hasScrollbar = orientation => {
+        return this.scroller.hasScrollbar.call(this, orientation);
+    };
+    hasVerticalScrollbar = () => {
+        return this.hasScrollbar('vertical');
+    };
+    hasHorizontalScrollbar = () => {
+        return this.hasScrollbar('horizontal');
+    };
+    focus = () => {
+        this.scroller.focus();
+    };
+    onFocus = event => {
+        if (event.target === this.domNode) {
+            this.focus();
+        }
+        if (this.props.onFocus) {
+            this.props.onFocus(event);
+        }
+    };
+    getTransformNode = () => {
+        return this.viewNode.children[0].children[0];
+    };
+    getScrollSize = () => {
+        const node = this.getTransformNode();
+        let size;
+        if (this.props.getScrollSize) {
+            size = this.props.getScrollSize(node);
+        }
+        else {
+            size = {
+                width: node.scrollWidth,
+                height: node.scrollHeight,
+            };
+        }
+        return size;
+    };
+    getScrollPosition = () => {
+        return this.scroller.getScrollPosition();
+    };
+    updateScrollStyle = (scrollPos, prevScrollPos) => {
+        scrollPos = scrollPos || this.getScrollPosition();
+        const { scrollTop, scrollLeft, scrollLeftMax } = scrollPos;
+        this.scrollLeftMaxValue = scrollLeftMax;
+        if (this.props.onContainerScroll) {
+            this.props.onContainerScroll(scrollPos, prevScrollPos);
+        }
+        const node = this.getTransformNode();
+        let shouldApplyDefaultTransform = true;
+        if (this.props.applyScrollStyle) {
+            shouldApplyDefaultTransform =
+                this.props.applyScrollStyle({ scrollLeft, scrollTop, scrollLeftMax }, node) !== false;
+        }
+        if (shouldApplyDefaultTransform) {
+            node.style.willChange = `transform`;
+            node.style.backfaceVisibility = `hidden`;
+            if (this.props.useTransformToScroll) {
+                node.style.transform = `translate3d(${-scrollLeft}px, ${-scrollTop}px, 0px)`;
+            }
+            else {
+                node.style.top = `${-scrollTop}px`;
+                node.style.left = `${-scrollLeft}px`;
+            }
+        }
+    };
+    getBeforeHeight = () => {
+        return this.props.before ? this.state.beforeElementSize.height || 0 : 0;
+    };
+    getAfterHeight = () => {
+        return this.props.after ? this.state.afterElementSize.height || 0 : 0;
+    };
+    getBeforeAndAfterHeight = () => {
+        return this.getBeforeHeight() + this.getAfterHeight();
+    };
+    onViewResize = (...args) => {
+        const [size] = args;
+        this.setState({
+            size,
+        }, () => {
+            this.rafSync();
+        });
+        if (this.props.onViewResize) {
+            this.props.onViewResize(...args);
+        }
+    };
+    renderScrollerSpacer = () => {
+        const spacerProps = {
+            key: 'spacer',
+            'data-name': 'spacer--sticky-scroller',
+            style: {
+                pointerEvents: 'none',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                ...this.state.size,
+            },
+        };
+        let result;
+        if (this.props.renderScrollerSpacer) {
+            result = this.props.renderScrollerSpacer(spacerProps, this.state.size);
+        }
+        if (result === undefined) {
+            result = React.createElement("div", { ...spacerProps });
+        }
+        return result;
+    };
     getEmptyScrollOffset() {
         return this.props.emptyScrollOffset == null
             ? getScrollbarWidth()
             : this.props.emptyScrollOffset;
     }
+    renderScroller = scrollerProps => {
+        const scrollerOffset = this.props.nativeScroll
+            ? 0
+            : -this.getEmptyScrollOffset();
+        // -this.props.emptyScrollOffset - this.nativeScrollbarWidth;
+        const props = {
+            ...scrollerProps,
+            'data-name': 'scroller',
+            className: '',
+            style: {
+                display: 'block',
+                position: 'absolute',
+                WebkitOverflowScrolling: 'touch',
+                top: 0,
+                left: 0,
+                // right: this.props.rtl && !this.props.nativeScroll ? 0 : scrollerOffset,
+                right: scrollerOffset,
+                bottom: scrollerOffset,
+                overflow: this.props.nativeScroll ? 'auto' : 'scroll',
+            },
+            children: [
+                this.props.extraChildren,
+                scrollerProps.children,
+                this.renderScrollerSpacer(),
+            ],
+        };
+        let result;
+        if (this.props.renderScroller) {
+            result = this.props.renderScroller(props);
+        }
+        if (result === undefined) {
+            result = React.createElement("div", { ...props });
+        }
+        return result;
+    };
+    getBefore = () => {
+        const { before } = this.props;
+        if (!before) {
+            return null;
+        }
+        return React.cloneElement(before, {
+            style: {
+                position: 'absolute',
+                top: 0,
+                ...before.props.style,
+            },
+            children: (React.createElement(React.Fragment, null,
+                before.props.children,
+                React.createElement(NotifyResize, { notifyOnMount: true, onResize: this.onBeforeElementResize }))),
+        });
+    };
+    getAfter = () => {
+        const { after } = this.props;
+        if (!after) {
+            return null;
+        }
+        return React.cloneElement(after, {
+            style: {
+                position: 'absolute',
+                bottom: 0,
+                ...after.props.style,
+            },
+            children: (React.createElement(React.Fragment, null,
+                after.props.children,
+                React.createElement(NotifyResize, { notifyOnMount: true, onResize: this.onAfterElementResize }))),
+        });
+    };
+    onBeforeElementResize = size => {
+        this.setState({
+            beforeElementSize: size,
+        });
+    };
+    onAfterElementResize = size => {
+        this.setState({
+            afterElementSize: size,
+        });
+    };
     render() {
         const { props } = this;
         let { style, className } = props;
@@ -360,7 +360,7 @@ class StickyVirtualScrollContainer extends React.Component {
                 result = this.props.renderView(viewDOMProps);
             }
             if (result === undefined) {
-                result = React.createElement("div", Object.assign({}, viewDOMProps));
+                result = React.createElement("div", { ...viewDOMProps });
             }
             return result;
         };
@@ -368,11 +368,11 @@ class StickyVirtualScrollContainer extends React.Component {
         if (this.props.nativeScroll) {
             cleanedProps.scrollbars = false;
         }
-        return (React.createElement(InovuaScrollContainer, Object.assign({ tabIndex: -1, display: this.props.display || 'block', className: className, wrapperStyle: {
+        return (React.createElement(InovuaScrollContainer, { tabIndex: -1, display: this.props.display || 'block', className: className, wrapperStyle: {
                 ...WRAPPER_STYLE,
                 top: beforeHeight,
                 bottom: afterHeight,
-            } }, cleanedProps, { style: style, before: this.getBefore(), after: this.getAfter(), nativeScroll: this.props.nativeScroll, emptyScrollOffset: 0, getScrollSize: this.getScrollSize, renderScroller: this.renderScroller, renderView: renderView, onViewResize: this.onViewResize, onContainerScroll: this.updateScrollStyle, ref: this.refScroller })));
+            }, ...cleanedProps, style: style, before: this.getBefore(), after: this.getAfter(), nativeScroll: this.props.nativeScroll, emptyScrollOffset: 0, getScrollSize: this.getScrollSize, renderScroller: this.renderScroller, renderView: renderView, onViewResize: this.onViewResize, onContainerScroll: this.updateScrollStyle, ref: this.refScroller }));
     }
 }
 StickyVirtualScrollContainer.propTypes = {

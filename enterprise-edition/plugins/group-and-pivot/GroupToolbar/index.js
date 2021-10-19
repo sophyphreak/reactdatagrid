@@ -10,60 +10,9 @@ import cleanProps from '@inovua/reactdatagrid-community/packages/react-clean-pro
 import join from '@inovua/reactdatagrid-community/packages/join';
 import GroupItem from './GroupToolbarItem';
 export default class GroupToolbar extends React.Component {
+    domRef;
     constructor(props) {
         super(props);
-        this.renderItem = (column, name, index) => {
-            if (!column) {
-                return null;
-            }
-            let dragThis;
-            let style;
-            const { dragging, shifted = [] } = this.state;
-            if (shifted[index] != null) {
-                style = { position: 'relative', left: shifted[index] };
-            }
-            if (dragging) {
-                const { dragIndex, left: diff } = dragging;
-                if (index == dragIndex) {
-                    dragThis = true;
-                    style = { position: 'relative', left: diff, zIndex: 10 };
-                }
-            }
-            const groupItem = (React.createElement(GroupItem, { index: index, rtl: this.props.rtl, dragging: dragThis, style: style, renderGroupItem: this.props.renderGroupItem, theme: this.props.theme, renderSortTool: this.props.renderSortTool, onMouseDown: this.props.onItemMouseDown.bind(this, column, index), key: column.id || column.name || index, column: column, onSortClick: this.props.onSortClick, onClear: this.onClear.bind(this, column, name), ref: this.refGroupItem.bind(this, column) }));
-            if (this.state.insertIndex == index) {
-                return [this.renderArrow(), groupItem];
-            }
-            return groupItem;
-        };
-        this.renderArrow = () => {
-            return (React.createElement("div", { className: "InovuaReactDataGrid__group-toolbar-insert-arrow", style: { height: this.state.arrowHeight } }));
-        };
-        this.setGroupBy = groupBy => {
-            if (this.props.onGroupByChange &&
-                JSON.stringify(groupBy) != JSON.stringify(this.props.groupBy)) {
-                this.props.onGroupByChange(groupBy);
-            }
-        };
-        this.onClear = (column, name) => {
-            const groupBy = this.p.groupBy;
-            if (Array.isArray(groupBy)) {
-                const index = groupBy.indexOf(name);
-                if (index == -1) {
-                    return;
-                }
-                this.setGroupBy([
-                    ...groupBy.slice(0, index),
-                    ...groupBy.slice(index + 1),
-                ]);
-            }
-        };
-        this.getCells = () => {
-            const { columns, groupBy } = this.props;
-            if (Array.isArray(groupBy) && groupBy.length) {
-                return groupBy.map(name => this.groupItems[columns[name].id]);
-            }
-            return [];
-        };
         this.state = {
             dragging: null,
             insertIndex: -1,
@@ -89,10 +38,62 @@ export default class GroupToolbar extends React.Component {
             content = (React.createElement(GroupItem, { theme: this.props.theme, rtl: this.props.rtl, placeholder: true, style: { cursor: 'auto' } }, this.props.placeholder));
         }
         const divProps = cleanProps(props, GroupToolbar.propTypes);
-        return (React.createElement("div", Object.assign({ ref: this.domRef }, divProps, { className: className }),
+        return (React.createElement("div", { ref: this.domRef, ...divProps, className: className },
             content,
             this.state.insertIndex == groupBy.length && this.renderArrow()));
     }
+    renderItem = (column, name, index) => {
+        if (!column) {
+            return null;
+        }
+        let dragThis;
+        let style;
+        const { dragging, shifted = [] } = this.state;
+        if (shifted[index] != null) {
+            style = { position: 'relative', left: shifted[index] };
+        }
+        if (dragging) {
+            const { dragIndex, left: diff } = dragging;
+            if (index == dragIndex) {
+                dragThis = true;
+                style = { position: 'relative', left: diff, zIndex: 10 };
+            }
+        }
+        const groupItem = (React.createElement(GroupItem, { index: index, rtl: this.props.rtl, dragging: dragThis, style: style, renderGroupItem: this.props.renderGroupItem, theme: this.props.theme, renderSortTool: this.props.renderSortTool, onMouseDown: this.props.onItemMouseDown.bind(this, column, index), key: column.id || column.name || index, column: column, onSortClick: this.props.onSortClick, onClear: this.onClear.bind(this, column, name), ref: this.refGroupItem.bind(this, column) }));
+        if (this.state.insertIndex == index) {
+            return [this.renderArrow(), groupItem];
+        }
+        return groupItem;
+    };
+    renderArrow = () => {
+        return (React.createElement("div", { className: "InovuaReactDataGrid__group-toolbar-insert-arrow", style: { height: this.state.arrowHeight } }));
+    };
+    setGroupBy = groupBy => {
+        if (this.props.onGroupByChange &&
+            JSON.stringify(groupBy) != JSON.stringify(this.props.groupBy)) {
+            this.props.onGroupByChange(groupBy);
+        }
+    };
+    onClear = (column, name) => {
+        const groupBy = this.p.groupBy;
+        if (Array.isArray(groupBy)) {
+            const index = groupBy.indexOf(name);
+            if (index == -1) {
+                return;
+            }
+            this.setGroupBy([
+                ...groupBy.slice(0, index),
+                ...groupBy.slice(index + 1),
+            ]);
+        }
+    };
+    getCells = () => {
+        const { columns, groupBy } = this.props;
+        if (Array.isArray(groupBy) && groupBy.length) {
+            return groupBy.map(name => this.groupItems[columns[name].id]);
+        }
+        return [];
+    };
 }
 GroupToolbar.propTypes = {
     clearIcon: PropTypes.node,

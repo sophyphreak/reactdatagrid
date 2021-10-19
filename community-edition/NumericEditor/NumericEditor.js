@@ -10,7 +10,7 @@ const NumericEditor = (props) => {
     const { editorProps } = props;
     const editorPropsStyle = editorProps ? editorProps.style : null;
     return (React.createElement("div", { className: 'InovuaReactDataGrid__cell__editor InovuaReactDataGrid__cell__editor--number' },
-        React.createElement(NumericInput, Object.assign({}, editorProps, { autoFocus: props.autoFocus, defaultValue: props.value, onChange: props.onChange, theme: props.theme, style: {
+        React.createElement(NumericInput, { ...editorProps, autoFocus: props.autoFocus, defaultValue: props.value, onChange: props.onChange, theme: props.theme, style: {
                 ...editorPropsStyle,
                 minWidth: Math.max(0, props.cellProps.computedWidth - 30),
             }, onBlur: props.onComplete, onKeyDown: (e) => {
@@ -24,6 +24,6 @@ const NumericEditor = (props) => {
                     props.onTabNavigation &&
                         props.onTabNavigation(true, e.shiftKey ? -1 : 1);
                 }
-            } }))));
+            } })));
 };
 export default NumericEditor;

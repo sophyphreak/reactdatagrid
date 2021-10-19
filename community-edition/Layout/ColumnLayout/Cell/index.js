@@ -54,18 +54,10 @@ const CELL_RENDER_SECOND_OBJ = sealedObjectFactory({
 });
 const wrapInContent = (value) => (React.createElement("div", { key: "content", className: "InovuaReactDataGrid__cell__content", children: value }));
 export default class InovuaDataGridCell extends React.Component {
+    domRef;
+    isCancelled;
     constructor(props) {
         super(props);
-        this.toggleGroup = event => {
-            if (event && event.preventDefault) {
-                event.preventDefault();
-            }
-            const props = this.getProps();
-            if (typeof props.onGroupToggle === 'function') {
-                const { data } = props;
-                props.onGroupToggle(data.keyPath, props, event);
-            }
-        };
         this.domRef = React.createRef();
         this.state = { props };
         autoBind(this);
@@ -507,7 +499,7 @@ export default class InovuaDataGridCell extends React.Component {
             className: join(initialDOMProps.className, cellProps.className),
         });
         domProps.ref = this.domRef;
-        return headerCell ? (RENDER_HEADER(cellProps, domProps, this, this.state)) : (React.createElement("div", Object.assign({}, domProps, { children: cellProps.children, id: null, name: null, value: null, title: null, data: null })));
+        return headerCell ? (RENDER_HEADER(cellProps, domProps, this, this.state)) : (React.createElement("div", { ...domProps, children: cellProps.children, id: null, name: null, value: null, title: null, data: null }));
     }
     renderNodeTool(props) {
         const { data, renderTreeCollapseTool, renderTreeExpandTool, renderTreeLoadingTool, } = props;
@@ -580,12 +572,12 @@ export default class InovuaDataGridCell extends React.Component {
         };
         const Editor = props.editor;
         if (Editor) {
-            return React.createElement(Editor, Object.assign({}, editorProps));
+            return React.createElement(Editor, { ...editorProps });
         }
         if (props.renderEditor) {
             return props.renderEditor(editorProps, editorProps.cellProps, this);
         }
-        return React.createElement(TextEditor, Object.assign({}, editorProps));
+        return React.createElement(TextEditor, { ...editorProps });
     }
     isInEdit() {
         return this.getProps().inEdit;
@@ -1011,6 +1003,16 @@ export default class InovuaDataGridCell extends React.Component {
             toggleGroup: this.toggleGroup,
         });
     }
+    toggleGroup = event => {
+        if (event && event.preventDefault) {
+            event.preventDefault();
+        }
+        const props = this.getProps();
+        if (typeof props.onGroupToggle === 'function') {
+            const { data } = props;
+            props.onGroupToggle(data.keyPath, props, event);
+        }
+    };
 }
 InovuaDataGridCell.defaultProps = {
     cellDefaultClassName: cellBem(),

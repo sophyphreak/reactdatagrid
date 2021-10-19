@@ -110,7 +110,7 @@ describe('columnResize shareSpaceOnResize=true', () => {
                 { id: 'id', computedWidth: 100, type: 'number' },
                 { id: 'city', computedFlex: 2, computedWidth: 400 },
                 { id: 'country', computedWidth: 100, computedResizable: false },
-                { id: 'age', computedFlex: 1, type: 'number', computedWidth: 200 },
+                { id: 'age', computedFlex: 1, type: 'number', computedWidth: 200 }, //200
             ],
             totalComputedWidth: 800,
             shareSpaceOnResize: true,
@@ -129,7 +129,7 @@ describe('columnResize shareSpaceOnResize=true', () => {
                 { id: 'id', computedWidth: 100, type: 'number' },
                 { id: 'city', computedFlex: 2, computedWidth: 400 },
                 { id: 'country', computedWidth: 100 },
-                { id: 'age', computedFlex: 1, type: 'number', computedWidth: 200 },
+                { id: 'age', computedFlex: 1, type: 'number', computedWidth: 200 }, //200
             ],
             totalComputedWidth: 800,
             shareSpaceOnResize: true,
@@ -147,7 +147,7 @@ describe('columnResize shareSpaceOnResize=true', () => {
                 { id: 'id', computedWidth: 100, type: 'number' },
                 { id: 'city', computedFlex: 2, computedWidth: 400, keepFlex: true },
                 { id: 'country', computedWidth: 100, computedResizable: false },
-                { id: 'age', computedFlex: 1, type: 'number', computedWidth: 100 },
+                { id: 'age', computedFlex: 1, type: 'number', computedWidth: 100 }, //100
             ],
             totalComputedWidth: 800,
             shareSpaceOnResize: true,

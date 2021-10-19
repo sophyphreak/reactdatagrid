@@ -17,44 +17,6 @@ const stopPropagation = e => e.stopPropagation();
 class InovuaDataGridLayout extends Component {
     constructor(props) {
         super(props);
-        this.getDOMNode = () => {
-            return this.domNode;
-        };
-        this.renderPageList = list => {
-            if (!createPortal) {
-                return list;
-            }
-            return this.props.renderInPortal(list);
-        };
-        this.onRowMouseEnter = (event, rowProps) => {
-            this.props.onRowMouseEnter(event, rowProps);
-        };
-        this.onRowMouseLeave = (event, rowProps) => {
-            this.props.onRowMouseLeave(event, rowProps);
-        };
-        this.getVirtualList = () => {
-            return this.columnLayout.getVirtualList();
-        };
-        this.getRenderRange = () => {
-            return this.columnLayout.getRenderRange();
-        };
-        this.isRowFullyVisible = index => {
-            return this.columnLayout.isRowFullyVisible(index);
-        };
-        this.getScrollLeft = () => {
-            return this.columnLayout ? this.columnLayout.scrollLeft || 0 : 0;
-        };
-        this.setScrollLeft = scrollLeft => {
-            if (this.columnLayout) {
-                this.columnLayout.setScrollLeft(scrollLeft);
-                if (this.dragHeader) {
-                    this.dragHeader.setScrollLeft(scrollLeft);
-                }
-            }
-        };
-        this.getScrollTop = () => {
-            return this.columnLayout ? this.columnLayout.scrollTop || 0 : 0;
-        };
         this.ref = domNode => {
             this.domNode = domNode;
         };
@@ -65,6 +27,9 @@ class InovuaDataGridLayout extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return shouldComponentUpdate(this, nextProps, nextState);
     }
+    getDOMNode = () => {
+        return this.domNode;
+    };
     render() {
         const Footer = this.props.Footer;
         return (React.createElement(Consumer, null, computedProps => {
@@ -103,10 +68,45 @@ class InovuaDataGridLayout extends Component {
         paginationToolbarProps.bordered = false;
         delete paginationToolbarProps.livePagination;
         if (result === undefined) {
-            result = (React.createElement(PaginationToolbar, Object.assign({ key: "paginationtoolbar" }, paginationToolbarProps, { constrainTo: this.props.constrainTo, renderPageList: this.renderPageList })));
+            result = (React.createElement(PaginationToolbar, { key: "paginationtoolbar", ...paginationToolbarProps, constrainTo: this.props.constrainTo, renderPageList: this.renderPageList }));
         }
         return result;
     }
+    renderPageList = list => {
+        if (!createPortal) {
+            return list;
+        }
+        return this.props.renderInPortal(list);
+    };
+    onRowMouseEnter = (event, rowProps) => {
+        this.props.onRowMouseEnter(event, rowProps);
+    };
+    onRowMouseLeave = (event, rowProps) => {
+        this.props.onRowMouseLeave(event, rowProps);
+    };
+    getVirtualList = () => {
+        return this.columnLayout.getVirtualList();
+    };
+    getRenderRange = () => {
+        return this.columnLayout.getRenderRange();
+    };
+    isRowFullyVisible = index => {
+        return this.columnLayout.isRowFullyVisible(index);
+    };
+    getScrollLeft = () => {
+        return this.columnLayout ? this.columnLayout.scrollLeft || 0 : 0;
+    };
+    setScrollLeft = scrollLeft => {
+        if (this.columnLayout) {
+            this.columnLayout.setScrollLeft(scrollLeft);
+            if (this.dragHeader) {
+                this.dragHeader.setScrollLeft(scrollLeft);
+            }
+        }
+    };
+    getScrollTop = () => {
+        return this.columnLayout ? this.columnLayout.scrollTop || 0 : 0;
+    };
 }
 InovuaDataGridLayout.defaultProps = {
     defaultScrollTop: 0,

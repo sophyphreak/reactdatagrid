@@ -24,11 +24,19 @@ const STR_VISIBLE = 'visible';
 const raf = global.requestAnimationFrame;
 const caf = global.cancelAnimationFrame;
 export default class InovuaVirtualListRow extends React.Component {
+    mounted = true;
+    _appliedIndex;
+    refetchNode = true;
+    visible;
+    index;
+    offset = 0;
+    rowSpan;
+    oldRowSpan;
+    ref;
+    row;
+    node;
     constructor(props) {
         super(props);
-        this.mounted = true;
-        this.refetchNode = true;
-        this.offset = 0;
         this.ref = r => {
             this.row = r;
         };

@@ -158,7 +158,7 @@ class DateFilter extends Component {
                     ...startInputProps,
                     renderPicker,
                 };
-                const startEditor = React.createElement(DateInput, Object.assign({}, startProps));
+                const startEditor = React.createElement(DateInput, { ...startProps });
                 const endProps = {
                     okButton: true,
                     placeholder: i18n && i18n('end'),
@@ -168,7 +168,7 @@ class DateFilter extends Component {
                     ...endInputProps,
                     renderPicker,
                 };
-                const endEditor = React.createElement(DateInput, Object.assign({}, endProps));
+                const endEditor = React.createElement(DateInput, { ...endProps });
                 return this.props.render(React.createElement("div", { style: { display: 'flex' } },
                     startEditor,
                     React.createElement("div", { className: "InovuaReactDataGrid__column-header__filter__binary_operator_separator" }),
@@ -186,7 +186,7 @@ class DateFilter extends Component {
                     ...inputProps,
                     renderPicker,
                 };
-                return this.props.render(React.createElement(DateInput, Object.assign({}, finalProps)));
+                return this.props.render(React.createElement(DateInput, { ...finalProps }));
         }
     }
 }

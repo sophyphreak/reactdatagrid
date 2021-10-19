@@ -8,6 +8,8 @@ import React from 'react';
 import NumericInput from '../packages/NumericInput';
 import debounce from 'lodash.debounce';
 class NumberFilter extends React.Component {
+    input;
+    refInput;
     constructor(props) {
         super(props);
         this.refInput = (i) => {
@@ -127,9 +129,9 @@ class NumberFilter extends React.Component {
                 };
                 return (this.props.render &&
                     this.props.render(React.createElement("div", { style: { display: 'flex' } },
-                        React.createElement(NumericInput, Object.assign({}, startProps)),
+                        React.createElement(NumericInput, { ...startProps }),
                         React.createElement("div", { className: "InovuaReactDataGrid__column-header__filter__binary_operator_separator" }),
-                        React.createElement(NumericInput, Object.assign({}, endProps)))));
+                        React.createElement(NumericInput, { ...endProps }))));
             default:
                 const finalEditorProps = typeof filterEditorProps === 'function'
                     ? filterEditorProps(this.props, {
@@ -145,7 +147,7 @@ class NumberFilter extends React.Component {
                     ...inputProps,
                 };
                 return (this.props.render &&
-                    this.props.render(React.createElement(NumericInput, Object.assign({}, finalProps))));
+                    this.props.render(React.createElement(NumericInput, { ...finalProps })));
         }
     }
 }

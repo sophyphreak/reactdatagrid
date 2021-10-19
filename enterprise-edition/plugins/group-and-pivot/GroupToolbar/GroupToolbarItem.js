@@ -36,70 +36,9 @@ const getItemContent = column => {
 };
 const emptyObject = {};
 export default class GroupToolbarItem extends React.Component {
+    domRef;
     constructor(props) {
         super(props);
-        this.onSortClick = () => {
-            if (this.dragging) {
-                return;
-            }
-            if (this.props.onSortClick) {
-                this.props.onSortClick(this.props.column);
-            }
-        };
-        this.renderSortTool = () => {
-            const column = this.props.column || emptyObject;
-            const { computedSortable: sortable } = column;
-            const { dir: direction } = column.computedSortInfo || emptyObject;
-            const render = column.renderSortTool || this.props.renderSortTool;
-            return renderSortTool({
-                sortable,
-                direction,
-                renderSortTool: render,
-                size: SORT_ICON_SIZE,
-            }, { ...column, groupToolbarItem: true });
-        };
-        this.renderClearIcon = () => {
-            const { clearIcon, placeholder } = this.props;
-            const column = this.props.column || emptyObject;
-            const { computedSortable: sortable } = column;
-            const dragging = this.state.dragging || this.props.dragging;
-            if (!clearIcon) {
-                return null;
-            }
-            let style = clearIcon.props ? clearIcon.props.style : null;
-            if (dragging || placeholder) {
-                style = Object.assign({}, style, { visibility: 'hidden' });
-            }
-            return (React.createElement("div", { key: "clearTool", onClick: this.onClear, style: style, className: join(clearIcon.props && clearIcon.props.className, 'InovuaReactDataGrid__group-toolbar-item__clear-icon', !sortable &&
-                    'InovuaReactDataGrid__group-toolbar-item__clear-icon-no-sortable') }, clearIcon));
-        };
-        this.setTop = top => {
-            this.setState({ top });
-        };
-        this.setLeft = left => {
-            this.setState({ left });
-        };
-        this.setRight = right => {
-            this.setState({ right });
-        };
-        this.setHeight = height => {
-            this.setState({ height });
-        };
-        this.setWidth = width => {
-            this.setState({ width });
-        };
-        this.setDragging = (dragging, callback) => {
-            this.setState({ dragging }, callback);
-        };
-        this.onClear = event => {
-            event.stopPropagation();
-            setTimeout(() => {
-                this.props.onClear(event);
-            });
-        };
-        this.getVisibleIndex = () => {
-            return this.props.column.computedVisibleIndex;
-        };
         this.state = { dragging: false };
         // needed for d&d
         this.domRef = createRef();
@@ -141,10 +80,72 @@ export default class GroupToolbarItem extends React.Component {
             });
         }
         if (result === undefined) {
-            result = React.createElement("div", Object.assign({}, domProps));
+            result = React.createElement("div", { ...domProps });
         }
         return result;
     }
+    onSortClick = () => {
+        if (this.dragging) {
+            return;
+        }
+        if (this.props.onSortClick) {
+            this.props.onSortClick(this.props.column);
+        }
+    };
+    renderSortTool = () => {
+        const column = this.props.column || emptyObject;
+        const { computedSortable: sortable } = column;
+        const { dir: direction } = column.computedSortInfo || emptyObject;
+        const render = column.renderSortTool || this.props.renderSortTool;
+        return renderSortTool({
+            sortable,
+            direction,
+            renderSortTool: render,
+            size: SORT_ICON_SIZE,
+        }, { ...column, groupToolbarItem: true });
+    };
+    renderClearIcon = () => {
+        const { clearIcon, placeholder } = this.props;
+        const column = this.props.column || emptyObject;
+        const { computedSortable: sortable } = column;
+        const dragging = this.state.dragging || this.props.dragging;
+        if (!clearIcon) {
+            return null;
+        }
+        let style = clearIcon.props ? clearIcon.props.style : null;
+        if (dragging || placeholder) {
+            style = Object.assign({}, style, { visibility: 'hidden' });
+        }
+        return (React.createElement("div", { key: "clearTool", onClick: this.onClear, style: style, className: join(clearIcon.props && clearIcon.props.className, 'InovuaReactDataGrid__group-toolbar-item__clear-icon', !sortable &&
+                'InovuaReactDataGrid__group-toolbar-item__clear-icon-no-sortable') }, clearIcon));
+    };
+    setTop = top => {
+        this.setState({ top });
+    };
+    setLeft = left => {
+        this.setState({ left });
+    };
+    setRight = right => {
+        this.setState({ right });
+    };
+    setHeight = height => {
+        this.setState({ height });
+    };
+    setWidth = width => {
+        this.setState({ width });
+    };
+    setDragging = (dragging, callback) => {
+        this.setState({ dragging }, callback);
+    };
+    onClear = event => {
+        event.stopPropagation();
+        setTimeout(() => {
+            this.props.onClear(event);
+        });
+    };
+    getVisibleIndex = () => {
+        return this.props.column.computedVisibleIndex;
+    };
 }
 GroupToolbarItem.propTypes = {
     clearIcon: PropTypes.node,

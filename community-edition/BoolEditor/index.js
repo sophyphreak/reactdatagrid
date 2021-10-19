@@ -10,8 +10,8 @@ import cleanProps from '@inovua/reactdatagrid-community/packages/react-clean-pro
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 const BoolEditor = (props) => {
     const domProps = cleanProps(props, BoolEditor.propTypes);
-    return (React.createElement("div", Object.assign({ className: `InovuaReactDataGrid__cell__editor InovuaReactDataGrid__cell__editor--bool ${domProps.className ||
-            ''}` }, domProps),
+    return (React.createElement("div", { className: `InovuaReactDataGrid__cell__editor InovuaReactDataGrid__cell__editor--bool ${domProps.className ||
+            ''}`, ...domProps },
         React.createElement(CheckBox, { theme: props.theme, autoFocus: props.autoFocus, defaultChecked: props.value, onChange: props.onChange, onBlur: props.onComplete, onKeyDown: (e) => {
                 if (e.key == 'Tab') {
                     e.preventDefault();

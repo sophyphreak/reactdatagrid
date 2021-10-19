@@ -10,16 +10,17 @@ import Combo from '../packages/ComboBox';
 import ScrollContainer from '../packages/react-scroll-container-pro/src';
 const renderScroller = (props) => {
     delete props.tabIndex;
-    return (React.createElement("div", Object.assign({}, props, { className: `${props.className} InovuaReactDataGrid__column-header__filter--select__scroller` })));
+    return (React.createElement("div", { ...props, className: `${props.className} InovuaReactDataGrid__column-header__filter--select__scroller` }));
 };
 const renderListScroller = (props) => {
-    return (React.createElement(ScrollContainer, Object.assign({}, props, { applyCSSContainOnScroll: false, renderScroller: renderScroller, viewStyle: { width: '100%' } })));
+    return (React.createElement(ScrollContainer, { ...props, applyCSSContainOnScroll: false, renderScroller: renderScroller, viewStyle: { width: '100%' } }));
 };
 const stopPropagation = (e) => e.stopPropagation();
 const defaultProps = {
     nativeScroll: false,
 };
 class SelectFilter extends React.Component {
+    static defaultProps = defaultProps;
     constructor(props) {
         super(props);
         const { filterValue } = props;
@@ -89,8 +90,7 @@ class SelectFilter extends React.Component {
             }
             stopPropagation(e);
         };
-        return this.props.render && this.props.render(React.createElement(Combo, Object.assign({}, finalProps)));
+        return this.props.render && this.props.render(React.createElement(Combo, { ...finalProps }));
     }
 }
-SelectFilter.defaultProps = defaultProps;
 export default SelectFilter;

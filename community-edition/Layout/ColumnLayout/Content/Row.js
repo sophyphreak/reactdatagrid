@@ -52,33 +52,19 @@ const getValueForPivotColumnSummary = (item, { pivotSummaryPath: path, }) => {
     return null;
 };
 export default class DataGridRow extends React.Component {
-    constructor(props) {
-        super(props);
-        this.cells = [];
-        this.columnRenderStartIndex = 0;
-        this.scrollingDirection = 'vertical';
-        this.scrollingInProgress = false;
-        this.hasBorderTop = false;
-        this.hasBorderBottom = false;
-        this.rafId = null;
-        this.shouldUpdate = false;
-        this.maxRowspan = 1;
-        this.getVirtualizeColumns = () => {
-            return this.props.virtualizeColumns;
-            return this.scrollingDirection !== 'horizontal'
-                ? this.props.virtualizeColumns
-                : false;
-        };
-        this.cellRef = (c) => {
-            if (!c) {
-                return;
-            }
-            this.cells.push(c);
-        };
-        this.domRef = createRef();
-        this.cells = [];
-        autoBind(this);
-    }
+    static propTypes;
+    static defaultProps;
+    cells = [];
+    cellRef;
+    columnRenderStartIndex = 0;
+    scrollingDirection = 'vertical';
+    scrollingInProgress = false;
+    hasBorderTop = false;
+    hasBorderBottom = false;
+    rafId = null;
+    shouldUpdate = false;
+    domRef;
+    maxRowspan = 1;
     shouldComponentUpdate(nextProps) {
         let areEqual = equalReturnKey(this.props, nextProps, {
             computedActiveCell: 1,
@@ -138,6 +124,18 @@ export default class DataGridRow extends React.Component {
             }
         }
         return false;
+    }
+    constructor(props) {
+        super(props);
+        this.cellRef = (c) => {
+            if (!c) {
+                return;
+            }
+            this.cells.push(c);
+        };
+        this.domRef = createRef();
+        this.cells = [];
+        autoBind(this);
     }
     onCellUnmount(cellProps, cell) {
         if (this.cells) {
@@ -466,7 +464,7 @@ export default class DataGridRow extends React.Component {
             onRenderRow(rowProps);
         }
         if (row === undefined) {
-            row = (React.createElement("div", Object.assign({}, cleanProps(rowProps, DataGridRow.propTypes), { id: null, data: null, value: null })));
+            row = (React.createElement("div", { ...cleanProps(rowProps, DataGridRow.propTypes), id: null, data: null, value: null }));
         }
         return row;
     }
@@ -539,6 +537,12 @@ export default class DataGridRow extends React.Component {
         }
         return gaps;
     }
+    getVirtualizeColumns = () => {
+        return this.props.virtualizeColumns;
+        return this.scrollingDirection !== 'horizontal'
+            ? this.props.virtualizeColumns
+            : false;
+    };
     toggleRowExpand(rowIndex) {
         if (typeof rowIndex !== 'number') {
             rowIndex = this.props.realIndex;
@@ -1344,7 +1348,7 @@ export default class DataGridRow extends React.Component {
                 cell = this.props.cellFactory(cProps);
             }
             if (cell === undefined) {
-                cell = (React.createElement(Cell, Object.assign({}, cProps, { ref: cProps.cellRef ? cProps.cellRef : null, key: key })));
+                cell = (React.createElement(Cell, { ...cProps, ref: cProps.cellRef ? cProps.cellRef : null, key: key }));
             }
             return cell;
         });

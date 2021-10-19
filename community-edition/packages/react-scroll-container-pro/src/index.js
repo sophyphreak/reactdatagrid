@@ -42,14 +42,10 @@ const OTHER_ORIENTATION = {
     horizontal: 'vertical',
 };
 export default class InovuaScrollContainer extends Component {
+    scrollerScrollSize;
+    scrollerClientSize;
     constructor(props) {
         super(props);
-        this.applyCSSContainOnScrollUpdate = bool => {
-            const scrollerNode = this.scrollerNode;
-            if (scrollerNode) {
-                scrollerNode.style.contain = bool ? 'strict' : '';
-            }
-        };
         autoBind(this, {
             scrollTop: 1,
             scrollLeft: 1,
@@ -277,14 +273,14 @@ export default class InovuaScrollContainer extends Component {
                 resizer && (React.createElement(NotifyResize, { ResizeObserver: this.props.ResizeObserver, checkResizeDelay: this.props.checkResizeDelay, key: "viewResizer", useRaf: this.props.rafOnResize, onResize: this.onViewResize, notifyOnMount: true })),
             ],
         };
-        const view = renderView ? (renderView(viewProps)) : (React.createElement("div", Object.assign({ key: "view" }, viewProps)));
+        const view = renderView ? (renderView(viewProps)) : (React.createElement("div", { key: "view", ...viewProps }));
         const scrollerProps = {
             className: `inovua-react-scroll-container__scroller inovua-react-scroll-container__scroller--direction-${this.props.rtl ? 'rtl' : 'ltr'}`,
             style: scrollerStyle,
             ref: this.refScroller,
             children: [
                 view,
-                resizer ? (React.createElement(NotifyResize, Object.assign({ ref: this.scrollerResizerRef }, props.scrollerResizerProps, { ResizeObserver: this.props.ResizeObserver, checkResizeDelay: this.props.checkResizeDelay, useRaf: this.props.rafOnResize, key: "scrollerResizer", onResize: this.onResize, notifyOnMount: true }))) : null,
+                resizer ? (React.createElement(NotifyResize, { ref: this.scrollerResizerRef, ...props.scrollerResizerProps, ResizeObserver: this.props.ResizeObserver, checkResizeDelay: this.props.checkResizeDelay, useRaf: this.props.rafOnResize, key: "scrollerResizer", onResize: this.onResize, notifyOnMount: true })) : null,
             ].filter(Boolean),
         };
         if (!usePassiveScroll) {
@@ -301,7 +297,7 @@ export default class InovuaScrollContainer extends Component {
         if (this.props.dragToScroll) {
             scrollerProps.tabIndex = -1;
         }
-        const scroller = renderScroller ? (renderScroller(scrollerProps)) : (React.createElement("div", Object.assign({}, scrollerProps)));
+        const scroller = renderScroller ? (renderScroller(scrollerProps)) : (React.createElement("div", { ...scrollerProps }));
         children = [
             React.createElement("div", { key: "wrapper", className: "inovua-react-scroll-container__wrapper", ref: this.refWrapper, style: this.props.wrapperStyle
                     ? { ...WRAPPER_STYLE, ...this.props.wrapperStyle }
@@ -326,7 +322,7 @@ export default class InovuaScrollContainer extends Component {
             factoryProps.onMouseEnter = this.onMouseEnter;
             factoryProps.onMouseLeave = this.onMouseLeave;
         }
-        return Factory ? (React.createElement(Factory, Object.assign({}, factoryProps, { ref: this.refThis, style: style, className: className, children: children }))) : (createElement(props.tagName, {
+        return Factory ? (React.createElement(Factory, { ...factoryProps, ref: this.refThis, style: style, className: className, children: children })) : (createElement(props.tagName, {
             ...factoryProps,
             ref: this.refThis,
             style,
@@ -475,7 +471,7 @@ export default class InovuaScrollContainer extends Component {
             onWheelScroll: this.onScrollbarWheelScroll,
             onPageScroll: this.onScrollbarPageScroll,
         };
-        return React.createElement(Scrollbar, Object.assign({}, scrollbarProps));
+        return React.createElement(Scrollbar, { ...scrollbarProps });
     }
     onScrollbarStartDrag(orientation) {
         if (this.props.onScrollbarStartDrag) {
@@ -788,6 +784,12 @@ export default class InovuaScrollContainer extends Component {
             setTimeout(this.showScrollbars, this.props.showDelay);
         }
     }
+    applyCSSContainOnScrollUpdate = bool => {
+        const scrollerNode = this.scrollerNode;
+        if (scrollerNode) {
+            scrollerNode.style.contain = bool ? 'strict' : '';
+        }
+    };
     onStop(scrollPos, prevScrollPos, eventTarget) {
         this.scrollStarted = false;
         if (this.props.applyCSSContainOnScroll) {

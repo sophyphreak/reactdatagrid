@@ -171,7 +171,7 @@ export default class InovuaScrollbar extends Component {
         const onThumbMouseDown = thumbVisible && this.props.dragToScroll ? this.onThumbMouseDown : null;
         const onTrackClick = thumbVisible && this.props.dragToScroll ? this.onTrackClick : null;
         const onTrackWheel = this.props.dragToScroll && this.state.over ? this.onTrackWheel : null;
-        return (React.createElement("div", Object.assign({}, divProps, { style: style, className: className, "data-orientation": orientation }),
+        return (React.createElement("div", { ...divProps, style: style, className: className, "data-orientation": orientation },
             React.createElement("div", { ref: this.refTrack, style: trackStyle, className: trackClassName, onClick: onTrackClick, onWheel: onTrackWheel, onMouseEnter: this.props.dragToScroll ? this.onMouseEnter : null, onMouseLeave: this.props.dragToScroll ? this.onMouseLeave : null },
                 React.createElement("div", { ref: this.refThumb, style: thumbStyle, className: thumbClassName, onMouseDown: onThumbMouseDown }))));
     }

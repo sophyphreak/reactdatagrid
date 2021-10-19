@@ -10,22 +10,22 @@ import join from '../../packages/join';
 export default class ResizeOverlay extends React.Component {
     constructor(props) {
         super(props);
-        this.setConstrained = constrained => {
-            if (this.state.constrained != constrained) {
-                this.setState({ constrained });
-            }
-            return this;
-        };
-        this.setOffset = offset => {
-            this.setState({ offset });
-            return this;
-        };
-        this.setActive = (active, cfg) => {
-            this.setState({ active, offsetTop: cfg ? cfg.offsetTop || 0 : 0 });
-            return this;
-        };
         this.state = { offset: 0, constrained: false, active: false };
     }
+    setConstrained = constrained => {
+        if (this.state.constrained != constrained) {
+            this.setState({ constrained });
+        }
+        return this;
+    };
+    setOffset = offset => {
+        this.setState({ offset });
+        return this;
+    };
+    setActive = (active, cfg) => {
+        this.setState({ active, offsetTop: cfg ? cfg.offsetTop || 0 : 0 });
+        return this;
+    };
     render() {
         const props = this.props;
         const state = this.state;

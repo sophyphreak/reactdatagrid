@@ -13,6 +13,8 @@ export default {
     defaultProps: () => {
         return {
             showColumnMenuTool: true,
+            // columnContextMenuConstrainTo: true,
+            // rowContextMenuConstrainTo: true,
         };
     },
 };

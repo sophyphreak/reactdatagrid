@@ -12,31 +12,6 @@ global.React = React;
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.inc = () => {
-            this.setState({ width: this.state.width + 100 });
-        };
-        this.incHeight = () => {
-            this.setState({ height: this.state.height + 1000 });
-        };
-        this.onResize = size => {
-            console.log('resize', size, '!!!');
-        };
-        this.onScrollbarsChange = scrolls => {
-            console.log(scrolls);
-        };
-        this.onScrollLeftMax = () => {
-            console.log('scrollleft max');
-        };
-        this.toggleNativeScroll = () => {
-            this.setState({
-                nativeScroll: !this.state.nativeScroll,
-            });
-        };
-        this.toggleRtl = () => {
-            this.setState({
-                rtl: !this.state.rtl,
-            });
-        };
         this.state = {
             width: 1000,
             height: 2300,
@@ -44,6 +19,31 @@ class App extends React.Component {
             rtl: true,
         };
     }
+    inc = () => {
+        this.setState({ width: this.state.width + 100 });
+    };
+    incHeight = () => {
+        this.setState({ height: this.state.height + 1000 });
+    };
+    onResize = size => {
+        console.log('resize', size, '!!!');
+    };
+    onScrollbarsChange = scrolls => {
+        console.log(scrolls);
+    };
+    onScrollLeftMax = () => {
+        console.log('scrollleft max');
+    };
+    toggleNativeScroll = () => {
+        this.setState({
+            nativeScroll: !this.state.nativeScroll,
+        });
+    };
+    toggleRtl = () => {
+        this.setState({
+            rtl: !this.state.rtl,
+        });
+    };
     render() {
         const ScrollerFactory = this.state.nativeScroll
             ? NativeScrollContainer
@@ -66,7 +66,7 @@ class App extends React.Component {
                     width: '60vw',
                     border: '1px solid red',
                     margin: 20,
-                }, scrollThumbStyle: {}, tabIndex: 1, renderScroller: props => React.createElement("div", Object.assign({}, props, { tabIndex: 1 })), onResize: this.onResize, contain: true },
+                }, scrollThumbStyle: {}, tabIndex: 1, renderScroller: props => React.createElement("div", { ...props, tabIndex: 1 }), onResize: this.onResize, contain: true },
                 React.createElement("div", { "data-name": "yyy", style: {
                         background: 'linear-gradient(to right, rgba(30, 87, 153, 0.43) 0%, rgba(255, 137, 137, 0.35) 100%)',
                     } },

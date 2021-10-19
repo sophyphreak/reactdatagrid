@@ -125,14 +125,14 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
                 (props.computedShowHeaderBorderRight && last && !firstInSection)) &&
                 `${RESIZE_WRAPPER_CLASS_NAME}--show-border-${rtl ? 'left' : 'right'}`, `${RESIZE_WRAPPER_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`, computedLocked && `${RESIZE_WRAPPER_CLASS_NAME}--locked`, computedLocked &&
                 `${RESIZE_WRAPPER_CLASS_NAME}--locked-${computedLocked}`, firstInSection && `${RESIZE_WRAPPER_CLASS_NAME}--first-in-section`, lastInSection && `${RESIZE_WRAPPER_CLASS_NAME}--last-in-section`, last && `${RESIZE_WRAPPER_CLASS_NAME}--last`, props.headerWrapperClassName) },
-            React.createElement("div", Object.assign({}, cleanup(domProps), { style: innerStyle, children: content })),
+            React.createElement("div", { ...cleanup(domProps), style: innerStyle, children: content }),
             resizeHandle,
             props.computedFilterable && !dragging
                 ? renderFilter(props, cellInstance)
                 : null));
     }
     const ref = domProps.ref;
-    return (React.createElement("div", Object.assign({}, cleanup(domProps), { ref: ref, id: null, name: null, title: null, type: null, value: null, children: content })));
+    return (React.createElement("div", { ...cleanup(domProps), ref: ref, id: null, name: null, title: null, type: null, value: null, children: content }));
 };
 const cleanup = domProps => {
     delete domProps.ref;

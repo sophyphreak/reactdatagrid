@@ -198,7 +198,7 @@ export const renderColumnFilterContextMenu = (computedProps, computedPropsRef) =
         });
     }
     if (result === undefined) {
-        result = React.createElement(Menu, Object.assign({}, menuProps));
+        result = React.createElement(Menu, { ...menuProps });
     }
     if (computedProps.initialProps.renderGridMenu) {
         return computedProps.initialProps.renderGridMenu(result, computedProps);

@@ -24,100 +24,59 @@ const getHeader = (group = emptyObject) => {
     return humanize(name || '');
 };
 export default class HeaderGroup extends React.Component {
+    domRef;
     constructor(props) {
         super(props);
-        this.setTop = top => {
-            this.setState({ top });
-        };
-        this.setLeft = left => {
-            this.setState({ left });
-        };
-        this.setRight = right => {
-            this.setState({ right });
-        };
-        this.setHeight = height => {
-            this.setState({ height });
-        };
-        this.setWidth = width => {
-            this.setState({ width });
-        };
-        this.setDragging = (dragging, callback) => {
-            const newState = { dragging };
-            if (!dragging) {
-                newState.top = 0;
-                newState.left = 0;
-                newState.width = 0;
-                newState.height = 0;
-            }
-            this.setState(newState, callback);
-        };
-        this.prepareStyle = () => {
-            const { state, props } = this;
-            let style = props.style;
-            if (props.group.style) {
-                style = { ...style, ...props.group.style };
-            }
-            if (state.dragging) {
-                style = Object.assign({}, style, { zIndex: TOP_Z_INDEX });
-                if (this.props.rtl) {
-                    style.right = state.right || 0;
-                }
-                else {
-                    style.left = state.left || 0;
-                }
-                style.top = state.top || 0;
-                style.height = state.height || '';
-                style.width = state.width || '';
-                style.position = 'absolute';
-                style.overflow = 'hidden';
-            }
-            return style;
-        };
-        this.getProxyRegion = () => {
-            const node = this.domRef ? this.domRef.current : null;
-            const region = Region.from(node);
-            if (this.props.filterable) {
-                const filterWrapper = node.querySelector('.InovuaReactDataGrid__column-header__filter-wrapper');
-                if (filterWrapper) {
-                    region.setHeight(region.getHeight() - filterWrapper.offsetHeight);
-                }
-            }
-            return region;
-        };
-        //@ts-ignore
-        this.renderChild = (child, index) => {
-            //@ts-ignore
-            const extraProps = { parent: this, indexInHeaderGroup: index };
-            const dragging = this.props.dragging || this.state.dragging;
-            if (this.props.extraChildrenProps) {
-                Object.assign(extraProps, this.props.extraChildrenProps);
-            }
-            if (dragging) {
-                extraProps.dragging = dragging;
-            }
-            extraProps.key = index;
-            return cloneElement(child, extraProps);
-        };
-        this.onResizeMouseDown = event => {
-            if (this.props.onResizeMouseDown) {
-                event.stopPropagation();
-                this.props.onResizeMouseDown(this.props, this, event);
-            }
-        };
-        this.onResizeTouchStart = event => {
-            if (this.props.onResizeTouchStart) {
-                event.stopPropagation();
-                this.props.onResizeTouchStart(this.props, this, event);
-            }
-        };
-        this.onMouseDown = event => {
-            if (this.props.onMouseDown) {
-                this.props.onMouseDown(event, this.props, this);
-            }
-        };
         this.state = { dragging: false };
         this.domRef = React.createRef();
     }
+    setTop = top => {
+        this.setState({ top });
+    };
+    setLeft = left => {
+        this.setState({ left });
+    };
+    setRight = right => {
+        this.setState({ right });
+    };
+    setHeight = height => {
+        this.setState({ height });
+    };
+    setWidth = width => {
+        this.setState({ width });
+    };
+    setDragging = (dragging, callback) => {
+        const newState = { dragging };
+        if (!dragging) {
+            newState.top = 0;
+            newState.left = 0;
+            newState.width = 0;
+            newState.height = 0;
+        }
+        this.setState(newState, callback);
+    };
+    prepareStyle = () => {
+        const { state, props } = this;
+        let style = props.style;
+        if (props.group.style) {
+            style = { ...style, ...props.group.style };
+        }
+        if (state.dragging) {
+            style = Object.assign({}, style, { zIndex: TOP_Z_INDEX });
+            if (this.props.rtl) {
+                style.right = state.right || 0;
+            }
+            else {
+                style.left = state.left || 0;
+            }
+            style.top = state.top || 0;
+            style.height = state.height || '';
+            style.width = state.width || '';
+            style.position = 'absolute';
+            style.overflow = 'hidden';
+        }
+        return style;
+    };
     render() {
         const { props } = this;
         const { showBorderLeft, showBorderRight, resizable, children, group, dragging, depth, columnResizeHandleWidth, containsLastColumn, firstInSection, lastInSection, adjustResizer, locked, rtl, resizeProxyStyle, } = props;
@@ -150,6 +109,48 @@ export default class HeaderGroup extends React.Component {
             groupHeader,
             React.createElement("div", { className: "InovuaReactDataGrid__header-group-cells" }, children.map(this.renderChild))));
     }
+    getProxyRegion = () => {
+        const node = this.domRef ? this.domRef.current : null;
+        const region = Region.from(node);
+        if (this.props.filterable) {
+            const filterWrapper = node.querySelector('.InovuaReactDataGrid__column-header__filter-wrapper');
+            if (filterWrapper) {
+                region.setHeight(region.getHeight() - filterWrapper.offsetHeight);
+            }
+        }
+        return region;
+    };
+    //@ts-ignore
+    renderChild = (child, index) => {
+        //@ts-ignore
+        const extraProps = { parent: this, indexInHeaderGroup: index };
+        const dragging = this.props.dragging || this.state.dragging;
+        if (this.props.extraChildrenProps) {
+            Object.assign(extraProps, this.props.extraChildrenProps);
+        }
+        if (dragging) {
+            extraProps.dragging = dragging;
+        }
+        extraProps.key = index;
+        return cloneElement(child, extraProps);
+    };
+    onResizeMouseDown = event => {
+        if (this.props.onResizeMouseDown) {
+            event.stopPropagation();
+            this.props.onResizeMouseDown(this.props, this, event);
+        }
+    };
+    onResizeTouchStart = event => {
+        if (this.props.onResizeTouchStart) {
+            event.stopPropagation();
+            this.props.onResizeTouchStart(this.props, this, event);
+        }
+    };
+    onMouseDown = event => {
+        if (this.props.onMouseDown) {
+            this.props.onMouseDown(event, this.props, this);
+        }
+    };
 }
 HeaderGroup.defaultProps = { isHeaderGroup: true };
 HeaderGroup.propTypes = {
