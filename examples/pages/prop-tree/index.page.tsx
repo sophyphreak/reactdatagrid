@@ -7,7 +7,8 @@
 
 import React from 'react';
 
-import DataGrid, { TypeFooterRow } from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
+import Button from '../../../community-edition/packages/Button';
 
 const gridStyle = { minHeight: 550 };
 
@@ -72,7 +73,7 @@ const treeData = [
   },
 ];
 
-class App extends React.Component {
+class App extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
@@ -84,7 +85,12 @@ class App extends React.Component {
           id: 'toggle',
           render: data => {
             return (
-              <button onClick={() => data.toggleNodeExpand()}>toggle</button>
+              <Button
+                theme="default-dark"
+                onClick={() => data.toggleNodeExpand()}
+              >
+                toggle
+              </Button>
             );
           },
         },
@@ -112,6 +118,7 @@ class App extends React.Component {
         </p>
         <DataGrid
           treeColumn="name"
+          theme="default-dark"
           expandedNodes={expandedNodes}
           licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
           onExpandedNodesChange={this.onExpandedNodesChange}

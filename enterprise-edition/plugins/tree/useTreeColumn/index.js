@@ -365,6 +365,13 @@ const useTreeColumn = (props, computedProps, computedPropsRef) => {
         }
         const id = computedProps.getItemId(data);
         const expanded = isNodeExpanded(data);
+        if (typeof dataOrIndex === 'number') {
+            computedProps.setActiveIndex(dataOrIndex);
+        }
+        else {
+            const rowIndex = computedProps.getRowIndexById(id);
+            computedProps.setActiveIndex(rowIndex);
+        }
         return setNodeExpandedById(id, !expanded);
     }, []);
     const getNodeCache = useCallback(() => {
