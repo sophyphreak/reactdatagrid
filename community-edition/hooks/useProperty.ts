@@ -17,7 +17,7 @@ const useProperty = <T>(
   defaultValue?: any | undefined,
   config?: { onChange: (value: T, ...args: any[]) => void }
 ): [T, (...args: any[]) => any] => {
-  const context = useContext(props.context);
+  const context: any = useContext(props.context);
 
   const PropName = toUpperFirst(propName);
 

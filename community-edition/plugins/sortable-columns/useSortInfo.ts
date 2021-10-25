@@ -206,34 +206,37 @@ const useSortInfo = (
     // TODO
   }
 
-  const setSortInfo = useCallback((sortInfo: TypeSortInfo) => {
-    const computedProps = computedPropsRef.current;
-    if (!computedProps) {
-      return;
-    }
-
-    const queue = batchUpdate();
-    const { computedRemoteData } = computedProps;
-
-    queue.commit(() => {
-      if (
-        computedProps.computedPagination &&
-        computedProps.setSkip &&
-        computedProps.computedSkip
-      ) {
-        computedProps.setSkip(0);
+  const setSortInfo = useCallback(
+    (sortInfo: TypeSortInfo) => {
+      const computedProps = computedPropsRef.current;
+      if (!computedProps) {
+        return;
       }
-      silentSetSortInfo(sortInfo);
 
-      if (computedRemoteData) {
-        // remote data
-        computedProps.setLoadDataTrigger((loadDataTrigger: string[]) => [
-          ...loadDataTrigger,
-          'sortInfo',
-        ]);
-      }
-    });
-  }, []);
+      const queue = batchUpdate();
+      const { computedRemoteData } = computedProps;
+
+      queue.commit(() => {
+        if (
+          computedProps.computedPagination &&
+          computedProps.setSkip &&
+          computedProps.computedSkip
+        ) {
+          computedProps.setSkip(0);
+        }
+        silentSetSortInfo(sortInfo);
+
+        if (computedRemoteData) {
+          // remote data
+          computedProps.setLoadDataTrigger((loadDataTrigger: string[]) => [
+            ...loadDataTrigger,
+            'sortInfo',
+          ]);
+        }
+      });
+    },
+    [silentSetSortInfo]
+  );
 
   const toggleColumnSort = useCallback(
     (
@@ -270,7 +273,7 @@ const useSortInfo = (
           });
       setSortInfo(nextSortInfo);
     },
-    []
+    [setSortInfo]
   );
 
   const setColumnSortInfo = useCallback(
@@ -312,7 +315,7 @@ const useSortInfo = (
           });
       setSortInfo(nextSortInfo);
     },
-    []
+    [setSortInfo]
   );
 
   const unsortColumn = (

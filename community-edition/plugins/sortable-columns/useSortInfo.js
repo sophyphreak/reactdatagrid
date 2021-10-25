@@ -117,7 +117,7 @@ const useSortInfo = (props, _, computedPropsRef) => {
                 ]);
             }
         });
-    }, []);
+    }, [silentSetSortInfo]);
     const toggleColumnSort = useCallback((colId) => {
         const computedProps = computedPropsRef.current;
         if (!computedProps) {
@@ -141,7 +141,7 @@ const useSortInfo = (props, _, computedPropsRef) => {
                 sortFunctions: computedProps.sortFunctions,
             });
         setSortInfo(nextSortInfo);
-    }, []);
+    }, [setSortInfo]);
     const setColumnSortInfo = useCallback((column, dir) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -166,7 +166,7 @@ const useSortInfo = (props, _, computedPropsRef) => {
                 sortFunctions: computedProps.sortFunctions,
             });
         setSortInfo(nextSortInfo);
-    }, []);
+    }, [setSortInfo]);
     const unsortColumn = (column) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
