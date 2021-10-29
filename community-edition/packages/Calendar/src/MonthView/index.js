@@ -239,15 +239,18 @@ export default class MonthView extends Component {
     };
 
     this.monthViewRef = createRef();
+
+    this.updateToMoment(props);
   }
 
-  UNSAFE_componentWillMount() {
-    this.updateToMoment(this.props);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.updateToMoment(nextProps);
-  }
+  componentDidUpdate = prevProps => {
+    if (
+      prevProps.locale !== this.props.locale ||
+      prevProps.dateFormat !== this.props.dateFormat
+    ) {
+      this.updateToMoment(this.props);
+    }
+  };
 
   updateToMoment(props) {
     this.toMoment = (value, dateFormat) => {

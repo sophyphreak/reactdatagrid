@@ -118,7 +118,7 @@ const App = () => {
   }, []);
 
   const filteredRowsCount = useCallback((filteredRows: number) => {
-    console.log('filteredRows', filteredRows);
+    // console.log('filteredRows', filteredRows);
   }, []);
 
   return (

@@ -38,12 +38,12 @@ class InovuaButton extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (!this.props.disabled && nextProps.disabled && this.state.focused) {
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!prevProps.disabled && this.props.disabled && prevState.focused) {
       this.handleBlur();
       this.setState({ mouseOver: false });
     }
-  }
+  };
 
   handleKeyDown(event) {
     const { key } = event;

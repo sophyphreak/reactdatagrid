@@ -81,11 +81,11 @@ class InovuaOverlay extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.visible !== nextProps.visible) {
-      this.handleVisibleChange(nextProps.visible);
+  componentDidUpdate = prevProps => {
+    if (prevProps.visible !== this.props.visible) {
+      this.handleVisibleChange(this.props.visible);
     }
-  }
+  };
 
   componentWillUnmount() {
     this.unregister();

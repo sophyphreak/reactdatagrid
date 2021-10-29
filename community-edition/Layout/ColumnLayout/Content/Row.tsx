@@ -214,20 +214,6 @@ export default class DataGridRow extends React.Component<RowProps> {
     return false;
   }
 
-  // TODO remove unsafe
-  UNSAFE_componentWillReceiveProps(nextProps: RowProps) {
-    if (nextProps.columnRenderCount < this.props.columnRenderCount) {
-      this.cleanupCells();
-
-      this.getCells().forEach(cell => {
-        if (cell.getProps().computedLocked) {
-          return;
-        }
-        cell.setStateProps(null);
-      });
-    }
-  }
-
   componentDidMount() {
     if (this.props.active) {
       this.props.activeRowRef.current = {
@@ -281,6 +267,17 @@ export default class DataGridRow extends React.Component<RowProps> {
         instance: this,
         node: this.getDOMNode(),
       };
+    }
+
+    if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+      this.cleanupCells();
+
+      this.getCells().forEach(cell => {
+        if (cell.getProps().computedLocked) {
+          return;
+        }
+        cell.setStateProps(null);
+      });
     }
   }
 

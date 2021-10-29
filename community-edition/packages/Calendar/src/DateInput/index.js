@@ -130,6 +130,8 @@ export default class DateInput extends Component {
     delete flexProps.okButtonText;
     delete flexProps.todayButtonText;
     delete flexProps.rtl;
+    delete flexProps.pickerPosition;
+    delete flexProps.onLazyBlur;
 
     if (typeof props.cleanup == 'function') {
       props.cleanup(flexProps);

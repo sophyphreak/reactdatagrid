@@ -27,11 +27,13 @@ class BoolFilter extends React.Component {
         this.onValueChange(checked);
         this.setValue(checked);
     };
-    UNSAFE_componentWillReceiveProps = (nextProps) => {
-        if (nextProps.filterValue &&
-            nextProps.filterValue.value !== this.state.value) {
-            const value = nextProps.filterValue.value;
-            this.setValue(value);
+    componentDidUpdate = () => {
+        if (this.props.filterValue &&
+            this.props.filterValue.value !== this.state.value) {
+            if (this.props.filterValue) {
+                const value = this.props.filterValue.value;
+                this.setState({ value });
+            }
         }
     };
     setValue = (checked) => {

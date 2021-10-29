@@ -23,12 +23,13 @@ class StringFilter extends React.Component {
             });
         }
     }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.filterValue &&
-            nextProps.filterValue.value !== this.state.value) {
-            this.setValue(nextProps.filterValue.value);
+    componentDidUpdate = ({ filterValue: { value } }) => {
+        if (value.localeCompare(this.props.filterValue && this.props.filterValue.value)) {
+            if (this.props.filterValue) {
+                this.setValue(this.props.filterValue.value);
+            }
         }
-    }
+    };
     onChange(value) {
         this.onValueChange(value);
         this.setValue(value);

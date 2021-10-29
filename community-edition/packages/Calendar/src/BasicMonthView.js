@@ -157,13 +157,20 @@ const getWeekDayNames = props => {
 };
 
 class BasicMonthView extends Component {
-  UNSAFE_componentWillMount() {
-    this.updateToMoment(this.props);
+  constructor(props) {
+    super(props);
+
+    this.updateToMoment(props);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.updateToMoment(nextProps);
-  }
+  componentDidUpdate = prevProps => {
+    if (
+      prevProps.locale !== this.props.locale ||
+      prevProps.dateFormat !== this.props.dateFormat
+    ) {
+      this.updateToMoment(this.props);
+    }
+  };
 
   updateToMoment(props) {
     this.toMoment = (value, dateFormat) => {

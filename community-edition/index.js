@@ -15,6 +15,7 @@ export const plugins = [
     Menus,
     CellSelection,
 ];
-export default DataGridFactory({
+const ReactDataGrid = DataGridFactory({
     plugins,
 }, 'community');
+export default ReactDataGrid;

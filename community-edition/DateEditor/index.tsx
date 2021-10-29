@@ -79,9 +79,7 @@ class DateEditor extends React.Component<DateEditorProps, DateEditorState> {
   componentDidMount() {
     this.domNode = this.domRef.current;
     this.constrainToNode = selectParent('.InovuaReactDataGrid', this.domNode);
-  }
 
-  UNSAFE_componentWillMount() {
     const { cell } = this.props;
 
     const cellNode =

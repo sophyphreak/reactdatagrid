@@ -82,7 +82,7 @@ class DateFilter extends Component<DateFilterProps, DateFilterState> {
       )
     ) {
       if (this.props.filterValue) {
-        this.setValue(this.props.filterValue.value);
+        this.setValue((this.props.filterValue as any).value);
       }
     }
   };

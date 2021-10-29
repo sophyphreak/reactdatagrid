@@ -159,18 +159,18 @@ export default class MultiMonthView extends Component {
     };
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount = () => {
     this.updateToMoment(this.props);
-  }
+  };
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentDidUpdate = prevProps => {
     if (
-      nextProps.locale != this.props.locale ||
-      nextProps.dateFormat != this.props.dateFormat
+      prevProps.locale !== this.props.locale ||
+      prevProps.dateFormat !== this.props.dateFormat
     ) {
-      this.updateToMoment(nextProps);
+      this.updateToMoment(this.props);
     }
-  }
+  };
 
   updateToMoment(props) {
     this.toMoment = (value, dateFormat) => {

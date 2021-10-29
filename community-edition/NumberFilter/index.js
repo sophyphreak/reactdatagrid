@@ -30,18 +30,18 @@ class NumberFilter extends React.Component {
             });
         }
     }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (this.props.filterValue &&
-            this.props.filterValue.value !== nextProps.filterValue.value) {
-            // When we change operators from unary to binary and vice versa
-            // we have to reset the value, and i pass this new value to NumberFilter state
-            this.setValue(nextProps.filterValue && nextProps.filterValue.value);
+    componentDidUpdate = ({ filterValue: { value } }) => {
+        if (this.props.filterValue) {
+            if ((value < this.props.filterValue &&
+                this.props.filterValue.value) ||
+                (value > this.props.filterValue &&
+                    this.props.filterValue.value)) {
+                // When we change operators from unary to binary and vice versa
+                // we have to reset the value, and i pass this new value to NumberFilter state
+                this.setValue(this.props.filterValue && this.props.filterValue.value);
+            }
         }
-        if (nextProps.filterValue &&
-            nextProps.filterValue.value !== this.state.value) {
-            this.setValue(nextProps.filterValue && nextProps.filterValue.value);
-        }
-    }
+    };
     onChange(value) {
         if (value === this.state.value) {
             return;

@@ -29,7 +29,8 @@ const enterprisePlugins = [
     rowIndexColumn,
     livePagination,
 ];
-export default Factory({
+const ReactDataGrid = Factory({
     plugins: enterprisePlugins,
 }, 'enterprise');
 export { filterTypes };
+export default ReactDataGrid;

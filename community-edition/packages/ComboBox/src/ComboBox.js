@@ -132,71 +132,69 @@ class InovuaComboBox extends Component {
     if (!this.isRemoteFilter()) {
       this.doFilter();
     }
+
+    if (!this.props.lazyDataSource) {
+      this.loadDataSource(this.props.dataSource);
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return shouldComponentUpdate(this, nextProps, nextState);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.dataSource !== this.props.dataSource) {
-      this.loadDataSource(nextProps.dataSource, nextProps);
-    }
-
-    if (this.props.idProperty !== nextProps.idProperty) {
-      this.updateGetIdProperty();
-    }
-
-    if (this.props.displayProperty !== nextProps.displayProperty) {
-      this.updateGetDisplayProperty();
-    }
-
-    if (this.props.filterProperty !== nextProps.filterProperty) {
-      this.updateGetFilterProperty();
-    }
-
+  componentDidUpdate = prevProps => {
     if (
       this.isExpandedControlled() &&
-      this.props.expanded !== nextProps.expanded
+      this.props.expanded !== prevProps.expanded
     ) {
       this.onExpand();
     }
 
-    if (this.props.groupProperty !== nextProps.groupProperty) {
-      this.updateGroups({ groupProperty: nextProps.groupProperty });
+    if (prevProps.dataSource !== this.props.dataSource) {
+      this.loadDataSource(this.props.dataSource, this.props);
     }
 
-    if (
-      this.isActiveItemControlled() &&
-      this.props.changeValueOnNavigation &&
-      !this.props.multiple &&
-      this.props.activeItem !== nextProps.activeItem
-    ) {
-      this.setValue(nextProps.activeItem, { action: 'navigate' });
+    if (this.props.idProperty !== prevProps.idProperty) {
+      this.updateGetIdProperty(this.props);
     }
 
-    if (
-      this.isExpandedControlled() &&
-      !this.props.expanded &&
-      nextProps.expanded
-    ) {
-      this.loadLazyDataSource({ action: 'expand', text: '' });
+    if (this.props.displayProperty !== prevProps.displayProperty) {
+      this.updateGetDisplayProperty(this.props);
+    }
+
+    if (this.props.filterProperty !== prevProps.filterProperty) {
+      this.updateGetFilterProperty(this.props);
+    }
+
+    if (this.props.groupProperty !== prevProps.groupProperty) {
+      this.updateGroups({ groupProperty: this.props.groupProperty });
     }
 
     /**
      * if text is controlled, and it changed
      * do text change specific operations
      */
-    if (this.isTextControled() && this.props.text !== nextProps.text) {
-      this.onTextUpdate(nextProps.text);
+    if (this.isTextControled() && this.props.text !== prevProps.text) {
+      this.onTextUpdate(this.props.text);
     }
-  }
 
-  UNSAFE_componentWillMount() {
-    if (!this.props.lazyDataSource) {
-      this.loadDataSource(this.props.dataSource);
+    if (
+      this.isActiveItemControlled() &&
+      prevProps.changeValueOnNavigation &&
+      !prevProps.multiple &&
+      prevProps.activeItem !== this.props.activeItem
+    ) {
+      this.setValue(this.props.activeItem, { action: 'navigate' });
     }
-  }
+
+    if (
+      this.isExpandedControlled() &&
+      !prevProps.expanded &&
+      this.props.expanded
+    ) {
+      this.loadLazyDataSource({ action: 'expand', text: '' });
+    }
+  };
 
   render() {
     const { props, state } = this;

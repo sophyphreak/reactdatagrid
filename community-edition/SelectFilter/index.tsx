@@ -108,15 +108,18 @@ class SelectFilter extends React.Component<
     });
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: SelectFilterProps) {
+  componentDidUpdate = ({ filterValue: { value } }: any) => {
     if (
-      nextProps.filterValue &&
-      nextProps.filterValue.value !== this.state.value
+      value &&
+      String(value).localeCompare(
+        String(this.props.filterValue && this.props.filterValue.value)
+      )
     ) {
-      const value = nextProps.filterValue.value;
-      this.setValue(value);
+      if (this.props.filterValue) {
+        this.setValue((this.props.filterValue as any).value);
+      }
     }
-  }
+  };
 
   onValueChange(value: string | null) {
     this.props.onChange &&
