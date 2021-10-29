@@ -268,8 +268,11 @@ export default class DataGridRow extends React.Component<RowProps> {
         node: this.getDOMNode(),
       };
     }
+  }
 
-    if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+  // TODO remove unsafe
+  UNSAFE_componentWillReceiveProps(nextProps: RowProps) {
+    if (nextProps.columnRenderCount < this.props.columnRenderCount) {
       this.cleanupCells();
 
       this.getCells().forEach(cell => {

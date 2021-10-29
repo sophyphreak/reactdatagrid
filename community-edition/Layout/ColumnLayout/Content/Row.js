@@ -210,7 +210,19 @@ export default class DataGridRow extends React.Component {
                 node: this.getDOMNode(),
             };
         }
-        if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+        // if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+        //   this.cleanupCells();
+        //   this.getCells().forEach(cell => {
+        //     if (cell.getProps().computedLocked) {
+        //       return;
+        //     }
+        //     cell.setStateProps(null);
+        //   });
+        // }
+    }
+    // TODO remove unsafe
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.columnRenderCount < this.props.columnRenderCount) {
             this.cleanupCells();
             this.getCells().forEach(cell => {
                 if (cell.getProps().computedLocked) {
