@@ -168,18 +168,6 @@ export default class DataGridRow extends React.Component {
         });
         return false;
     }
-    // TODO remove unsafe
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.columnRenderCount < this.props.columnRenderCount) {
-            this.cleanupCells();
-            this.getCells().forEach(cell => {
-                if (cell.getProps().computedLocked) {
-                    return;
-                }
-                cell.setStateProps(null);
-            });
-        }
-    }
     componentDidMount() {
         if (this.props.active) {
             this.props.activeRowRef.current = {
@@ -221,6 +209,27 @@ export default class DataGridRow extends React.Component {
                 instance: this,
                 node: this.getDOMNode(),
             };
+        }
+        // if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+        //   this.cleanupCells();
+        //   this.getCells().forEach(cell => {
+        //     if (cell.getProps().computedLocked) {
+        //       return;
+        //     }
+        //     cell.setStateProps(null);
+        //   });
+        // }
+    }
+    // TODO remove unsafe
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.columnRenderCount < this.props.columnRenderCount) {
+            this.cleanupCells();
+            this.getCells().forEach(cell => {
+                if (cell.getProps().computedLocked) {
+                    return;
+                }
+                cell.setStateProps(null);
+            });
         }
     }
     updateEditCell(props = this.props) {

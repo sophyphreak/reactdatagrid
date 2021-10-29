@@ -89,16 +89,22 @@ export default class Clock extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const currentRun = this.shouldRun(this.props);
-    const nextRun = this.shouldRun(nextProps);
+  componentDidUpdate = prevProps => {
+    if (
+      prevProps.run !== this.props.run ||
+      prevProps.defaultSeconds !== this.props.defaultSeconds ||
+      prevProps.defaultTime !== this.props.defaultTime
+    ) {
+      const prevRun = this.shouldRun(prevProps);
+      const currentRun = this.shouldRun(this.props);
 
-    if (!currentRun && nextRun) {
-      this.start();
-    } else if (currentRun && !nextRun) {
-      this.stop();
+      if (!prevRun && currentRun) {
+        this.start();
+      } else if (prevRun && !currentRun) {
+        this.stop();
+      }
     }
-  }
+  };
 
   start() {
     this.startTime = Date.now ? Date.now() : +new Date();

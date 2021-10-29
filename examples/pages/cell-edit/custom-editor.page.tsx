@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
 
-import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
+import ReactDataGrid from '../../../enterprise-edition';
 
 import NumericEditor from '@inovua/reactdatagrid-community/NumericEditor';
 import BoolEditor from '@inovua/reactdatagrid-community/BoolEditor';
+import DateEditor from '@inovua/reactdatagrid-community/DateEditor';
 
 import people from '../people';
 import flags from '../flags';
@@ -53,6 +54,16 @@ const columns = [
           }}
         />
       );
+    },
+  },
+  {
+    name: 'birthDate',
+    header: 'Birth Date',
+    minWidth: 150,
+    type: 'date',
+    editor: DateEditor,
+    editorProps: {
+      dateFormat: 'DD-MM-YYYY',
     },
   },
   {

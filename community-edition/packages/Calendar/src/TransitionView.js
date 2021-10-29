@@ -88,13 +88,13 @@ export default class TransitionView extends Component {
     });
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.viewDate) {
+  componentDidUpdate = prevProps => {
+    if (prevProps.viewDate !== this.props.viewDate) {
       // this is in order to transition when the prop changes
       // if we were to simply do setState({ viewDate }) it wouldn't have had a transition
-      this.transitionTo(nextProps.viewDate, nextProps);
+      this.transitionTo(this.props.viewDate, this.props);
     }
-  }
+  };
 
   transitionTo(date, props) {
     props = props || this.props;

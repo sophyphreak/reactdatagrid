@@ -277,26 +277,21 @@ class InovuaCheckBox extends Component {
     this.checkboxRef = createRef();
   }
 
-  componentDidUpdate(previousProps) {
+  componentDidUpdate(prevProps) {
     this.checkUpdateIndeterminate(this.p);
 
-    if (
-      previousProps.supportIndeterminate &&
-      !this.props.supportIndeterminate
-    ) {
+    if (prevProps.supportIndeterminate && !this.props.supportIndeterminate) {
       this.setNativeIndeterminate(false);
+    }
+
+    if (!prevProps.autoFocus && this.props.autoFocus && !this.isFocused()) {
+      this.focus();
     }
   }
 
   componentDidMount() {
     this.checkUpdateIndeterminate();
     if (this.props.autoFocus) {
-      this.focus();
-    }
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.autoFocus && !this.props.autoFocus && !this.isFocused()) {
       this.focus();
     }
   }

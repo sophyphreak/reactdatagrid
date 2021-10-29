@@ -10,6 +10,7 @@ import React from 'react';
 import DataGrid from '@inovua/reactdatagrid-enterprise';
 
 import people from '../people';
+import { any } from 'prop-types';
 
 const gridStyle = { minHeight: '80vh', margin: 20 };
 
@@ -35,7 +36,7 @@ const times = (arr, n, fn?) => {
 const defaultGroupBy = ['country'];
 
 const defaultCellSelection = { '0-4,id': true, '0-4,desc': true };
-class App extends React.Component {
+class App extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const COLS = 100;
@@ -66,7 +67,6 @@ class App extends React.Component {
         125
       ),
     };
-    console.log(this.state.dataSource);
   }
 
   render() {
@@ -77,7 +77,7 @@ class App extends React.Component {
       <DataGrid
         idProperty="id"
         style={gridStyle}
-        theme="default-light"
+        theme="default-dark"
         handle={x => {
           global.x = x;
         }}
@@ -86,6 +86,7 @@ class App extends React.Component {
         columns={this.state.columns}
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         dataSource={this.state.dataSource}
+        // defaultGroupBy={defaultGroupBy}
       />
     );
   }

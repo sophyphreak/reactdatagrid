@@ -75,11 +75,17 @@ class DateFilter extends Component<DateFilterProps, DateFilterState> {
     this.onValueChange = this.onValueChange.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps({ filterValue: { value } }: any) {
-    if (this.props.filterValue && this.props.filterValue.value !== value) {
-      this.setValue(value);
+  componentDidUpdate = ({ filterValue: { value } }: any) => {
+    if (
+      value.localeCompare(
+        this.props.filterValue && this.props.filterValue.value
+      )
+    ) {
+      if (this.props.filterValue) {
+        this.setValue((this.props.filterValue as any).value);
+      }
     }
-  }
+  };
 
   onChange(value: TypeValue) {
     if (value === this.state.value) {

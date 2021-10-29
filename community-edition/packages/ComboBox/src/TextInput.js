@@ -31,15 +31,6 @@ class TextInput extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.throttle && this.props.value !== nextProps.value) {
-      this.setState({ value: nextProps.value });
-    }
-    if (this.props.throttle !== nextProps.throttle) {
-      this.updateThrottledUpdateValue(nextProps.throttle);
-    }
-  }
-
   componentDidUpdate(prevProps) {
     /**
      * Before the suggestion is added we must weight for the
@@ -68,6 +59,14 @@ class TextInput extends Component {
       this.suggestionTimeOut = setTimeout(() => {
         this.selectForwardIfNecessary();
       }, this.props.autocompleteDelay);
+    }
+
+    if (this.props.throttle && prevProps.value !== this.props.value) {
+      this.setState({ value: this.props.value });
+    }
+
+    if (prevProps.throttle !== this.props.throttle) {
+      this.updateThrottledUpdateValue(this.props.throttle);
     }
   }
 

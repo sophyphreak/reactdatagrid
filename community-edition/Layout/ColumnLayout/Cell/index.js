@@ -69,6 +69,21 @@ export default class InovuaDataGridCell extends React.Component {
     UNSAFE_componentWillReceiveProps(nextProps) {
         this.updateProps(nextProps);
     }
+    componentDidMount() {
+        this.node = this.getDOMNode();
+        if (this.props.onMount) {
+            this.props.onMount(this.props, this);
+        }
+        // if (this.props.naturalRowHeight) {
+        //   this.cleanupResizeObserver = setupResizeObserver(this.node, size => {
+        //     this.props.onResize?.({
+        //       cell: this,
+        //       props: this.getProps(),
+        //       size,
+        //     });
+        //   });
+        // }
+    }
     getProps() {
         return this.state.props;
     }
@@ -88,21 +103,6 @@ export default class InovuaDataGridCell extends React.Component {
     onUpdate() {
         if (this.props.onUpdate) {
             this.props.onUpdate(this.getProps(), this);
-        }
-    }
-    componentDidMount() {
-        this.node = this.getDOMNode();
-        if (this.props.onMount) {
-            this.props.onMount(this.props, this);
-        }
-        if (this.props.naturalRowHeight) {
-            // this.cleanupResizeObserver = setupResizeObserver(this.node, size => {
-            //   this.props.onResize?.({
-            //     cell: this,
-            //     props: this.getProps(),
-            //     size,
-            //   });
-            // });
         }
     }
     componentWillUnmount() {

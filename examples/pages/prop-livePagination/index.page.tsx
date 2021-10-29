@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
-import DataGrid from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
 
 const DATASET_URL = 'https://demos.reactdatagrid.io/api/v1/';
 
 const gridStyle = { minHeight: '70vh', margin: 20 };
 const columns = [
-  { name: 'id', type: 'number', maxWidth: 40 },
+  { name: 'id', type: 'number', maxWidth: 60 },
   { name: 'lastName', header: 'Name', defaultFlex: 2 },
   { name: 'firstName', header: 'First', defaultFlex: 2 },
   { name: 'email', defaultFlex: 3 },
@@ -28,28 +28,41 @@ const defaultFilterValue = [
   },
 ];
 
-const dataSource = ({ skip, sortInfo, limit, filterValue }) =>
-  fetch(
-    DATASET_URL +
-      '/contacts?skip=' +
-      skip +
-      '&limit=' +
-      limit +
-      '&filterBy=' +
-      JSON.stringify(filterValue) +
-      '&sortInfo=' +
-      JSON.stringify(sortInfo)
-  ).then(response => {
-    const totalCount = response.headers.get('X-Total-Count');
-    return response.json().then(data => {
-      return { data, count: parseInt(totalCount) };
-    });
-  });
 const App = () => {
+  const [count, setCount] = useState<any>(800);
+
+  const dataSource = ({ skip, sortInfo, limit, filterValue }) =>
+    fetch(
+      DATASET_URL +
+        '/contacts?skip=' +
+        skip +
+        '&limit=' +
+        limit +
+        '&filterBy=' +
+        JSON.stringify(filterValue) +
+        '&sortInfo=' +
+        JSON.stringify(sortInfo)
+    ).then(response => {
+      const totalCount = `${count}`; // response.headers.get('X-Total-Count');
+      return response.json().then(data => {
+        console.log('count', totalCount);
+        return { data, count: parseInt(totalCount) };
+      });
+    });
+
   return (
-    <div style={{ height: '200vh' }}>
+    <div>
+      <div style={{ marginBottom: 20 }}>
+        <button onClick={() => setCount(`${parseInt(count) - 10}`)}>
+          Decrease count
+        </button>
+        <button onClick={() => setCount(`${parseInt(count) + 10}`)}>
+          Increase count
+        </button>
+      </div>
       <DataGrid
         idProperty="id"
+        theme="default-dark"
         style={gridStyle}
         defaultLimit={15}
         columns={columns}

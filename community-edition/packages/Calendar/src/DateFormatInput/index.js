@@ -79,20 +79,25 @@ export default class DateFormatInput extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { minDate, maxDate } = this.getMinMax(nextProps);
-
-    this.setState({
-      minDate,
-      maxDate,
-    });
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate = prevProps => {
     if (this.props.value !== undefined && this.caretPos && this.isFocused()) {
       this.setCaretPosition(this.caretPos);
     }
-  }
+
+    const { minDate: prevMinDate, maxDate: prevMaxDate } = this.getMinMax(
+      prevProps
+    );
+    const { minDate: currentMinDate, maxDate: currentMaxDate } = this.getMinMax(
+      this.props
+    );
+
+    if (prevMinDate !== currentMinDate) {
+      this.setState({ minDate: currentMinDate });
+    }
+    if (prevMaxDate !== currentMaxDate) {
+      this.setState({ maxDate: currentMaxDate });
+    }
+  };
 
   toMoment(value, props) {
     props = props || this.props;

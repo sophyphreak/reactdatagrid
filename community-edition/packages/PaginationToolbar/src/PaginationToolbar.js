@@ -329,35 +329,33 @@ export default class InovuaPaginationToolbar extends React.Component {
     return result;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const skip = this.getSkip();
-    const limit = this.getLimit();
-    const pageCount = getPageCount({ count: this.props.totalCount, limit });
-
+  componentDidUpdate = prevProps => {
+    const skip = this.getSkip(prevProps);
+    const limit = this.getLimit(prevProps);
+    const pageCount = getPageCount({ count: prevProps.totalCount, limit });
     const currentPage = Math.min(pageCount, getCurrentPage({ skip, limit }));
 
-    const nextSkip = this.getSkip(nextProps);
-    const nextLimit = this.getLimit(nextProps);
+    const nextSkip = this.getSkip(this.props);
+    const nextLimit = this.getLimit(this.props);
+
     const nextPageCount = getPageCount({
-      count: nextProps.totalCount,
+      count: this.props.totalCount,
       limit: nextLimit,
     });
-
     const nextCurrentPage = Math.min(
       nextPageCount,
       getCurrentPage({ skip: nextSkip, limit: nextLimit })
     );
 
-    this.forceUpdate(() => {
-      // this is after setState in order to protect against a scenario where
-      // the nextCurrentPage would be less than the current maxPage and
-      // the number input would not update if doesn't yet have new props
-      // so we wait for it for new props & update the input using setValue
-      if (currentPage != nextCurrentPage) {
-        this.setCurrentPageInputValue(nextCurrentPage, nextProps);
-      }
-    });
-  }
+    if (
+      prevProps.totalCount !== this.props.totalCount ||
+      currentPage !== nextCurrentPage
+    ) {
+      this.forceUpdate(() => {
+        this.setCurrentPageInputValue(nextCurrentPage, this.props);
+      });
+    }
+  };
 
   setCurrentPageInputValue(value, props = this.props) {
     this.lastNotifiedSkip = getSkipForPage({

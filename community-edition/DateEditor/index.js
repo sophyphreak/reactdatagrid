@@ -28,8 +28,6 @@ class DateEditor extends React.Component {
     componentDidMount() {
         this.domNode = this.domRef.current;
         this.constrainToNode = selectParent('.InovuaReactDataGrid', this.domNode);
-    }
-    UNSAFE_componentWillMount() {
         const { cell } = this.props;
         const cellNode = cell && cell.getDOMNode() ? cell.getDOMNode() : cell.domRef.current;
         const gridNode = selectParent('.inovua-react-virtual-list', cellNode);

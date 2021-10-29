@@ -33,7 +33,7 @@ const enterprisePlugins = [
   livePagination,
 ];
 
-export default Factory(
+const ReactDataGrid = Factory(
   {
     plugins: enterprisePlugins,
   },
@@ -41,3 +41,4 @@ export default Factory(
 );
 
 export { filterTypes };
+export default ReactDataGrid;

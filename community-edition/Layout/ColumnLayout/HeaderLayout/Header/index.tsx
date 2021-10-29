@@ -142,15 +142,13 @@ export default class InovuaDataGridHeader extends React.Component {
     this.unlockedCells = null;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.columnRenderCount < this.props.columnRenderCount) {
-      const newLength = Math.max(nextProps.columnRenderCount + 1, 0);
-
-      this.getUnlockedCells().forEach(cell => {
+  componentDidUpdate = prevProps => {
+    if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+      this.getUnlockedCells(prevProps).forEach(cell => {
         cell.setStateProps(null);
       });
     }
-  }
+  };
 
   setCellIndex = (cell, index) => {
     const cellProps = this.getPropsForCells(index)[0];
@@ -168,12 +166,12 @@ export default class InovuaDataGridHeader extends React.Component {
     );
   };
 
-  getUnlockedCells = () => {
-    const { columns, lockedStartColumns } = this.props;
+  getUnlockedCells = (thisProps = this.props) => {
+    const { columns, lockedStartColumns } = thisProps;
 
     const result = [];
 
-    this.props.columns.forEach(c => {
+    thisProps.columns.forEach(c => {
       const cell = this.findCellById(c.id, this.unlockedCells);
       if (cell) {
         const props = cell.getProps();

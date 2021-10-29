@@ -42,13 +42,14 @@ class SelectFilter extends React.Component {
             value,
         });
     }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.filterValue &&
-            nextProps.filterValue.value !== this.state.value) {
-            const value = nextProps.filterValue.value;
-            this.setValue(value);
+    componentDidUpdate = ({ filterValue: { value } }) => {
+        if (value &&
+            String(value).localeCompare(String(this.props.filterValue && this.props.filterValue.value))) {
+            if (this.props.filterValue) {
+                this.setValue(this.props.filterValue.value);
+            }
         }
-    }
+    };
     onValueChange(value) {
         this.props.onChange &&
             this.props.onChange({

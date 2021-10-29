@@ -19,9 +19,11 @@ export const plugins = [
   (CellSelection as any) as TypePlugin,
 ];
 
-export default DataGridFactory(
+const ReactDataGrid = DataGridFactory(
   {
     plugins,
   },
   'community'
 );
+
+export default ReactDataGrid;
