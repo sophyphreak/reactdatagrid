@@ -1236,12 +1236,12 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
     property: string,
     value: any
   ) => void;
-  setItemAt: (items: any, config?: { replace?: boolean }) => void;
-  setItemsAt: (
+  setItemAt: (
     index: number,
     item: any,
     config?: { replace?: boolean; property?: string; value?: any }
   ) => void;
+  setItemsAt: (items: any, config?: { replace?: boolean }) => void;
   activeRowRef: MutableRefObject<{ instance: any; node: HTMLElement } | null>;
   activeRowHeight: number;
   renderActiveRowIndicator: (handle: any) => ReactNode;
