@@ -19,6 +19,7 @@ type SelectEditorProps = {
   onComplete?: Function;
   onTabNavigation?: Function;
   onCancel?: Function;
+  theme?: string;
 };
 
 const stopPropagation = (e: Event) => e.stopPropagation();
@@ -27,6 +28,7 @@ const styleWidth100 = { width: '100%' };
 const renderListScroller = (props: any) => (
   <ScrollContainer
     {...props}
+    applyCSSContainOnScroll={false}
     viewStyle={styleWidth100}
     onWheel={stopPropagation}
   />
@@ -47,6 +49,7 @@ const SelectEditor = (props: SelectEditorProps) => {
         collapseOnSelect
         focusOnClick={false}
         autoFocus={false}
+        theme={editorProps.theme ? editorProps.theme : props.theme}
         renderListScroller={props.nativeScroll ? undefined : renderListScroller}
         defaultValue={props.value}
         onChange={(value: string) => {

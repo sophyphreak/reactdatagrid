@@ -641,11 +641,14 @@ export default class InovuaDataGridHeader extends React.Component {
         if (!cell && showWarnings) {
             console.error(`Cannot find dom cell at ${index}.`);
         }
-        return cell.getDOMNode
-            ? cell.getDOMNode()
-            : cell.domRef
-                ? cell.domRef.current
-                : null;
+        if (cell) {
+            return cell.getDOMNode
+                ? cell.getDOMNode()
+                : cell.domRef
+                    ? cell.domRef.current
+                    : null;
+        }
+        return;
     };
     renderHeaderGroup = (groupName, groupItems, _) => {
         const { computedGroupsMap: groups, columnsMap, hasLockedEnd, lockedStartColumns, lockedEndColumns, firstLockedEndIndex, lastLockedStartIndex, lastLockedEndIndex, firstUnlockedIndex, lastUnlockedIndex, resizeProxyStyle, rtl, } = this.props;

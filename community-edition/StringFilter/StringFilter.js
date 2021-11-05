@@ -24,7 +24,7 @@ class StringFilter extends React.Component {
         }
     }
     componentDidUpdate = ({ filterValue: { value } }) => {
-        if (value.localeCompare(this.props.filterValue && this.props.filterValue.value)) {
+        if (String(value).localeCompare(String(this.props.filterValue && this.props.filterValue.value))) {
             if (this.props.filterValue) {
                 this.setValue(this.props.filterValue.value);
             }

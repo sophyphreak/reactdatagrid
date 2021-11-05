@@ -213,7 +213,7 @@ class List extends Component {
       style.maxHeight = this.props.maxHeight;
     }
     if (this.state.constrainedHeight) {
-      const constrainedOffset = 5;
+      const constrainedOffset = 16;
       const constrainedHeight = this.props.maxHeight
         ? Math.min(
             this.props.maxHeight,

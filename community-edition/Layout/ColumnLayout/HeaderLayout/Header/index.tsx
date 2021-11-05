@@ -934,11 +934,15 @@ export default class InovuaDataGridHeader extends React.Component<
       console.error(`Cannot find dom cell at ${index}.`);
     }
 
-    return cell.getDOMNode
-      ? cell.getDOMNode()
-      : cell.domRef
-      ? cell.domRef.current
-      : null;
+    if (cell) {
+      return cell.getDOMNode
+        ? cell.getDOMNode()
+        : cell.domRef
+        ? cell.domRef.current
+        : null;
+    }
+
+    return;
   };
 
   renderHeaderGroup = (groupName: string, groupItems: any, _?: any) => {
