@@ -13,6 +13,34 @@ import ColumnResizer from '../../Cell/ColumnResizer';
 const emptyObject = Object.freeze ? Object.freeze({}) : {};
 const BASE_CLASS_NAME = 'InovuaReactDataGrid__header-group__title';
 const TOP_Z_INDEX = 10000;
+const defaultProps = { isHeaderGroup: true };
+const propTypes = {
+    columnResizeHandleWidth: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+    ]),
+    group: PropTypes.shape({
+        name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        className: PropTypes.string,
+        style: PropTypes.object,
+        headerClassName: PropTypes.string,
+        headerStyle: PropTypes.object,
+    }),
+    depth: PropTypes.number.isRequired,
+    columns: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
+    children: PropTypes.node,
+    extraChildrenProps: PropTypes.object,
+    containsLastColumn: PropTypes.bool,
+    lastInSection: PropTypes.bool,
+    filterable: PropTypes.bool,
+    onResizeMouseDown: PropTypes.func,
+    onResizeTouchStart: PropTypes.func,
+    parentGroups: PropTypes.array,
+    showBorderLeft: PropTypes.bool,
+    showBorderRight: PropTypes.bool,
+    siblingCount: PropTypes.number,
+    siblingIndex: PropTypes.number,
+};
 const getHeader = (group = emptyObject) => {
     const { header, name } = group;
     if (header) {
@@ -24,25 +52,27 @@ const getHeader = (group = emptyObject) => {
     return humanize(name || '');
 };
 export default class HeaderGroup extends React.Component {
+    static defaultProps = defaultProps;
+    static propTypes = propTypes;
     domRef;
     constructor(props) {
         super(props);
         this.state = { dragging: false };
         this.domRef = React.createRef();
     }
-    setTop = top => {
+    setTop = (top) => {
         this.setState({ top });
     };
-    setLeft = left => {
+    setLeft = (left) => {
         this.setState({ left });
     };
-    setRight = right => {
+    setRight = (right) => {
         this.setState({ right });
     };
-    setHeight = height => {
+    setHeight = (height) => {
         this.setState({ height });
     };
-    setWidth = width => {
+    setWidth = (width) => {
         this.setState({ width });
     };
     setDragging = (dragging, callback) => {
@@ -134,49 +164,21 @@ export default class HeaderGroup extends React.Component {
         extraProps.key = index;
         return cloneElement(child, extraProps);
     };
-    onResizeMouseDown = event => {
+    onResizeMouseDown = (event) => {
         if (this.props.onResizeMouseDown) {
             event.stopPropagation();
             this.props.onResizeMouseDown(this.props, this, event);
         }
     };
-    onResizeTouchStart = event => {
+    onResizeTouchStart = (event) => {
         if (this.props.onResizeTouchStart) {
             event.stopPropagation();
             this.props.onResizeTouchStart(this.props, this, event);
         }
     };
-    onMouseDown = event => {
+    onMouseDown = (event) => {
         if (this.props.onMouseDown) {
             this.props.onMouseDown(event, this.props, this);
         }
     };
 }
-HeaderGroup.defaultProps = { isHeaderGroup: true };
-HeaderGroup.propTypes = {
-    columnResizeHandleWidth: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    ]),
-    group: PropTypes.shape({
-        name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        className: PropTypes.string,
-        style: PropTypes.object,
-        headerClassName: PropTypes.string,
-        headerStyle: PropTypes.object,
-    }),
-    depth: PropTypes.number.isRequired,
-    columns: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
-    children: PropTypes.node,
-    extraChildrenProps: PropTypes.object,
-    containsLastColumn: PropTypes.bool,
-    lastInSection: PropTypes.bool,
-    filterable: PropTypes.bool,
-    onResizeMouseDown: PropTypes.func,
-    onResizeTouchStart: PropTypes.func,
-    parentGroups: PropTypes.array,
-    showBorderLeft: PropTypes.bool,
-    showBorderRight: PropTypes.bool,
-    siblingCount: PropTypes.number,
-    siblingIndex: PropTypes.number,
-};

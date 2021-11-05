@@ -11,10 +11,10 @@ import { TypeCellProps, TypeComputedColumn } from '../../../../types';
 export default (
   cellProps: TypeCellProps,
   column: TypeComputedColumn,
-  headerProps,
-  contextMenu
+  headerProps: any,
+  contextMenu?: any
 ) => {
-  const { header, name } = cellProps;
+  const { header, name }: any = cellProps;
 
   if (header !== undefined) {
     if (typeof header !== 'function') {

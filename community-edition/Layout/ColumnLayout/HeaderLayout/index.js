@@ -1197,6 +1197,12 @@ export default class InovuaDataGridHeaderLayout extends Component {
       return;
     }
 
+    if (this.props.virtualizeColumns) {
+      setTimeout(() => {
+        this.header.updateColumns();
+      }, 10);
+    }
+
     if (dragTarget == 'headergroup') {
       if (dropIndex == dragIndex && dragTarget == dropTarget) {
         return;

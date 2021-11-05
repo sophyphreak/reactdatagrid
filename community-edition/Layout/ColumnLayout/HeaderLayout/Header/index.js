@@ -15,7 +15,6 @@ import HeaderGroup from './HeaderGroup';
 import renderCellsMaybeLocked from '../../Content/renderCellsMaybeLocked';
 import join from '../../../../packages/join';
 import getCellHeader from './getCellHeader';
-const notEmpty = x => !!x;
 const emptyFn = () => { };
 export { getCellHeader };
 export const getParentGroups = (groupName, groups, { includeSelf } = { includeSelf: false }) => {
@@ -33,7 +32,123 @@ export const getParentGroups = (groupName, groups, { includeSelf } = { includeSe
     }
     return parentGroups;
 };
+const defaultProps = {
+    onResize: () => { },
+    showWarnings: !uglified,
+};
+const propTypes = {
+    availableWidth: PropTypes.number,
+    columnHeaderUserSelect: PropTypes.bool,
+    columnRenderCount: PropTypes.number,
+    columnResizeHandleWidth: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+    ]),
+    columnUserSelect: PropTypes.bool,
+    columns: PropTypes.array,
+    columnsMap: PropTypes.object,
+    lockedStartColumns: PropTypes.array,
+    unlockedColumns: PropTypes.array,
+    lockedEndColumns: PropTypes.array,
+    deselectAll: PropTypes.func,
+    firstLockedEndIndex: PropTypes.number,
+    firstLockedStartIndex: PropTypes.number,
+    isMultiSort: PropTypes.bool,
+    onGroupMouseDown: PropTypes.func,
+    onResizeMouseDown: PropTypes.func,
+    onResizeTouchStart: PropTypes.func,
+    resizable: PropTypes.bool,
+    resizeProxyStyle: PropTypes.object,
+    scrollbarWidth: PropTypes.number,
+    selectAll: PropTypes.func,
+    selectedCount: PropTypes.number,
+    sortInfo: PropTypes.any,
+    sortable: PropTypes.bool,
+    totalCount: PropTypes.number,
+    unselectedCount: PropTypes.number,
+    virtualListBorderLeft: PropTypes.number,
+    virtualListBorderRight: PropTypes.number,
+    nativeScroll: PropTypes.bool,
+    computedShowHeaderBorderRight: PropTypes.any,
+    hasLockedEnd: PropTypes.bool,
+    hasLockedStart: PropTypes.bool,
+    showColumnContextMenu: PropTypes.func,
+    showColumnFilterContextMenu: PropTypes.func,
+    onColumnHeaderFocus: PropTypes.func,
+    showColumnMenuTool: PropTypes.bool,
+    showColumnMenuToolOnHover: PropTypes.bool,
+    firstUnlockedIndex: PropTypes.number,
+    lockedRows: PropTypes.any,
+    i18n: PropTypes.any,
+    filterable: PropTypes.bool,
+    filterTypes: PropTypes.any,
+    computedGroupsDepth: PropTypes.number,
+    computedGroupsMap: PropTypes.objectOf(PropTypes.shape({ name: PropTypes.string.isRequired })),
+    headerHeight: PropTypes.number,
+    maxWidth: PropTypes.number,
+    renderSortTool: PropTypes.func,
+    minWidth: PropTypes.number,
+    onCellMouseDown: PropTypes.func,
+    onCellTouchStart: PropTypes.func,
+    onCellClick: PropTypes.func,
+    computedOnColumnFilterValueChange: PropTypes.func,
+    onSortClick: PropTypes.func,
+    onResize: PropTypes.func,
+    scrollLeft: PropTypes.number,
+    showWarnings: PropTypes.bool,
+    unselected: PropTypes.any,
+    virtualizeColumns: PropTypes.bool,
+    width: PropTypes.number,
+    updateLockedWrapperPositions: PropTypes.func,
+    lastLockedEndIndex: PropTypes.number,
+    lastLockedStartIndex: PropTypes.number,
+    lastUnlockedIndex: PropTypes.number,
+    getScrollLeftMax: PropTypes.func,
+    rtl: PropTypes.bool,
+    renderLockedEndCells: PropTypes.func,
+    renderLockedStartCells: PropTypes.func,
+    renderInPortal: PropTypes.any,
+    onFilterValueChange: PropTypes.func,
+    setScrollLeft: PropTypes.func,
+};
 export default class InovuaDataGridHeader extends React.Component {
+    static defaultProps = defaultProps;
+    static propTypes = propTypes;
+    domRef;
+    unlockedCells;
+    cells;
+    columnRenderStartIndex;
+    scrollLeft = 0;
+    startIndex = 0;
+    endIndex = 0;
+    constructor(props) {
+        super(props);
+        this.cells = [];
+        this.unlockedCells = [];
+        this.startIndex = 0;
+        this.endIndex = 0;
+        this.domRef = React.createRef();
+        this.state = {
+            children: this.renderColumns(),
+        };
+    }
+    componentWillUnmount() {
+        this.cells = null;
+        this.unlockedCells = null;
+    }
+    componentDidUpdate = (prevProps) => {
+        if (this.props.columnRenderCount < prevProps.columnRenderCount) {
+            this.getUnlockedCells(prevProps).forEach(cell => {
+                cell.setStateProps(null);
+            });
+        }
+        if (this.props.virtualizeColumns &&
+            prevProps.columnRenderCount !== this.props.columnRenderCount) {
+            this.setState({
+                children: this.renderColumns(),
+            });
+        }
+    };
     onCellMount = (cellProps, c) => {
         // do not consider cells while dragging
         if (cellProps.dragging) {
@@ -51,26 +166,19 @@ export default class InovuaDataGridHeader extends React.Component {
         }
         if (this.props.virtualizeColumns && !cellProps.computedLocked) {
             if (this.unlockedCells) {
-                this.unlockedCells = this.unlockedCells.filter(c => c !== cell);
+                this.unlockedCells = this.unlockedCells.filter((c) => c !== cell);
             }
         }
         if (this.cells) {
             this.cells = this.cells.filter(c => c !== cell);
         }
     };
-    domRef;
-    constructor(props) {
-        super(props);
-        this.cells = [];
-        this.unlockedCells = [];
-        this.domRef = React.createRef();
-    }
     findCellById = (cellId, cellsArray = this.cells) => {
-        return cellsArray.filter(c => c.getProps().id === cellId)[0];
+        return cellsArray.filter((c) => c.getProps().id === cellId)[0];
     };
     getCells = () => {
         const result = [];
-        this.props.columns.forEach(c => {
+        this.props.columns.forEach((c) => {
             const cell = this.findCellById(c.id);
             if (cell) {
                 const props = cell.getProps();
@@ -82,7 +190,7 @@ export default class InovuaDataGridHeader extends React.Component {
     getGroupsAndCells = () => {
         const cells = this.getCells();
         const result = [];
-        const add = item => {
+        const add = (item) => {
             if (result.indexOf(item) == -1) {
                 result.push(item);
             }
@@ -99,31 +207,20 @@ export default class InovuaDataGridHeader extends React.Component {
         });
         return result;
     };
-    componentWillUnmount() {
-        this.cells = null;
-        this.unlockedCells = null;
-    }
-    componentDidUpdate = prevProps => {
-        if (this.props.columnRenderCount < prevProps.columnRenderCount) {
-            this.getUnlockedCells(prevProps).forEach(cell => {
-                cell.setStateProps(null);
-            });
-        }
-    };
     setCellIndex = (cell, index) => {
         const cellProps = this.getPropsForCells(index)[0];
         cell.setStateProps(cellProps);
     };
-    getCellIndex = cell => {
+    getCellIndex = (cell) => {
         return cell.getProps().index;
     };
-    sortCells = cells => {
+    sortCells = (cells) => {
         return cells.sort((cell1, cell2) => this.getCellIndex(cell1) - this.getCellIndex(cell2));
     };
     getUnlockedCells = (thisProps = this.props) => {
-        const { columns, lockedStartColumns } = thisProps;
+        const { lockedStartColumns } = thisProps;
         const result = [];
-        thisProps.columns.forEach(c => {
+        thisProps.columns.forEach((c) => {
             const cell = this.findCellById(c.id, this.unlockedCells);
             if (cell) {
                 const props = cell.getProps();
@@ -138,7 +235,7 @@ export default class InovuaDataGridHeader extends React.Component {
     };
     getGaps = (startIndex, endIndex) => {
         const visibleCellPositions = {};
-        this.getSortedCells().forEach(cell => {
+        this.getSortedCells().forEach((cell) => {
             visibleCellPositions[this.getCellIndex(cell)] = true;
         });
         const gaps = [];
@@ -149,7 +246,7 @@ export default class InovuaDataGridHeader extends React.Component {
         }
         return gaps;
     };
-    setColumnRenderStartIndex = columnRenderStartIndex => {
+    setColumnRenderStartIndex = (columnRenderStartIndex) => {
         this.columnRenderStartIndex = columnRenderStartIndex;
         const renderRange = this.getColumnRenderRange();
         if (!renderRange) {
@@ -196,8 +293,8 @@ export default class InovuaDataGridHeader extends React.Component {
         }
         return null;
     };
-    prepareStyle = props => {
-        const { headerHeight, width, minWidth, index, scrollbarWidth } = props;
+    prepareStyle = (props) => {
+        const { headerHeight, width, minWidth, index } = props;
         const style = { ...props.style };
         if (width || minWidth) {
             if (width) {
@@ -221,9 +318,9 @@ export default class InovuaDataGridHeader extends React.Component {
         return style;
     };
     getDOMNode() {
-        return this.domRef.current;
+        return this.domRef?.current;
     }
-    notifyScrollLeftMax = scrollLeftMax => {
+    notifyScrollLeftMax = (scrollLeftMax) => {
         const resizerClassName = 'InovuaReactDataGrid__column-resizer';
         const lastUnlockedResizer = this.getDOMNode().querySelector(`.${resizerClassName}--last-unlocked`);
         if (lastUnlockedResizer) {
@@ -253,7 +350,7 @@ export default class InovuaDataGridHeader extends React.Component {
             // and checking if scrollLeft = scrollLeftMax at that point to make the last unlocked resizer have a greater zindex
         }
     };
-    setScrollLeft = scrollLeft => {
+    setScrollLeft = (scrollLeft) => {
         this.scrollLeft = scrollLeft;
         const node = this.props.hasLocked
             ? this.getDOMNode().querySelector('.InovuaReactDataGrid__unlocked-wrapper')
@@ -269,17 +366,37 @@ export default class InovuaDataGridHeader extends React.Component {
                 isHeader: true,
             });
         }
+        if (this.props.virtualizeColumns) {
+            this.maybeUpdateColumns();
+        }
+    };
+    maybeUpdateColumns = () => {
+        const range = this.getColumnRenderRange();
+        if (range &&
+            range.start !== this.startIndex &&
+            range.end !== this.endIndex) {
+            this.updateColumns();
+        }
+    };
+    updateColumns = () => {
+        const newColumns = this.renderColumns();
+        this.setState({
+            children: newColumns,
+        });
     };
     render() {
         const { props } = this;
-        const { columns, rtl } = props;
+        const { rtl, virtualizeColumns } = props;
         const className = join('InovuaReactDataGrid__header', `InovuaReactDataGrid__header--direction-${rtl ? 'rtl' : 'ltr'}`, props.className);
         const style = this.prepareStyle(props);
-        const children = this.renderColumns(columns);
+        const children = virtualizeColumns
+            ? this.state.children
+            : this.renderColumns();
         const cleanedProps = cleanProps(props, InovuaDataGridHeader.propTypes);
+        delete cleanedProps.columnWidthPrefixSums;
         return (React.createElement("div", { ...cleanedProps, className: className, data: null, style: style, ref: this.domRef, onFocus: this.onFocus }, children));
     }
-    onFocus = event => {
+    onFocus = (event) => {
         const body = selectParent('.InovuaReactDataGrid__body', event.target);
         if (!body) {
             return;
@@ -298,7 +415,7 @@ export default class InovuaDataGridHeader extends React.Component {
     };
     getPropsForCells = (startIndex, endIndex = startIndex + 1) => {
         const props = this.props;
-        const { renderInPortal, columnHeaderUserSelect, columnResizeHandleWidth, columnUserSelect, data, showColumnContextMenu, showColumnFilterContextMenu, deselectAll, firstLockedEndIndex, firstUnlockedIndex, filterable, computedShowHeaderBorderRight, hasLockedEnd, hasLockedStart, lockedStartColumns, lockedEndColumns, nativeScroll, resizeProxyStyle, rtl, i18n, scrollbarWidth, selectAll, selectedCount, filterTypes, computedSortable, totalCount, renderSortTool, unselectedCount, virtualizeColumns, showColumnMenuTool, showColumnMenuToolOnHover, lastUnlockedIndex, lastLockedStartIndex, lastLockedEndIndex, theme, } = props;
+        const { renderInPortal, columnHeaderUserSelect, columnResizeHandleWidth, columnUserSelect, data, showColumnContextMenu, showColumnFilterContextMenu, deselectAll, firstLockedEndIndex, firstUnlockedIndex, filterable, computedShowHeaderBorderRight, hasLockedEnd, hasLockedStart, lockedEndColumns, nativeScroll, resizeProxyStyle, rtl, i18n, scrollbarWidth, selectAll, selectedCount, filterTypes, totalCount, renderSortTool, unselectedCount, virtualizeColumns, showColumnMenuTool, showColumnMenuToolOnHover, lastUnlockedIndex, lastLockedStartIndex, lastLockedEndIndex, theme, } = props;
         let columns = props.columns;
         if (startIndex !== undefined) {
             columns = columns.slice(startIndex, endIndex);
@@ -453,6 +570,8 @@ export default class InovuaDataGridHeader extends React.Component {
         const props = this.props;
         const { computedGroupsMap: groups, hasLockedStart, hasLockedEnd, lockedStartColumns, lockedEndColumns, columns, } = props;
         const renderRange = this.getColumnRenderRange();
+        this.startIndex = renderRange?.start;
+        this.endIndex = renderRange?.end;
         const cellProps = renderRange
             ? this.getPropsForCells(renderRange.start, renderRange.end + 1)
             : this.getPropsForCells();
@@ -491,7 +610,7 @@ export default class InovuaDataGridHeader extends React.Component {
                     isHeader: true,
                 });
             }
-            return this.renderGroupedCells(cellProps, groups);
+            return this.renderGroupedCells(cellProps);
         }
         let result = [];
         if (hasLockedStart && lockedStartCells) {
@@ -501,14 +620,15 @@ export default class InovuaDataGridHeader extends React.Component {
         if (hasLockedEnd && lockedEndCells) {
             result.push(...lockedEndCells);
         }
-        result = result.map((cProps, index) => {
-            return React.createElement(Cell, { ...cProps, key: index });
+        result = result.map((cProps, i) => {
+            const index = renderRange?.start + i;
+            return (React.createElement(Cell, { ...cProps, key: `${index}__${cProps.id}`, left: this.props.columnWidthPrefixSums[index] }));
         });
         return renderCellsMaybeLocked(result, this.props, props.scrollLeft, {
             isHeader: true,
         });
     };
-    getCellDOMNodeAt = index => {
+    getCellDOMNodeAt = (index) => {
         const { columns, showWarnings, virtualizeColumns } = this.props;
         const column = columns[index];
         if (!column) {
@@ -527,14 +647,14 @@ export default class InovuaDataGridHeader extends React.Component {
                 ? cell.domRef.current
                 : null;
     };
-    renderHeaderGroup = (groupName, groupItems) => {
-        const { computedGroupsMap: groups, columnsMap, hasLockedStart, hasLockedEnd, lockedStartColumns, lockedEndColumns, firstLockedEndIndex, lastLockedStartIndex, lastLockedEndIndex, firstUnlockedIndex, lastUnlockedIndex, resizeProxyStyle, rtl, } = this.props;
+    renderHeaderGroup = (groupName, groupItems, _) => {
+        const { computedGroupsMap: groups, columnsMap, hasLockedEnd, lockedStartColumns, lockedEndColumns, firstLockedEndIndex, lastLockedStartIndex, lastLockedEndIndex, firstUnlockedIndex, lastUnlockedIndex, resizeProxyStyle, rtl, } = this.props;
         const group = groups[groupName];
         const parentGroups = getParentGroups(groupName, groups);
         const depth = group ? group.computedDepth : 0;
         // we compute ALL the columns that are under this HeaderGroup
         const columns = groupItems
-            .filter(x => !!x)
+            .filter((x) => !!x)
             .reduce((acc, item) => {
             if (item.type == HeaderGroup) {
                 // its items can be HeaderGroup s, in which case, they have columns
@@ -625,11 +745,11 @@ export default class InovuaDataGridHeader extends React.Component {
         }
     };
     getItemsForDepth = (items, depth) => {
-        return items.map(item => {
+        return items.map((item) => {
             return item.props.depth === depth ? item : null;
         });
     };
-    renderItems = items => {
+    renderItems = (items) => {
         const { computedGroupsDepth } = this.props;
         // + 1 since we also have cell level
         let currentDepth = computedGroupsDepth + 1;
@@ -673,7 +793,7 @@ export default class InovuaDataGridHeader extends React.Component {
     /**
      * Returns the group where this item (header cell/ HeaderGroup) belongs to
      */
-    getItemGroupName = item => {
+    getItemGroupName = (item) => {
         if (!item) {
             return null;
         }
@@ -698,9 +818,9 @@ export default class InovuaDataGridHeader extends React.Component {
         }
         return item;
     };
-    renderGroupedCells = cellProps => {
+    renderGroupedCells = (cellProps) => {
         const { computedGroupsMap: groups, showWarnings } = this.props;
-        const items = cellProps.map((props, index) => {
+        const items = cellProps.map((props) => {
             const group = groups[props.group];
             if (showWarnings && props.group && !group) {
                 this.warn(`Column "${props.id}" references group "${props.group}", but the group is never defined in the groups prop.`);
@@ -720,86 +840,7 @@ export default class InovuaDataGridHeader extends React.Component {
             });
         }
     };
-    warn = msg => {
+    warn = (msg) => {
         console.error(msg);
     };
 }
-InovuaDataGridHeader.defaultProps = {
-    onResize: () => { },
-    showWarnings: !uglified,
-};
-InovuaDataGridHeader.propTypes = {
-    availableWidth: PropTypes.number,
-    columnHeaderUserSelect: PropTypes.bool,
-    columnRenderCount: PropTypes.number,
-    columnResizeHandleWidth: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    ]),
-    columnUserSelect: PropTypes.bool,
-    columns: PropTypes.array,
-    columnsMap: PropTypes.object,
-    lockedStartColumns: PropTypes.array,
-    unlockedColumns: PropTypes.array,
-    lockedEndColumns: PropTypes.array,
-    deselectAll: PropTypes.func,
-    firstLockedEndIndex: PropTypes.number,
-    firstLockedStartIndex: PropTypes.number,
-    isMultiSort: PropTypes.bool,
-    onGroupMouseDown: PropTypes.func,
-    onResizeMouseDown: PropTypes.func,
-    onResizeTouchStart: PropTypes.func,
-    resizable: PropTypes.bool,
-    resizeProxyStyle: PropTypes.object,
-    scrollbarWidth: PropTypes.number,
-    selectAll: PropTypes.func,
-    selectedCount: PropTypes.number,
-    sortInfo: PropTypes.any,
-    sortable: PropTypes.bool,
-    totalCount: PropTypes.number,
-    unselectedCount: PropTypes.number,
-    virtualListBorderLeft: PropTypes.number,
-    virtualListBorderRight: PropTypes.number,
-    nativeScroll: PropTypes.bool,
-    computedShowHeaderBorderRight: PropTypes.any,
-    hasLockedEnd: PropTypes.bool,
-    hasLockedStart: PropTypes.bool,
-    showColumnContextMenu: PropTypes.func,
-    showColumnFilterContextMenu: PropTypes.func,
-    onColumnHeaderFocus: PropTypes.func,
-    showColumnMenuTool: PropTypes.bool,
-    showColumnMenuToolOnHover: PropTypes.bool,
-    firstUnlockedIndex: PropTypes.number,
-    lockedRows: PropTypes.any,
-    i18n: PropTypes.any,
-    filterable: PropTypes.bool,
-    filterTypes: PropTypes.any,
-    computedGroupsDepth: PropTypes.number,
-    computedGroupsMap: PropTypes.objectOf(PropTypes.shape({ name: PropTypes.string.isRequired })),
-    headerHeight: PropTypes.number,
-    maxWidth: PropTypes.number,
-    renderSortTool: PropTypes.func,
-    minWidth: PropTypes.number,
-    onCellMouseDown: PropTypes.func,
-    onCellTouchStart: PropTypes.func,
-    onCellClick: PropTypes.func,
-    computedOnColumnFilterValueChange: PropTypes.func,
-    onSortClick: PropTypes.func,
-    onResize: PropTypes.func,
-    scrollLeft: PropTypes.number,
-    showWarnings: PropTypes.bool,
-    unselected: PropTypes.any,
-    virtualizeColumns: PropTypes.bool,
-    width: PropTypes.number,
-    updateLockedWrapperPositions: PropTypes.func,
-    lastLockedEndIndex: PropTypes.number,
-    lastLockedStartIndex: PropTypes.number,
-    lastUnlockedIndex: PropTypes.number,
-    getScrollLeftMax: PropTypes.func,
-    rtl: PropTypes.bool,
-    renderLockedEndCells: PropTypes.func,
-    renderLockedStartCells: PropTypes.func,
-    renderInPortal: PropTypes.any,
-    onFilterValueChange: PropTypes.func,
-    setScrollLeft: PropTypes.func,
-};

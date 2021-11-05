@@ -33,10 +33,10 @@ const renderContent = (props: any) => {
 };
 
 const renderHeader = (
-  props,
-  domProps,
-  cellInstance,
-  state = EMPTY_OBJECT
+  props: any,
+  domProps: any,
+  cellInstance: any,
+  state: any = EMPTY_OBJECT
 ): Renderable => {
   const dragging =
     props.dragging !== undefined ? props.dragging : state.dragging;
@@ -60,7 +60,7 @@ const renderHeader = (
       ? headerProps.headerCellStyle
       : null;
 
-  let content = (
+  let content: any = (
     <div
       key="content"
       style={style}
@@ -159,6 +159,11 @@ const renderHeader = (
 
     let resizeHandle;
 
+    if (!dragging && virtualizeColumns) {
+      theStyle.left = props.left;
+      theStyle.position = 'absolute';
+    }
+
     if (props.computedResizable) {
       resizeHandle = (
         <ColumnResizer
@@ -190,6 +195,7 @@ const renderHeader = (
         theStyle.top = state.top || 0;
       }
     }
+
     return (
       <div
         ref={domProps.ref}
@@ -244,7 +250,7 @@ const renderHeader = (
   );
 };
 
-const cleanup = domProps => {
+const cleanup = (domProps: any) => {
   delete domProps.ref;
   delete domProps.id;
   delete domProps.computedOffset;

@@ -30,7 +30,7 @@ const App = () => {
   const [selected, setSelected] = useState(null);
 
   const onSelectionChange = useCallback(({ selected: selectedMap, data }) => {
-    const newSelected = Object.keys(selectedMap).map(id => id * 1);
+    const newSelected = Object.keys(selectedMap).map((id: any) => id * 1);
 
     setSelected(newSelected);
   }, []);

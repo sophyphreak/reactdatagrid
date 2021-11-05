@@ -62,7 +62,7 @@ export default class InovuaDataGridCell extends React.Component {
         this.state = { props };
         autoBind(this);
         if (props.headerCell) {
-            this.state.left = 0;
+            this.state.left = props.left || 0;
         }
         this.isCancelled = false;
     }

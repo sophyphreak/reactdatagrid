@@ -360,6 +360,11 @@ export default class InovuaDataGridColumnLayout extends React.Component {
                 .setConstrained(constrained)
                 .setActive(false);
         }
+        if (computedProps.virtualizeColumns) {
+            setTimeout(() => {
+                this.headerLayout.header.updateColumns();
+            }, 10);
+        }
         computedProps.computedOnColumnResize({
             groupColumns,
             diff,

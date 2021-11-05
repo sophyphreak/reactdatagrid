@@ -96,6 +96,10 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
             styleCloned = true;
         }
         let resizeHandle;
+        if (!dragging && virtualizeColumns) {
+            theStyle.left = props.left;
+            theStyle.position = 'absolute';
+        }
         if (props.computedResizable) {
             resizeHandle = (React.createElement(ColumnResizer, { key: "columnResizer", className: resizerClassName, onMouseDown: props.onResizeMouseDown, onTouchStart: props.onResizeTouchStart, style: {
                     width: props.columnResizeHandleWidth,
@@ -134,7 +138,7 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
     const ref = domProps.ref;
     return (React.createElement("div", { ...cleanup(domProps), ref: ref, id: null, name: null, title: null, type: null, value: null, children: content }));
 };
-const cleanup = domProps => {
+const cleanup = (domProps) => {
     delete domProps.ref;
     delete domProps.id;
     delete domProps.computedOffset;

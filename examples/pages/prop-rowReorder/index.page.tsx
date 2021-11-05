@@ -7,7 +7,7 @@
 
 import React from 'react';
 
-import DataGrid from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
 
 import people from '../people';
 

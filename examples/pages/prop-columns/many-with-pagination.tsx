@@ -5,14 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
-import DataGrid from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
+import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
 import people from '../people';
-import { any } from 'prop-types';
 
-const gridStyle = { minHeight: '80vh', margin: 20 };
+const gridStyle = { minHeight: 500 };
 
 const times = (arr, n, fn?) => {
   const result = [];
@@ -33,63 +33,98 @@ const times = (arr, n, fn?) => {
 
   return result;
 };
-const defaultGroupBy = ['country'];
 
-const defaultCellSelection = { '0-4,id': true, '0-4,desc': true };
-class App extends React.Component<any, any> {
-  constructor(props) {
-    super(props);
-    const COLS = 100;
-    const columns = times([{ name: 'id' }], COLS, (_, i) => {
-      return {
-        name: i ? `id-${i}` : 'id',
-        id: i ? `id-${i}` : 'id',
-        // defaultLocked: i < 2 ? 'start' : i > COLS - 2 ? 'end' : false,
-        // colspan: () => 1,
-        // render: ({ value, rowIndex }) => {
-        //   // console.log(`render ${rowIndex} - ${i}`);
-        //   return value;
-        // },
-      };
-    });
-    this.state = {
-      columns,
-      dataSource: times(
-        [
-          [...new Array(COLS)].reduce(
-            (acc, _, i) => {
-              acc[`id-${i}`] = i;
-              return acc;
-            },
-            { id: 0 }
-          ),
-        ],
-        125
+const peopleCols = [
+  { name: 'id', type: 'number', defaultWidth: 80 },
+  { name: 'firstName', defaultFlex: 1, minWidth: 150 },
+  { name: 'country', defaultFlex: 1, minWidth: 150 },
+  { name: 'age', type: 'number', defaultFlex: 1, minWidth: 150 },
+  // {
+  //   id: 'desc',
+  //   header: 'Description',
+  //   defaultFlex: 2,
+  //   minWidth: 150,
+  //   render: ({ data }) =>
+  //     data.firstName + ', aged: ' + data.age + '. Lives in ' + data.country,
+  // },
+];
+
+const COLS = 100;
+const columns = times([{ name: 'id' }], COLS, (_, i) => {
+  return {
+    name: i ? `id-${i}` : 'id',
+    id: i ? `id-${i}` : 'id',
+    header: i ? `ID ${i}` : 'ID',
+  };
+});
+
+const loadData = () => {
+  return times(
+    [
+      [...new Array(COLS)].reduce(
+        (acc, _, i) => {
+          acc[`id-${i}`] = i;
+          return acc;
+        },
+        { id: 0 }
       ),
-    };
-  }
+    ],
+    5
+  );
+};
 
-  render() {
-    if (!process.browser) {
-      return null;
-    }
-    return (
+const App = () => {
+  const [virtualColumns, setVirtualColumns] = useState(true);
+  const [secondGrid, setSecondGrid] = useState(false);
+
+  if (!process.browser) {
+    return null;
+  }
+  return (
+    <div>
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox
+          theme="default-dark"
+          checked={virtualColumns}
+          onChange={setVirtualColumns}
+        >
+          Virtual columns
+        </CheckBox>
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox
+          theme="default-dark"
+          checked={secondGrid}
+          onChange={setSecondGrid}
+        >
+          Second Grid
+        </CheckBox>
+      </div>
       <DataGrid
         idProperty="id"
-        style={gridStyle}
         theme="default-dark"
-        handle={x => {
-          global.x = x;
-        }}
-        pagination
-        enablePagination
-        columns={this.state.columns}
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        dataSource={this.state.dataSource}
-        // defaultGroupBy={defaultGroupBy}
+        style={gridStyle}
+        pagination
+        columns={columns}
+        dataSource={loadData}
+        headerHeight={virtualColumns ? 48 : undefined}
       />
-    );
-  }
-}
+      {secondGrid ? (
+        <DataGrid
+          idProperty="id"
+          theme="default-dark"
+          key={`grid_${secondGrid}`}
+          licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
+          style={{ height: 500, marginTop: 30 }}
+          pagination
+          columns={peopleCols}
+          dataSource={people}
+          headerHeight={virtualColumns ? 48 : undefined}
+        />
+      ) : null}
+    </div>
+  );
+};
 
 export default () => <App />;

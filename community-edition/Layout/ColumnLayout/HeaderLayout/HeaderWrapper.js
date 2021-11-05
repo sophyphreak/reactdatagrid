@@ -54,6 +54,7 @@ export default class HeaderWrapper extends React.Component {
       lastUnlockedIndex,
       updateLockedWrapperPositions,
       theme,
+      columnWidthPrefixSums,
     } = props;
 
     let scrollbarWidth = 0;
@@ -152,6 +153,7 @@ export default class HeaderWrapper extends React.Component {
             !!props.headerHeight &&
             !props.computedGroups
           }
+          columnWidthPrefixSums={columnWidthPrefixSums}
         />
         <div className="InovuaReactDataGrid__header-wrapper__fill">
           {props.computedFilterable && (
