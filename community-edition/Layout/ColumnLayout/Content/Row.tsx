@@ -412,6 +412,16 @@ export default class DataGridRow extends React.Component<RowProps> {
 
     const lastInGroup = indexInGroup == props.groupCount - 1;
 
+    const hasRowSpan =
+      props.computedRowspans &&
+      Object.keys(props.computedRowspans)
+        .map((name: string) => {
+          const rowspan = props.computedRowspans[name];
+
+          return rowspan > 1;
+        })
+        .find((rowSpan: boolean) => rowSpan === true);
+
     let className = join(
       props.className,
       CLASS_NAME,
@@ -449,7 +459,8 @@ export default class DataGridRow extends React.Component<RowProps> {
       realIndex == 0 && `${CLASS_NAME}--first`,
       last && `${CLASS_NAME}--last`,
       indexInGroup == 0 && `${CLASS_NAME}--first-in-group`,
-      lastInGroup && `${CLASS_NAME}--last-in-group`
+      lastInGroup && `${CLASS_NAME}--last-in-group`,
+      hasRowSpan ? `${CLASS_NAME}--has-rowspan` : ''
     );
 
     if (passedProps) {

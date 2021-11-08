@@ -104,7 +104,7 @@
 
   /* ----------  Row  ---------- */
   .InovuaReactDataGrid__row {
-    &--scrolling:not(.InovuaReactDataGrid__row--natural-rowheight) {
+    &--scrolling:not(.InovuaReactDataGrid__row--natural-rowheight):not(.InovuaReactDataGrid__row--has-rowspan) {
       contain: strict !important;
     }
 

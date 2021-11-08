@@ -287,6 +287,13 @@ export default class DataGridRow extends React.Component {
         let { rowClassName } = props;
         const virtualizeColumns = this.getVirtualizeColumns();
         const lastInGroup = indexInGroup == props.groupCount - 1;
+        const hasRowSpan = props.computedRowspans &&
+            Object.keys(props.computedRowspans)
+                .map((name) => {
+                const rowspan = props.computedRowspans[name];
+                return rowspan > 1;
+            })
+                .find((rowSpan) => rowSpan === true);
         let className = join(props.className, CLASS_NAME, this.scrollingInProgress && `${CLASS_NAME}--scrolling`, empty && `${CLASS_NAME}--empty`, editing && `${CLASS_NAME}--editing`, `${CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`, computedShowZebraRows &&
             even &&
             (!groupProps || computedPivot) &&
@@ -298,7 +305,7 @@ export default class DataGridRow extends React.Component {
             ? `${CLASS_NAME}--has-locked-start`
             : `${CLASS_NAME}--no-locked-start`, hasLockedEnd
             ? `${CLASS_NAME}--has-locked-end`
-            : `${CLASS_NAME}--no-locked-end`, showHorizontalCellBorders && `${CLASS_NAME}--show-horizontal-borders`, active && `${CLASS_NAME}--active`, virtualizeColumns && `${CLASS_NAME}--virtualize-columns`, rowHeight && `${CLASS_NAME}--rowheight`, naturalRowHeight && `${CLASS_NAME}--natural-rowheight`, realIndex == 0 && `${CLASS_NAME}--first`, last && `${CLASS_NAME}--last`, indexInGroup == 0 && `${CLASS_NAME}--first-in-group`, lastInGroup && `${CLASS_NAME}--last-in-group`);
+            : `${CLASS_NAME}--no-locked-end`, showHorizontalCellBorders && `${CLASS_NAME}--show-horizontal-borders`, active && `${CLASS_NAME}--active`, virtualizeColumns && `${CLASS_NAME}--virtualize-columns`, rowHeight && `${CLASS_NAME}--rowheight`, naturalRowHeight && `${CLASS_NAME}--natural-rowheight`, realIndex == 0 && `${CLASS_NAME}--first`, last && `${CLASS_NAME}--last`, indexInGroup == 0 && `${CLASS_NAME}--first-in-group`, lastInGroup && `${CLASS_NAME}--last-in-group`, hasRowSpan ? `${CLASS_NAME}--has-rowspan` : '');
         if (passedProps) {
             className = join(className, selected && passedProps.selectedClassName);
         }

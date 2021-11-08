@@ -186,6 +186,7 @@
 .InovuaReactDataGrid__row {
   position: relative;
   overflow: visible;
+  z-index: unset;
 
   &:not(.InovuaReactDataGrid__row--virtualize-columns) {
     &,
@@ -200,6 +201,10 @@
   &--direction-rtl
     > .InovuaReactDataGrid__row-cell-wrap.InovuaReactDataGrid__row-cell-wrap {
     flex-flow: row-reverse;
+  }
+
+  &--has-rowspan {
+    z-index: 1;
   }
 }
 
