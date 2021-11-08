@@ -681,6 +681,7 @@ type TypeDataGridPropsNoI18n = {
     width: number;
     height: number;
   }) => Element | ReactNode;
+  renderSortTool?: (direction: -1 | 0 | 1, extraProps: any) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

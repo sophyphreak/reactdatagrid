@@ -22,6 +22,23 @@ const fixScrollLeft = event => {
 };
 
 export default class HeaderWrapper extends React.Component {
+  getSortedColumnsInfo = ({ computedSortInfo, columnsMap }) => {
+    if (!computedSortInfo) {
+      return;
+    }
+
+    let sortedColumnsInfo = [];
+    if (Array.isArray(computedSortInfo)) {
+      computedSortInfo.map(sortInfo => {
+        sortedColumnsInfo.push(columnsMap[sortInfo.name]);
+      });
+    } else {
+      return columnsMap[computedSortInfo.name];
+    }
+
+    return sortedColumnsInfo;
+  };
+
   render() {
     const { props } = this;
     const {
@@ -56,6 +73,8 @@ export default class HeaderWrapper extends React.Component {
       theme,
       columnWidthPrefixSums,
       renderMenuTool,
+      computedSortInfo,
+      columnsMap,
     } = props;
 
     let scrollbarWidth = 0;
@@ -63,6 +82,11 @@ export default class HeaderWrapper extends React.Component {
     if (nativeScroll && scrollbars.vertical) {
       scrollbarWidth = getScrollbarWidth();
     }
+
+    const sortedColumnsInfo = this.getSortedColumnsInfo({
+      computedSortInfo,
+      columnsMap,
+    });
 
     return (
       <div
@@ -156,6 +180,7 @@ export default class HeaderWrapper extends React.Component {
           }
           columnWidthPrefixSums={columnWidthPrefixSums}
           renderMenuTool={renderMenuTool}
+          sortedColumnsInfo={sortedColumnsInfo}
         />
         <div className="InovuaReactDataGrid__header-wrapper__fill">
           {props.computedFilterable && (

@@ -1417,7 +1417,7 @@ export default class InovuaDataGridCell extends React.Component {
   }
 
   // direction can be 1, -1 or null
-  getSortTools(direction = null, cellProps) {
+  getSortTools(direction = null, cellProps: any) {
     const { computedSortable, renderSortTool: render } = this.getProps();
     return renderSortTool(
       { sortable: computedSortable, direction, renderSortTool: render },
