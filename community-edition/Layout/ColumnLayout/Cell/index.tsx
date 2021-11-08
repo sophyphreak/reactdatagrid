@@ -382,10 +382,13 @@ export default class InovuaDataGridCell extends React.Component {
       props.last ||
       props.computedVisibleIndex == props.computedVisibleCount - 1;
 
-    let className = join(
+    const propsClassName =
       typeof props.className === 'function'
         ? props.className(props)
-        : props.className,
+        : props.className;
+
+    let className = join(
+      propsClassName,
       baseClassName,
       commonClassName,
       !isHeaderCell && props.cellClassName,

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import join from '../../../packages/join';
 
@@ -15,11 +15,18 @@ type TypeState = {
   keepVisible: boolean;
 };
 
+type TypeRenderMenuTool = (props: {
+  className: string;
+  width: number;
+  height: number;
+}) => Element | ReactNode;
+
 type TypeProps = {
   showContextMenu?: (instance: any, onHide: (() => void) | null) => void;
   showOnHover?: boolean;
   rtl?: boolean;
   name?: string;
+  renderMenuTool?: TypeRenderMenuTool;
 };
 
 export class MenuTool extends React.Component<TypeProps, TypeState> {
@@ -75,6 +82,28 @@ export class MenuTool extends React.Component<TypeProps, TypeState> {
     });
   }
 
+  renderMenuTool = () => {
+    const domProps = {
+      className: join('', 'InovuaReactDataGrid__sort-icon--desc'),
+      width: 14,
+      height: 12,
+    };
+
+    if (this.props.renderMenuTool) {
+      return this.props.renderMenuTool(domProps);
+    }
+
+    return (
+      <svg {...domProps} viewBox="0 0 14 12">
+        <g fillRule="evenodd">
+          <rect width="14" height="2" rx="1" />
+          <rect width="14" height="2" y="5" rx="1" />
+          <rect width="14" height="2" y="10" rx="1" />
+        </g>
+      </svg>
+    );
+  };
+
   render() {
     let className = BASE_CLASS_NAME;
 
@@ -96,18 +125,7 @@ export class MenuTool extends React.Component<TypeProps, TypeState> {
         onClick={this.onClick}
         ref={this.domRef}
       >
-        <svg
-          className={join('', 'InovuaReactDataGrid__sort-icon--desc')}
-          width="14"
-          height="12"
-          viewBox="0 0 14 12"
-        >
-          <g fillRule="evenodd">
-            <rect width="14" height="2" rx="1" />
-            <rect width="14" height="2" y="5" rx="1" />
-            <rect width="14" height="2" y="10" rx="1" />
-          </g>
-        </svg>
+        {this.renderMenuTool()}
       </div>
     );
   }
@@ -119,6 +137,7 @@ type TypeMenuToolProps = {
   name?: string;
   rtl?: boolean;
   showColumnMenuToolOnHover?: boolean;
+  renderMenuTool?: TypeRenderMenuTool;
 };
 
 export default (props: TypeMenuToolProps, cellInstance: any) => {
@@ -137,6 +156,7 @@ export default (props: TypeMenuToolProps, cellInstance: any) => {
       rtl={props.rtl}
       showOnHover={props.showColumnMenuToolOnHover}
       showContextMenu={cellInstance.showContextMenu}
+      renderMenuTool={props.renderMenuTool}
     />
   );
 };

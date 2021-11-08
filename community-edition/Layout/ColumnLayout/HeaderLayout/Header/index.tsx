@@ -616,6 +616,7 @@ export default class InovuaDataGridHeader extends React.Component<
       lastLockedStartIndex,
       lastLockedEndIndex,
       theme,
+      renderMenuTool,
     } = props;
 
     let columns = props.columns;
@@ -696,6 +697,7 @@ export default class InovuaDataGridHeader extends React.Component<
         scrollbarWidth,
         data,
         theme,
+        renderMenuTool,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);
