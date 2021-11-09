@@ -129,6 +129,8 @@ const propTypes = {
   renderInPortal: PropTypes.any,
   onFilterValueChange: PropTypes.func,
   setScrollLeft: PropTypes.func,
+  sortedColumnsInfo: PropTypes.any,
+  renderMenuTool: PropTypes.func,
 };
 
 type TypeHeaderProps = {} | any;
@@ -616,6 +618,8 @@ export default class InovuaDataGridHeader extends React.Component<
       lastLockedStartIndex,
       lastLockedEndIndex,
       theme,
+      renderMenuTool,
+      sortedColumnsInfo,
     } = props;
 
     let columns = props.columns;
@@ -652,6 +656,7 @@ export default class InovuaDataGridHeader extends React.Component<
       const defaults = {
         filterable,
         renderSortTool,
+        renderMenuTool,
         showColumnMenuTool,
         showColumnMenuToolOnHover,
       };
@@ -696,6 +701,7 @@ export default class InovuaDataGridHeader extends React.Component<
         scrollbarWidth,
         data,
         theme,
+        sortedColumnsInfo,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);

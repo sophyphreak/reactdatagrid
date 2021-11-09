@@ -256,9 +256,10 @@ export default class InovuaDataGridCell extends React.Component {
         const commonClassName = join(!computedLocked && `${baseClassName}--unlocked`, computedLocked && `${baseClassName}--locked`, computedLocked && `${baseClassName}--locked-${computedLocked}`);
         const last = props.last ||
             props.computedVisibleIndex == props.computedVisibleCount - 1;
-        let className = join(typeof props.className === 'function'
+        const propsClassName = typeof props.className === 'function'
             ? props.className(props)
-            : props.className, baseClassName, commonClassName, !isHeaderCell && props.cellClassName, (nested || hidden) && `${baseClassName}--no-padding`, hidden && `${baseClassName}--hidden`, `${baseClassName}--direction-${rtl ? 'rtl' : 'ltr'}`, computedRowspan > 1 && `${baseClassName}--rowspan`, inTransition && `${baseClassName}--transition`, inTransition && computedWidth && `${baseClassName}--showing`, inTransition && !computedWidth && `${baseClassName}--hiding`, computedWidth === 0 && `${baseClassName}--no-size`, nested && `${baseClassName}--stretch`, (isHeaderCell && headerUserSelect == null) || !isHeaderCell
+            : props.className;
+        let className = join(propsClassName, baseClassName, commonClassName, !isHeaderCell && props.cellClassName, (nested || hidden) && `${baseClassName}--no-padding`, hidden && `${baseClassName}--hidden`, `${baseClassName}--direction-${rtl ? 'rtl' : 'ltr'}`, computedRowspan > 1 && `${baseClassName}--rowspan`, inTransition && `${baseClassName}--transition`, inTransition && computedWidth && `${baseClassName}--showing`, inTransition && !computedWidth && `${baseClassName}--hiding`, computedWidth === 0 && `${baseClassName}--no-size`, nested && `${baseClassName}--stretch`, (isHeaderCell && headerUserSelect == null) || !isHeaderCell
             ? userSelect && `${baseClassName}--user-select-${userSelect}`
             : null, groupExpandCell && `${baseClassName}--group-expand-cell`, groupTitleCell && `${baseClassName}--group-title-cell`, rowSelected && `${baseClassName}--selected`, groupProps && `${baseClassName}--group-cell`, computedPivot && `${baseClassName}--pivot-enabled`, groupSpacerColumn && `${baseClassName}--group-column-cell`, inEdit && `${baseClassName}--in-edit`, cellSelected && `${baseClassName}--cell-selected`, cellActive && `${baseClassName}--cell-active`, props.textAlign &&
             (isHeaderCell ? !props.headerAlign : true) &&

@@ -382,10 +382,13 @@ export default class InovuaDataGridCell extends React.Component {
       props.last ||
       props.computedVisibleIndex == props.computedVisibleCount - 1;
 
-    let className = join(
+    const propsClassName =
       typeof props.className === 'function'
         ? props.className(props)
-        : props.className,
+        : props.className;
+
+    let className = join(
+      propsClassName,
       baseClassName,
       commonClassName,
       !isHeaderCell && props.cellClassName,
@@ -1414,7 +1417,7 @@ export default class InovuaDataGridCell extends React.Component {
   }
 
   // direction can be 1, -1 or null
-  getSortTools(direction = null, cellProps) {
+  getSortTools(direction = null, cellProps: any) {
     const { computedSortable, renderSortTool: render } = this.getProps();
     return renderSortTool(
       { sortable: computedSortable, direction, renderSortTool: render },

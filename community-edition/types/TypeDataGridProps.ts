@@ -676,6 +676,12 @@ type TypeDataGridPropsNoI18n = {
   renderColumnReorderProxy?: (props: any) => void;
   columnOrder?: string[];
   onColumnOrderChange?: (columnOrder: string[]) => void;
+  renderMenuTool?: (props: {
+    className: string;
+    width: number;
+    height: number;
+  }) => Element | ReactNode;
+  renderSortTool?: (direction: -1 | 0 | 1, extraProps: any) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

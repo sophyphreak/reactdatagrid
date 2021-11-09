@@ -46,6 +46,21 @@ export class MenuTool extends React.Component {
             keepVisible: false,
         });
     }
+    renderMenuTool = () => {
+        const domProps = {
+            className: join('', 'InovuaReactDataGrid__sort-icon--desc'),
+            width: 14,
+            height: 12,
+        };
+        if (this.props.renderMenuTool) {
+            return this.props.renderMenuTool(domProps);
+        }
+        return (React.createElement("svg", { ...domProps, viewBox: "0 0 14 12" },
+            React.createElement("g", { fillRule: "evenodd" },
+                React.createElement("rect", { width: "14", height: "2", rx: "1" }),
+                React.createElement("rect", { width: "14", height: "2", y: "5", rx: "1" }),
+                React.createElement("rect", { width: "14", height: "2", y: "10", rx: "1" }))));
+    };
     render() {
         let className = BASE_CLASS_NAME;
         const { showOnHover, rtl } = this.props;
@@ -56,12 +71,7 @@ export class MenuTool extends React.Component {
             className += ` ${BASE_CLASS_NAME}--visible`;
         }
         className += ` ${BASE_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`;
-        return (React.createElement("div", { className: className, onMouseDown: this.onMouseDown, onClick: this.onClick, ref: this.domRef },
-            React.createElement("svg", { className: join('', 'InovuaReactDataGrid__sort-icon--desc'), width: "14", height: "12", viewBox: "0 0 14 12" },
-                React.createElement("g", { fillRule: "evenodd" },
-                    React.createElement("rect", { width: "14", height: "2", rx: "1" }),
-                    React.createElement("rect", { width: "14", height: "2", y: "5", rx: "1" }),
-                    React.createElement("rect", { width: "14", height: "2", y: "10", rx: "1" })))));
+        return (React.createElement("div", { className: className, onMouseDown: this.onMouseDown, onClick: this.onClick, ref: this.domRef }, this.renderMenuTool()));
     }
 }
 export default (props, cellInstance) => {
@@ -71,5 +81,5 @@ export default (props, cellInstance) => {
     if (!props.showColumnMenuTool) {
         return null;
     }
-    return (React.createElement(MenuTool, { key: "menuTool", name: props.name, rtl: props.rtl, showOnHover: props.showColumnMenuToolOnHover, showContextMenu: cellInstance.showContextMenu }));
+    return (React.createElement(MenuTool, { key: "menuTool", name: props.name, rtl: props.rtl, showOnHover: props.showColumnMenuToolOnHover, showContextMenu: cellInstance.showContextMenu, renderMenuTool: props.renderMenuTool }));
 };
