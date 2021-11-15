@@ -63,8 +63,10 @@ const useClipboard = (props, computedProps, computedPropsRef) => {
             const index = parseInt(parsedKey[0]);
             const column = parsedKey[1];
             const data = computedProps.getData();
-            const cellValue = data[index][column];
-            rows[index] = Object.assign({}, rows[index], { [column]: cellValue });
+            if (index !== undefined && column !== undefined) {
+                const cellValue = data[index][column];
+                rows[index] = Object.assign({}, rows[index], { [column]: cellValue });
+            }
         });
         if (computedProps.onCopySelectedCellsChange) {
             computedProps.onCopySelectedCellsChange(rows);
