@@ -522,6 +522,7 @@ const GridFactory = (
         pluginsMap['group-and-pivot'].hook!(props, cProps, computedPropsRef)
       );
     }
+
     Object.assign(cProps, useGroups(props, cProps, computedPropsRef));
     if (pluginsMap.tree && pluginsMap.tree.hook) {
       Object.assign(
@@ -1389,6 +1390,7 @@ const GridFactory = (
         computedPropsRef
       )
     );
+
     computedProps.coverHandleRef = useRef<{
       setActive: Dispatch<SetStateAction<boolean>>;
       setCursor: Dispatch<SetStateAction<string>>;
@@ -1455,6 +1457,17 @@ const GridFactory = (
       );
     }
 
+    if (
+      computedProps.enableClipboard &&
+      pluginsMap['clipboard'] &&
+      pluginsMap['clipboard'].hook
+    ) {
+      Object.assign(
+        computedProps,
+        pluginsMap['clipboard'].hook!(props, computedProps, computedPropsRef)
+      );
+    }
+
     if (edition !== 'enterprise') {
       if (props.rowIndexColumn) {
         communityFeatureWarn('Row resize (row index column)', warnRef);
@@ -1464,6 +1477,9 @@ const GridFactory = (
       }
       if (props.onRowReorder != null || props.rowReorderColumn != null) {
         communityFeatureWarn('Row reorder', warnRef);
+      }
+      if (props.enableClipboard) {
+        communityFeatureWarn('Clipboard', warnRef);
       }
     }
 

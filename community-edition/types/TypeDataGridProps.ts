@@ -682,6 +682,11 @@ type TypeDataGridPropsNoI18n = {
     height: number;
   }) => Element | ReactNode;
   renderSortTool?: (direction: -1 | 0 | 1, extraProps: any) => void;
+  enableClipboard?: boolean;
+  onCopySelectedCellsChange?: (cells: any) => void;
+  onPasteSelectedCellsChange?: (cells: any) => void;
+  onCopyActiveRowChange?: (row: any) => void;
+  onPasteActiveRowChange?: (row: any) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

@@ -126,4 +126,14 @@ export default [
       return {};
     },
   },
+  {
+    ...emptyPlugin,
+    name: 'clipboard',
+    hook: () => {
+      return {};
+    },
+    defaultProps: () => {
+      return {};
+    },
+  },
 ];

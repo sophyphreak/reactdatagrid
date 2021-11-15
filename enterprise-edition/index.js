@@ -16,6 +16,7 @@ import livePagination from './plugins/live-pagination';
 import rowIndexColumn from './plugins/row-index-column';
 import footerRows from './plugins/footer-rows';
 import lockedRows from './plugins/locked-rows';
+import clipboard from './plugins/clipboard';
 const enterprisePlugins = [
     ...plugins,
     treePlugin,
@@ -28,6 +29,7 @@ const enterprisePlugins = [
     rowReorder,
     rowIndexColumn,
     livePagination,
+    clipboard,
 ];
 const ReactDataGrid = Factory({
     plugins: enterprisePlugins,

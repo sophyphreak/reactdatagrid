@@ -26,3 +26,17 @@
   color: #ef9a9a;
   font-style: italic;
 }
+
+.cell-edit__copy-paste__input {
+  padding: 5px;
+  outline: none;
+  background: #464d56;
+  color: #9ba7b4;
+  border: 1px solid #464d56;
+  border-radius: 2px;
+  margin-bottom: 20px;
+
+  &:focus {
+    border: 1px solid #7986cb;
+  }
+}

@@ -202,6 +202,24 @@ export default (
         event.nativeEvent.__handled_in_details = true;
       }
     }
+
+    if (computedProps.enableClipboard) {
+      if ((event.ctrlKey || event.metaKey) && event.key == 'c') {
+        if (computedProps.computedCellSelection) {
+          computedProps.copySelectedCellsToClipboard();
+        } else {
+          computedProps.copyActiveRowToClipboard();
+        }
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key == 'v') {
+        if (computedProps.computedCellSelection) {
+          computedProps.pasteSelectedCellsFromClipboard();
+        } else {
+          computedProps.pasteActiveRowFromClipboard();
+        }
+      }
+    }
   };
 
   const onFullBlur = useCallback((event: FocusEvent) => {}, []);

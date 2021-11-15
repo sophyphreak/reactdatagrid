@@ -577,6 +577,7 @@ export default (
     item: any,
     config?: { replace?: boolean; property?: string; value?: any }
   ) => void;
+  setItemsAt: (items: any, config?: { replace: boolean }) => void;
   data: any[];
   ungroupedData: any[];
   setUngroupedData: Dispatch<SetStateAction<any[]>>;
