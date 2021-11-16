@@ -687,6 +687,7 @@ type TypeDataGridPropsNoI18n = {
   onPasteSelectedCellsChange?: (cells: any) => void;
   onCopyActiveRowChange?: (row: any) => void;
   onPasteActiveRowChange?: (row: any) => void;
+  pageSizes?: number[];
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
