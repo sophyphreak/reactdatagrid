@@ -206,17 +206,21 @@ export default (
     if (computedProps.enableClipboard) {
       if ((event.ctrlKey || event.metaKey) && event.key == 'c') {
         if (computedProps.computedCellSelection) {
-          computedProps.copySelectedCellsToClipboard();
+          computedProps.copySelectedCellsToClipboard &&
+            computedProps.copySelectedCellsToClipboard();
         } else {
-          computedProps.copyActiveRowToClipboard();
+          computedProps.copyActiveRowToClipboard &&
+            computedProps.copyActiveRowToClipboard();
         }
       }
 
       if ((event.ctrlKey || event.metaKey) && event.key == 'v') {
         if (computedProps.computedCellSelection) {
-          computedProps.pasteSelectedCellsFromClipboard();
+          computedProps.pasteSelectedCellsFromClipboard &&
+            computedProps.pasteSelectedCellsFromClipboard();
         } else {
-          computedProps.pasteActiveRowFromClipboard();
+          computedProps.pasteActiveRowFromClipboard &&
+            computedProps.pasteActiveRowFromClipboard();
         }
       }
     }

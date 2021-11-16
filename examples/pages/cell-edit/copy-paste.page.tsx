@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import ReactDataGrid from '../../../enterprise-edition';
+import ReactDataGrid from '../../../community-edition';
 import people from '../people';
 
 const gridStyle = { minHeight: 550 };
