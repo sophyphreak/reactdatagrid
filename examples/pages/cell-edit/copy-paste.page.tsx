@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
-import ReactDataGrid from '../../../community-edition';
+import ReactDataGrid from '../../../enterprise-edition';
 import people from '../people';
 
 const gridStyle = { minHeight: 550 };
@@ -96,19 +96,20 @@ const App = () => {
         idProperty="id"
         theme="default-dark"
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        cellSelection={cellSelection}
-        onCellSelectionChange={onCellSelectionChange}
+        // cellSelection={cellSelection}
+        // onCellSelectionChange={onCellSelectionChange}
         enableClipboard
-        onCopyActiveRowChange={onCopyActiveRowChange}
-        onPasteActiveRowChange={onPasteActiveRowChange}
-        onCopySelectedCellsChange={onCopySelectedCellsChange}
-        onPasteSelectedCellsChange={onPasteSelectedCellsChange}
+        // onCopyActiveRowChange={onCopyActiveRowChange}
+        // onPasteActiveRowChange={onPasteActiveRowChange}
+        // onCopySelectedCellsChange={onCopySelectedCellsChange}
+        // onPasteSelectedCellsChange={onPasteSelectedCellsChange}
         // defaultGroupBy={[]}
         style={gridStyle}
-        onEditComplete={onEditComplete}
-        editable={true}
+        // onEditComplete={onEditComplete}
+        // editable={true}
         columns={columns}
         dataSource={dataSource}
+        // renderRowContextMenu={renderClipboardContextMenu}
       />
       <input
         className="cell-edit__copy-paste__input"

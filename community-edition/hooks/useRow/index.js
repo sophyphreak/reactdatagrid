@@ -207,6 +207,10 @@ export default (props, computedProps, computedPropsRef) => {
             return;
         }
         event.preventDefault();
+        if (computedProps.preventBlurOnContextMenuOpen &&
+            computedProps.preventBlurOnContextMenuOpen.current) {
+            return;
+        }
         if (props.onBlur) {
             props.onBlur(event);
         }

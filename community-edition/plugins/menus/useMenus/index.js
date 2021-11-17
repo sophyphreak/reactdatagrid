@@ -74,6 +74,10 @@ export default (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        if (computedProps.preventBlurOnContextMenuOpen &&
+            computedProps.preventBlurOnContextMenuOpen.current) {
+            computedProps.preventBlurOnContextMenuOpen.current = false;
+        }
         if (computedProps.rowContextMenuProps) {
             const rowContextMenuOnHide = rowContextMenuInfoRef.current.menuOnHide;
             if (typeof rowContextMenuOnHide == 'function') {
@@ -133,6 +137,9 @@ export default (props, computedProps, computedPropsRef) => {
         }
         if (!initialProps.renderRowContextMenu) {
             return;
+        }
+        if (computedProps.preventBlurOnContextMenuOpen) {
+            computedProps.preventBlurOnContextMenuOpen.current = true;
         }
         event.preventDefault();
         const cellProps = event.nativeEvent

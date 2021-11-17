@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { MutableRefObject } from 'react';
+import { MutableRefObject, useRef } from 'react';
 import { TypeDataGridProps, TypeComputedProps } from '../../../types';
 
 const useClipboard = (
@@ -17,7 +17,12 @@ const useClipboard = (
   pasteActiveRowFromClipboard: () => void;
   copySelectedCellsToClipboard: () => void;
   pasteSelectedCellsFromClipboard: () => void;
+  clipboard: MutableRefObject<boolean>;
+  preventBlurOnContextMenuOpen: MutableRefObject<boolean>;
 } => {
+  const clipboard: MutableRefObject<boolean> = useRef(false);
+  const preventBlurOnContextMenuOpen: MutableRefObject<boolean> = useRef(false);
+
   const copyActiveRowToClipboard = () => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
@@ -40,6 +45,11 @@ const useClipboard = (
 
       navigator.clipboard
         .writeText(parsedActiveRow)
+        .then(() => {
+          if (Object.keys(activeRow).length > 0) {
+            clipboard.current = true;
+          }
+        })
         .catch(e => console.warn(e));
     }
   };
@@ -107,6 +117,11 @@ const useClipboard = (
 
       navigator.clipboard
         .writeText(parsedSelectedCells)
+        .then(() => {
+          if (Object.keys(rows).length > 0) {
+            clipboard.current = true;
+          }
+        })
         .catch(e => console.warn(e));
     }
   };
@@ -165,6 +180,8 @@ const useClipboard = (
     pasteActiveRowFromClipboard,
     copySelectedCellsToClipboard,
     pasteSelectedCellsFromClipboard,
+    clipboard,
+    preventBlurOnContextMenuOpen,
   };
 };
 

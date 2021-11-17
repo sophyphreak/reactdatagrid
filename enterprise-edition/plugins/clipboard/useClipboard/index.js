@@ -4,7 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { useRef } from 'react';
 const useClipboard = (props, computedProps, computedPropsRef) => {
+    const clipboard = useRef(false);
+    const preventBlurOnContextMenuOpen = useRef(false);
     const copyActiveRowToClipboard = () => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -22,6 +25,11 @@ const useClipboard = (props, computedProps, computedPropsRef) => {
             const parsedActiveRow = JSON.stringify(activeRow);
             navigator.clipboard
                 .writeText(parsedActiveRow)
+                .then(() => {
+                if (Object.keys(activeRow).length > 0) {
+                    clipboard.current = true;
+                }
+            })
                 .catch(e => console.warn(e));
         }
     };
@@ -75,6 +83,11 @@ const useClipboard = (props, computedProps, computedPropsRef) => {
             const parsedSelectedCells = JSON.stringify(rows);
             navigator.clipboard
                 .writeText(parsedSelectedCells)
+                .then(() => {
+                if (Object.keys(rows).length > 0) {
+                    clipboard.current = true;
+                }
+            })
                 .catch(e => console.warn(e));
         }
     };
@@ -114,6 +127,8 @@ const useClipboard = (props, computedProps, computedPropsRef) => {
         pasteActiveRowFromClipboard,
         copySelectedCellsToClipboard,
         pasteSelectedCellsFromClipboard,
+        clipboard,
+        preventBlurOnContextMenuOpen,
     };
 };
 export { useClipboard };

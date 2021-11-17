@@ -819,6 +819,9 @@ export default class InovuaDataGridCell extends React.Component {
     onMouseDown(event) {
         const props = this.getProps();
         const initialDOMProps = this.getInitialDOMProps();
+        if (event.button === 2) {
+            return;
+        }
         if (props.onMouseDown) {
             props.onMouseDown(props, event);
         }

@@ -127,6 +127,13 @@ export default (
       return;
     }
 
+    if (
+      computedProps.preventBlurOnContextMenuOpen &&
+      computedProps.preventBlurOnContextMenuOpen.current
+    ) {
+      computedProps.preventBlurOnContextMenuOpen.current = false;
+    }
+
     if (computedProps.rowContextMenuProps) {
       const rowContextMenuOnHide = rowContextMenuInfoRef.current.menuOnHide;
       if (typeof rowContextMenuOnHide == 'function') {
@@ -207,6 +214,10 @@ export default (
 
       if (!initialProps.renderRowContextMenu) {
         return;
+      }
+
+      if (computedProps.preventBlurOnContextMenuOpen) {
+        computedProps.preventBlurOnContextMenuOpen.current = true;
       }
 
       event.preventDefault();

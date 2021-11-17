@@ -278,6 +278,13 @@ export default (
 
     event.preventDefault();
 
+    if (
+      computedProps.preventBlurOnContextMenuOpen &&
+      computedProps.preventBlurOnContextMenuOpen.current
+    ) {
+      return;
+    }
+
     if (props.onBlur) {
       props.onBlur(event);
     }
@@ -286,7 +293,6 @@ export default (
     if (computedActiveIndex >= 0) {
       computedProps.doSetLastActiveIndex(computedActiveIndex);
     }
-
     computedProps.setActiveIndex(-1);
     computedProps.computedSetFocused(false);
   }, []);
@@ -629,6 +635,7 @@ export default (
       if (!computedProps) {
         return;
       }
+
       const { computedActiveIndex } = computedProps;
       if (computedActiveIndex == -1) {
         return;
