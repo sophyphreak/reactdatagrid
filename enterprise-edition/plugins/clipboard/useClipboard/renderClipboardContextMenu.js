@@ -44,12 +44,12 @@ const renderClipboardContextMenu = (menuProps, { computedProps }) => {
     menuProps.items = [
         {
             label: 'Copy',
-            secondaryLabel: 'Ctrl/Cmd + c',
+            secondaryLabel: 'Ctrl/Cmd + C',
             onClick: () => onCopyClickHandle(computedProps),
         },
         {
             label: 'Paste',
-            secondaryLabel: 'Ctrl/Cmd + v',
+            secondaryLabel: 'Ctrl/Cmd + V',
             onClick: () => onPasteClickHandle(computedProps),
             disabled: pasteDisableHandle(computedProps),
         },
