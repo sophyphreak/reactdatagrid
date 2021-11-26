@@ -6,7 +6,7 @@
  */
 import DragHelper from '@inovua/reactdatagrid-community/packages/drag-helper';
 const emptyFn = () => { };
-export default (event, region, cfg) => {
+const setupRowDrag = (event, region, cfg) => {
     const onDrag = cfg.onDrag || emptyFn;
     const onDrop = cfg.onDrop || emptyFn;
     DragHelper(event, {
@@ -20,3 +20,4 @@ export default (event, region, cfg) => {
         },
     });
 };
+export default setupRowDrag;

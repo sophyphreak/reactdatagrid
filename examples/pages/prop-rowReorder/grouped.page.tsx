@@ -5,8 +5,11 @@ import ReactDataGrid from '../../../enterprise-edition';
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
 import people from '../people';
+import Button from '@inovua/reactdatagrid-community/packages/Button';
 
-const gridStyle = { minHeight: 700 };
+const gridStyle = {
+  minHeight: 750,
+};
 
 const columns = [
   {
@@ -25,18 +28,52 @@ const columns = [
 ];
 
 const App = () => {
-  const [defaultGroupBy, setDefaultGroupBy] = useState(['country']);
+  const [gridRef, setGridRef] = useState(null);
+  const [defaultGroupBy, setDefaultGroupBy] = useState(['country', 'age']);
   const [stickyGroupRows, setStickyGroupRows] = useState(false);
+  const [
+    allowRowReoderBetweenGroups,
+    setAllowRowReoderBetweenGroups,
+  ] = useState(true);
 
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
-        <CheckBox checked={stickyGroupRows} onChange={setStickyGroupRows}>
+        <CheckBox
+          theme="default-dark"
+          checked={stickyGroupRows}
+          onChange={setStickyGroupRows}
+        >
           Use sticky group rows
         </CheckBox>
       </div>
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox
+          theme="default-dark"
+          checked={allowRowReoderBetweenGroups}
+          onChange={setAllowRowReoderBetweenGroups}
+        >
+          AllowRowReoderBetweenGroups
+        </CheckBox>
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <Button
+          theme="default-dark"
+          onClick={() => {
+            console.log('ref', gridRef.current);
+            gridRef.current.setItemAt(
+              2,
+              { country: 'usa' },
+              { replace: false }
+            );
+          }}
+        >
+          Set group by country
+        </Button>
+      </div>
       <ReactDataGrid
         idProperty="id"
+        handle={setGridRef}
         theme="default-dark"
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         style={gridStyle}
@@ -45,6 +82,7 @@ const App = () => {
         columns={columns}
         dataSource={people}
         rowReorderColumn
+        allowRowReoderBetweenGroups={allowRowReoderBetweenGroups}
       />
     </div>
   );

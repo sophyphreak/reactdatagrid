@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-export default ({ rowHeightManager, dragBoxInitialRegion, dragBoxOffsets, initialDiffTop, scrollTop, dragIndex, dir, }) => {
+const getDropRowIndex = ({ rowHeightManager, dragBoxInitialRegion, dragBoxOffsets, initialDiffTop, scrollTop, dragIndex, dir, }) => {
     const rowOffset = dragBoxInitialRegion.top - dragBoxOffsets.top + initialDiffTop + scrollTop;
     const currentIndex = rowHeightManager.getRowAt(rowOffset);
     if (currentIndex < 0) {
@@ -36,3 +36,4 @@ export default ({ rowHeightManager, dragBoxInitialRegion, dragBoxOffsets, initia
     }
     return { index: newDropIndex };
 };
+export default getDropRowIndex;

@@ -4,8 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-export default ({ count, dragIndex, dropIndex, isRowReorderValid, }) => {
-    let validDropPositions = [...Array(count)].reduce((acc, curr, i) => {
+const dropIndexValidation = ({ count, dragIndex, dropIndex, isRowReorderValid, }) => {
+    let validDropPositions = [...Array(count)].reduce((acc, _curr, i) => {
         acc[i] = true;
         return acc;
     }, {});
@@ -18,3 +18,4 @@ export default ({ count, dragIndex, dropIndex, isRowReorderValid, }) => {
     }
     return validDropPositions;
 };
+export default dropIndexValidation;

@@ -15,7 +15,11 @@ import {
 
 const emptyFn = () => {};
 
-export default (event: MouseEvent, region: any, cfg: TypeDragHelper): void => {
+const setupRowDrag = (
+  event: MouseEvent,
+  region: any,
+  cfg: TypeDragHelper
+): void => {
   const onDrag = cfg.onDrag || emptyFn;
   const onDrop = cfg.onDrop || emptyFn;
 
@@ -30,3 +34,5 @@ export default (event: MouseEvent, region: any, cfg: TypeDragHelper): void => {
     },
   });
 };
+
+export default setupRowDrag;

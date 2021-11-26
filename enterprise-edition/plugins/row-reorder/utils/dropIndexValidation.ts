@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default ({
+const dropIndexValidation = ({
   count,
   dragIndex,
   dropIndex,
@@ -16,7 +16,7 @@ export default ({
   dropIndex: number;
   isRowReorderValid: Function;
 }) => {
-  let validDropPositions = [...Array(count)].reduce((acc, curr, i) => {
+  let validDropPositions = [...Array(count)].reduce((acc, _curr, i) => {
     acc[i] = true;
 
     return acc;
@@ -32,3 +32,5 @@ export default ({
 
   return validDropPositions;
 };
+
+export default dropIndexValidation;

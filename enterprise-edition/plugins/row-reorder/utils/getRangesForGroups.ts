@@ -5,27 +5,43 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { RangeResultType } from '../../types';
-
-export default ({
-  count,
+const getRangesForGroups = ({
+  data,
   initialOffset,
   rowHeightManager,
   initialScrollTop,
 }: {
-  count: number;
+  data: any[];
   initialOffset: number;
   rowHeightManager: any;
   initialScrollTop: number;
-}): RangeResultType[] => {
-  const result = [...Array(count)].map((_, i) => {
+}) => {
+  let keyPath: string[];
+  let depth: number = 0;
+  let value: string = '';
+
+  const ranges: any[] = data.map((row: any, i: number) => {
+    if (!row) {
+      return;
+    }
+
     const rowHeight = rowHeightManager.getRowHeight(i);
     const top = rowHeightManager.getRowOffset(i);
-
-    let offset = top + initialOffset - (initialScrollTop || 0);
+    const offset = top + initialOffset - (initialScrollTop || 0);
     const bottom = offset + rowHeight;
 
+    if (row.__group) {
+      keyPath = row.keyPath;
+      depth = row.depth;
+      value = row.value;
+    }
+
     const result = {
+      group: row.__group || false,
+      keyPath,
+      leaf: row.leaf || false,
+      value,
+      depth,
       top: offset,
       bottom: bottom,
       height: rowHeight,
@@ -35,5 +51,7 @@ export default ({
     return result;
   });
 
-  return result;
+  return ranges;
 };
+
+export default getRangesForGroups;

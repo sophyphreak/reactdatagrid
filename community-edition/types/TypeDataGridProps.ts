@@ -651,6 +651,7 @@ type TypeDataGridPropsNoI18n = {
 
   rowReorderColumn?: IColumn | boolean;
   onRowReorder?: TypeRowReorder;
+  allowRowReoderBetweenGroups?: boolean;
   renderRowReorderProxy?: ({
     data,
     dataSource,
@@ -688,6 +689,7 @@ type TypeDataGridPropsNoI18n = {
   onCopyActiveRowChange?: (row: any) => void;
   onPasteActiveRowChange?: (row: any) => void;
   pageSizes?: number[];
+  onCellClick?: (event: MouseEvent, cellProps: TypeCellProps) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

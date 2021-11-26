@@ -1063,6 +1063,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         rowReorderScrollByAmount: 20,
         rowReorderAutoScroll: false,
         rowReorderAutoScrollSpeed: 40,
+        allowRowReoderBetweenGroups: false,
         reorderProxySize: 3,
         expandOnMouseDown: false,
         columnMaxWidth: null,

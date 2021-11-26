@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TypeConstrainRegion } from '../../types';
+import { TypeConstrainRegion } from '../../../types';
 
 type DropIndexResultType = {
   index: number;
@@ -16,7 +16,7 @@ type DragBoxOffset = {
   left: number;
 };
 
-export default ({
+const getDropRowIndex = ({
   rowHeightManager,
   dragBoxInitialRegion,
   dragBoxOffsets,
@@ -74,3 +74,5 @@ export default ({
 
   return { index: newDropIndex };
 };
+
+export default getDropRowIndex;

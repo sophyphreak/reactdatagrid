@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-export default ({ count, initialOffset, rowHeightManager, initialScrollTop, }) => {
+const getRangesForRows = ({ count, initialOffset, rowHeightManager, initialScrollTop, }) => {
     const result = [...Array(count)].map((_, i) => {
         const rowHeight = rowHeightManager.getRowHeight(i);
         const top = rowHeightManager.getRowOffset(i);
@@ -20,3 +20,4 @@ export default ({ count, initialOffset, rowHeightManager, initialScrollTop, }) =
     });
     return result;
 };
+export default getRangesForRows;
