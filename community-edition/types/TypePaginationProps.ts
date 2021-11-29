@@ -24,6 +24,7 @@ export type TypePaginationProps = {
   hasPrevPage: () => boolean;
   onSkipChange: (skip: number) => void;
   onLimitChange: (limit: number) => void;
+  gotoPage: (page: number, config?: { force: boolean }) => void;
 };
 
 export default TypeErrorConstructor;

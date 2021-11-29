@@ -210,6 +210,7 @@ const usePagination = ({ append, reload, setAppend, skip, limit, count, setSkip:
             localPagination,
             livePagination,
             pagination,
+            gotoPage,
             gotoNextPage,
             gotoFirstPage,
             gotoLastPage,
@@ -230,6 +231,7 @@ const usePagination = ({ append, reload, setAppend, skip, limit, count, setSkip:
         hasPrevPage: hasPrev,
         gotoFirstPage,
         gotoLastPage,
+        gotoPage,
         paginationProps,
     };
 };

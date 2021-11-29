@@ -350,6 +350,7 @@ const usePagination = (
   gotoFirstPage: () => void;
   gotoLastPage: () => void;
   gotoPrevPage: () => void;
+  gotoPage: (page: number, config?: { force: boolean }) => void;
   hasNextPage: () => boolean;
   hasPrevPage: () => boolean;
   count: number;
@@ -472,6 +473,7 @@ const usePagination = (
       localPagination,
       livePagination,
       pagination,
+      gotoPage,
       gotoNextPage,
       gotoFirstPage,
       gotoLastPage,
@@ -493,6 +495,7 @@ const usePagination = (
     hasPrevPage: hasPrev,
     gotoFirstPage,
     gotoLastPage,
+    gotoPage,
     paginationProps,
   };
 };
