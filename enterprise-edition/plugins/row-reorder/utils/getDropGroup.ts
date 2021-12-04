@@ -16,10 +16,9 @@ const getDropGroup = ({
   dragBoxRegion: any;
 }): { dropGroup: string; keyPath: string[] } => {
   const boxTop = dragBoxRegion.top;
-  const boxBottom = dragBoxRegion.bottom;
 
   ranges.filter((row: any) => {
-    if (boxTop + 1 >= row.top && boxBottom <= row.bottom) {
+    if (boxTop >= row.top && boxTop <= row.bottom) {
       dropGroup = row.keyPath.join('/');
       keyPath = row.keyPath;
     }

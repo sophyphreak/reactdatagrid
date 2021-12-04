@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 
 import ReactDataGrid from '../../../enterprise-edition';
-
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
 import people from '../people';
 import Button from '@inovua/reactdatagrid-community/packages/Button';
-
-const gridStyle = {
-  minHeight: 750,
-};
 
 const columns = [
   {
@@ -29,12 +24,12 @@ const columns = [
 
 const App = () => {
   const [gridRef, setGridRef] = useState(null);
-  const [defaultGroupBy, setDefaultGroupBy] = useState(['country', 'age']);
   const [stickyGroupRows, setStickyGroupRows] = useState(false);
   const [
     allowRowReoderBetweenGroups,
     setAllowRowReoderBetweenGroups,
   ] = useState(true);
+  const [smallGrid, setSmallGrid] = useState<boolean>(false);
 
   return (
     <div>
@@ -71,14 +66,23 @@ const App = () => {
           Set group by country
         </Button>
       </div>
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox
+          theme="default-dark"
+          checked={smallGrid}
+          onChange={setSmallGrid}
+        >
+          Small grid
+        </CheckBox>
+      </div>
       <ReactDataGrid
         idProperty="id"
         handle={setGridRef}
         theme="default-dark"
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        style={gridStyle}
+        style={{ minHeight: smallGrid ? 450 : 750 }}
         stickyGroupRows={stickyGroupRows}
-        defaultGroupBy={defaultGroupBy}
+        defaultGroupBy={['country']}
         columns={columns}
         dataSource={people}
         rowReorderColumn

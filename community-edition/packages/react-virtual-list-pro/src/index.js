@@ -738,6 +738,7 @@ export default class InovuaVirtualList extends Component {
                 rowHeightChange || this.getVisibleCount(this.props) < oldVisibleCount;
             // optimize this
             this.initSizes(this.props);
+            this.forceUpdate();
         }
     }
     fixEdgeScrollPosition = () => {

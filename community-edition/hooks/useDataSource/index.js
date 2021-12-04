@@ -280,6 +280,23 @@ export default (props, computedProps, computedPropsRef) => {
     const [computedLimit, setLimit] = useProperty(props, 'limit', 50);
     const [computedDataSourceCache, setDataSourceCache] = useDataSourceCache(props, computedProps, computedPropsRef);
     const [summary, setSummary] = useState(props.summaryReducer ? props.summaryReducer.initialValue : null);
+    const setItemOnReorderingGroups = (index, item, config) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        computedProps.setItemAt(index, item, config);
+        computedProps.reload();
+        if (computedProps.computedGroupBy &&
+            computedProps.computedGroupBy.length > 0) {
+            if (computedProps.onGroupByChange) {
+                computedProps.onGroupByChange(computedProps.computedGroupBy);
+            }
+        }
+        if (config.newData) {
+            computedProps.silentSetData(config.newData);
+        }
+    };
     const setItemAt = (index, item, config) => {
         const replace = config && config.replace;
         const { current: computedProps } = computedPropsRef;
@@ -576,6 +593,8 @@ export default (props, computedProps, computedPropsRef) => {
             computedRemoteFilter
                 ? JSON.stringify(computedProps.computedFilterValue)
                 : null,
+            JSON.stringify(computedProps.computedCollapsedGroups || ''),
+            JSON.stringify(computedProps.computedExpandedGroups || ''),
         ],
         noReloadDeps: [
             originalData,
@@ -592,8 +611,8 @@ export default (props, computedProps, computedPropsRef) => {
             !computedRemoteFilter
                 ? JSON.stringify(computedProps.computedFilterValue)
                 : null,
-            JSON.stringify(computedProps.computedCollapsedGroups || ''),
-            JSON.stringify(computedProps.computedExpandedGroups || ''),
+            // JSON.stringify(computedProps.computedCollapsedGroups || ''),
+            // JSON.stringify(computedProps.computedExpandedGroups || ''),
             computedProps.computedExpandedNodes
                 ? JSON.stringify(computedProps.computedExpandedNodes)
                 : null,
@@ -669,8 +688,6 @@ export default (props, computedProps, computedPropsRef) => {
         computedSummary: summary,
         setSummary,
         dataPromiseRef,
-        setSkip,
-        setLimit,
         silentSetData,
         computedLivePagination,
         computedLocalPagination,
@@ -684,6 +701,7 @@ export default (props, computedProps, computedPropsRef) => {
         setItemPropertyForId,
         setItemAt,
         setItemsAt,
+        setItemOnReorderingGroups,
         ...paginationProps,
     };
 };

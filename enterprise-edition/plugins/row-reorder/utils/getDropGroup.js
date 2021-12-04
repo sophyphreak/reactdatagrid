@@ -8,9 +8,8 @@ let dropGroup = '';
 let keyPath = [];
 const getDropGroup = ({ ranges, dragBoxRegion, }) => {
     const boxTop = dragBoxRegion.top;
-    const boxBottom = dragBoxRegion.bottom;
     ranges.filter((row) => {
-        if (boxTop + 1 >= row.top && boxBottom <= row.bottom) {
+        if (boxTop >= row.top && boxTop <= row.bottom) {
             dropGroup = row.keyPath.join('/');
             keyPath = row.keyPath;
         }

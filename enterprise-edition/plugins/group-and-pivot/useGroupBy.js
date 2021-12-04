@@ -36,6 +36,9 @@ const useGroupBy = (props, computedProps, computedPropsRef) => {
     const [computedCollapsedGroups, setCollapsedGroups] = useProperty(props, 'collapsedGroups', undefined, {
         onChange: () => { },
     });
+    const [computedExpandedGroups, setExpandedGroups] = useProperty(props, 'expandedGroups', true, {
+        onChange: () => { },
+    });
     const setCollapsedAndExpanded = useCallback(({ collapsedGroups, expandedGroups, }) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -50,9 +53,6 @@ const useGroupBy = (props, computedProps, computedPropsRef) => {
             computedProps.onGroupCollapseChange(collapsedGroups, expandedGroups);
         }
     }, []);
-    const [computedExpandedGroups, setExpandedGroups] = useProperty(props, 'expandedGroups', true, {
-        onChange: () => { },
-    });
     const setGroupBy = (groupBy) => {
         if (groupBy && typeof groupBy === 'string') {
             groupBy = [groupBy];

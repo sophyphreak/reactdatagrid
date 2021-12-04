@@ -439,11 +439,10 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
   };
 
   updateGroups = (props: any, dragIndex: number, dropIndex: number) => {
-    const { setItemAt, data, silentSetData } = props;
+    const { data, silentSetData, setItemOnReorderingGroups } = props;
     const { dropGroup, selectedGroup } = DRAG_INFO;
 
     const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
-    const item = this.computeItem(props);
 
     if (!selectedGroup.localeCompare(dropGroup)) {
       silentSetData(newDataSource);
@@ -452,9 +451,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     }
 
     if (dropGroup) {
-      setTimeout(() => {
-        setItemAt(dragIndex, item, { replace: false });
-      }, 0);
+      const item = this.computeItem(props);
+      setItemOnReorderingGroups(dragIndex, item, {
+        replace: false,
+        newData: newDataSource,
+      });
       this.clearDropInfo();
       return;
     }

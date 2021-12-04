@@ -92,6 +92,12 @@ const useGroupBy = (
     onChange: () => {},
   });
 
+  const [computedExpandedGroups, setExpandedGroups] = useProperty<
+    TypeExpandedGroups
+  >(props, 'expandedGroups', true, {
+    onChange: () => {},
+  });
+
   const setCollapsedAndExpanded = useCallback(
     ({
       collapsedGroups,
@@ -119,12 +125,6 @@ const useGroupBy = (
     []
   );
 
-  const [computedExpandedGroups, setExpandedGroups] = useProperty<
-    TypeExpandedGroups
-  >(props, 'expandedGroups', true, {
-    onChange: () => {},
-  });
-
   const setGroupBy = (groupBy: TypeGroupBy) => {
     if (groupBy && typeof groupBy === 'string') {
       groupBy = [groupBy];
@@ -141,7 +141,7 @@ const useGroupBy = (
     }
 
     const queue = batchUpdate();
-    const data = computeData(
+    const data: any = computeData(
       {
         groupBy,
       },
@@ -157,7 +157,7 @@ const useGroupBy = (
     });
   };
 
-  const isGroupCollapsed = (group: { keyPath: string[] }) => {
+  const isGroupCollapsed = (group: { keyPath: string[]; valuePath?: any }) => {
     const { current: computedProps } = computedPropsRef;
 
     if (!computedProps) {

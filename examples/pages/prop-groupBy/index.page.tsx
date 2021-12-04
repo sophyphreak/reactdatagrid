@@ -11,7 +11,7 @@ import DataGrid from '@inovua/reactdatagrid-enterprise';
 
 import people from '../people';
 
-const gridStyle = { minHeight: 550, margin: 10 };
+const gridStyle = { minHeight: 450, margin: 10 };
 
 const columns = [
   {
@@ -36,6 +36,7 @@ const App = () => {
   return (
     <DataGrid
       idProperty="id"
+      theme="default-dark"
       style={gridStyle}
       columns={columns}
       columnMinWidth={300}

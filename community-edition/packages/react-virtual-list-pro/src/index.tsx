@@ -1035,6 +1035,7 @@ export default class InovuaVirtualList extends Component<TypeProps> {
 
       // optimize this
       this.initSizes(this.props);
+      this.forceUpdate();
     }
   }
 

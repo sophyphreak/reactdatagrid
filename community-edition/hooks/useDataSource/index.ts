@@ -10,7 +10,6 @@ import {
   Dispatch,
   SetStateAction,
   MutableRefObject,
-  useEffect,
   useLayoutEffect,
   useRef,
   useCallback,
@@ -580,6 +579,11 @@ export default (
     item: any,
     config?: { replace?: boolean; property?: string; value?: any }
   ) => void;
+  setItemOnReorderingGroups: (
+    index: number,
+    item: any,
+    config?: { replace?: boolean; newData?: any[] }
+  ) => void;
   setItemsAt: (items: any, config?: { replace: boolean }) => void;
   data: any[];
   ungroupedData: any[];
@@ -603,6 +607,7 @@ export default (
   dataIndexMap: null | { [key: string]: number };
   setDataMap: (dataMap: null | { [key: string]: any }) => void;
   setDataIndexMap: (dataMap: null | { [key: string]: number }) => void;
+  dataPromiseRef: any;
 } => {
   const computedRemoteData = isRemoteData(props);
   const computedRemoteFilter = isRemoteFilter(props);
@@ -628,6 +633,33 @@ export default (
   const [summary, setSummary] = useState<any>(
     props.summaryReducer ? props.summaryReducer.initialValue : null
   );
+
+  const setItemOnReorderingGroups = (
+    index: number,
+    item: any,
+    config?: { replace?: boolean; newData?: any[] } | any
+  ) => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    computedProps.setItemAt(index, item, config);
+    computedProps.reload();
+
+    if (
+      computedProps.computedGroupBy &&
+      computedProps.computedGroupBy.length > 0
+    ) {
+      if (computedProps.onGroupByChange) {
+        computedProps.onGroupByChange(computedProps.computedGroupBy);
+      }
+    }
+
+    if (config.newData) {
+      computedProps.silentSetData(config.newData);
+    }
+  };
 
   const setItemAt = (
     index: number,
@@ -1049,6 +1081,8 @@ export default (
         computedRemoteFilter
           ? JSON.stringify(computedProps.computedFilterValue)
           : null,
+        JSON.stringify(computedProps.computedCollapsedGroups || ''),
+        JSON.stringify(computedProps.computedExpandedGroups || ''),
       ],
       noReloadDeps: [
         originalData,
@@ -1065,8 +1099,8 @@ export default (
         !computedRemoteFilter
           ? JSON.stringify(computedProps.computedFilterValue)
           : null,
-        JSON.stringify(computedProps.computedCollapsedGroups || ''),
-        JSON.stringify(computedProps.computedExpandedGroups || ''),
+        // JSON.stringify(computedProps.computedCollapsedGroups || ''),
+        // JSON.stringify(computedProps.computedExpandedGroups || ''),
         computedProps.computedExpandedNodes
           ? JSON.stringify(computedProps.computedExpandedNodes)
           : null,
@@ -1163,8 +1197,6 @@ export default (
     computedSummary: summary,
     setSummary,
     dataPromiseRef,
-    setSkip,
-    setLimit,
     silentSetData,
     computedLivePagination,
     computedLocalPagination,
@@ -1178,6 +1210,7 @@ export default (
     setItemPropertyForId,
     setItemAt,
     setItemsAt,
+    setItemOnReorderingGroups,
     ...paginationProps,
   };
 };
