@@ -960,6 +960,33 @@ export default class InovuaVirtualList extends Component<TypeProps> {
     this.rowOffsets = null;
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const nextCount = Math.max(nextProps.count, 0);
+    const rowHeightChange =
+      this.props.rowHeight && nextProps.rowHeight != this.props.rowHeight;
+
+    if (this.props.renderRow !== nextProps.renderRow) {
+      this.rowCoveredBy = {};
+      this.rowSpans = {};
+    }
+
+    if (
+      nextCount != this.props.count ||
+      nextProps.showEmptyRows != this.props.showEmptyRows ||
+      rowHeightChange
+    ) {
+      const oldVisibleCount = this.getVisibleCount();
+      this.updateVisibleCount(this.size.height, nextProps);
+      this.cleanupRows(nextProps);
+
+      this.reorder =
+        rowHeightChange || this.getVisibleCount(nextProps) < oldVisibleCount;
+
+      // optimize this
+      this.initSizes(nextProps);
+    }
+  }
+
   componentDidUpdate(prevProps) {
     let prevScrollTopPos;
     let prevScrollLeftPos;
@@ -1010,32 +1037,6 @@ export default class InovuaVirtualList extends Component<TypeProps> {
 
     if (prevProps.stickyRows !== this.props.stickyRows) {
       this.updateStickyRows(undefined, undefined, { force: true });
-    }
-
-    const nextCount = Math.max(this.props.count, 0);
-    const rowHeightChange =
-      prevProps.rowHeight && this.props.rowHeight != prevProps.rowHeight;
-
-    if (prevProps.renderRow !== this.props.renderRow) {
-      this.rowCoveredBy = {};
-      this.rowSpans = {};
-    }
-
-    if (
-      nextCount != prevProps.count ||
-      this.props.showEmptyRows != prevProps.showEmptyRows ||
-      rowHeightChange
-    ) {
-      const oldVisibleCount = this.getVisibleCount(prevProps);
-      this.updateVisibleCount(this.size.height, this.props);
-      this.cleanupRows(this.props);
-
-      this.reorder =
-        rowHeightChange || this.getVisibleCount(this.props) < oldVisibleCount;
-
-      // optimize this
-      this.initSizes(this.props);
-      this.forceUpdate();
     }
   }
 
