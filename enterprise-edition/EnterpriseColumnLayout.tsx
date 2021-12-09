@@ -29,7 +29,7 @@ import moveXBeforeY from '@inovua/reactdatagrid-community/utils/moveXBeforeY';
 import dropIndexValidation from './plugins/row-reorder/utils/dropIndexValidation';
 import LockedRows from './plugins/locked-rows/LockedRows';
 import getRangesForGroups from './plugins/row-reorder/utils/getRangesForGroups';
-import dropGroupIndexValidation from './plugins/row-reorder/utils/dropGroupIndexValidation';
+import getRangesForTree from './plugins/row-reorder/utils/getRangesForTree';
 import getDropGroup from './plugins/row-reorder/utils/getDropGroup';
 
 let DRAG_INFO: any = null;
@@ -390,7 +390,12 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
   onRowDrop = (_event: MouseEvent, _config: TypeConfig, props: any) => {
     const { dropIndex } = this;
-    const { onRowReorder, setActiveIndex, computedGroupBy } = props;
+    const {
+      onRowReorder,
+      setActiveIndex,
+      computedGroupBy,
+      computedTreeEnabled,
+    } = props;
 
     if (dropIndex === undefined) {
       this.cancelDrop();
@@ -415,6 +420,12 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       return;
     }
 
+    if (computedTreeEnabled) {
+      this.clearDropInfo();
+      this.updateTree(props, dragIndex, dropIndex);
+      return;
+    }
+
     this.clearDropInfo();
     setActiveIndex(dropIndex);
 
@@ -435,6 +446,16 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
 
       setOriginalData(newDataSource);
+    }
+  };
+
+  updateTree = (props: any, dragIndex: number, dropIndex: number) => {
+    const { data, silentSetData } = props;
+
+    if (this.validDropPositions[dropIndex]) {
+      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
+
+      silentSetData(newDataSource);
     }
   };
 
@@ -616,7 +637,13 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       dragBoxInitialRegion: TypeConstrainRegion;
     }
   ) => {
-    const { count, rowHeightManager, data, computedGroupBy } = props;
+    const {
+      count,
+      rowHeightManager,
+      data,
+      computedGroupBy,
+      computedTreeEnabled,
+    } = props;
 
     let ranges: RangeResultType[] = [];
     let selectedGroup: any;
@@ -633,6 +660,13 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         dragBoxRegion: dragBoxInitialRegion,
       });
       selectedGroup = dropGroup;
+    } else if (computedTreeEnabled) {
+      ranges = getRangesForTree({
+        data,
+        initialOffset: contentRegion.top,
+        rowHeightManager,
+        initialScrollTop,
+      });
     } else {
       ranges = getRangesForRows({
         count,
@@ -727,28 +761,21 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       count,
       isRowReorderValid,
       allowRowReoderBetweenGroups,
+      computedTreeEnabled,
     } = props;
     const { selectedGroup } = DRAG_INFO;
 
-    let validDropPositions;
-
-    if (computedGroupBy && computedGroupBy.length > 0) {
-      validDropPositions = dropGroupIndexValidation({
-        data,
-        dragIndex,
-        dropIndex,
-        isRowReorderValid,
-        selectedGroup,
-        allowRowReoderBetweenGroups,
-      });
-    } else {
-      validDropPositions = dropIndexValidation({
-        count,
-        dragIndex,
-        dropIndex,
-        isRowReorderValid,
-      });
-    }
+    const validDropPositions = dropIndexValidation({
+      data,
+      count,
+      dragIndex,
+      dropIndex,
+      isRowReorderValid,
+      selectedGroup,
+      allowRowReoderBetweenGroups,
+      computedGroupBy,
+      computedTreeEnabled,
+    });
 
     this.validDropPositions = validDropPositions;
 
@@ -925,15 +952,26 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       dataSource,
       data,
       computedPivot,
+      // computedTreeEnabled,
     } = props;
+
+    let isNotRowReorder = false;
 
     if (
       !onRowReorder &&
       (typeof onRowReorder !== 'function' || typeof onRowReorder !== 'boolean')
     ) {
       if (!rowReorderColumn) {
-        return false;
+        isNotRowReorder = true;
       }
+    }
+
+    // if (computedTreeEnabled) {
+    //   isNotRowReorder = true;
+    // }
+
+    if (isNotRowReorder) {
+      return false;
     }
 
     if (

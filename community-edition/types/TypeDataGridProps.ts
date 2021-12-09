@@ -336,8 +336,8 @@ type TypeDataGridPropsNoI18n = {
     nodeExpanded: boolean;
     node: any;
     data: any;
-    index: number;
     id: string | number;
+    index: number;
   }) => void;
 
   isNodeExpandable?: (args: {
@@ -1188,10 +1188,10 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   collapsingNodesRef: MutableRefObject<{ [key: string]: boolean }>;
   clearNodeChildrenCache: (
     nodeId: string | number,
-    reccursive: boolean,
-    treeCache: { [key: string]: object },
-    callback: () => void,
-    clearedMap: { [key: string]: boolean }
+    recursive: boolean,
+    treeCache: TypeNodeCache | undefined,
+    clearedMap?: { [key: string]: boolean },
+    callback?: () => void
   ) => void;
   computedTreeEnabled: boolean;
   onGroupByChange?: (groupBy: TypeGroupBy) => void;

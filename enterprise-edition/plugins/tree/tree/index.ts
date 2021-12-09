@@ -14,7 +14,7 @@ const sortAsc = (a: number, b: number) => a - b;
 const identity = <T>(a: T): T => a;
 
 const augmentNode = (
-  n,
+  n: any,
   parentNode: any,
   index: number,
   config: any = EMPTY_OBJECT
@@ -91,8 +91,8 @@ const expandAtIndexWithInfo = (
 ) => {
   const nodesName = config.nodesName || 'nodes';
   const idProperty = config.idProperty || 'id';
-  const generateIdFromPath = config.generateIdFromPath;
-  const pathSeparator = config.pathSeparator || '/';
+  // const generateIdFromPath = config.generateIdFromPath;
+  // const pathSeparator = config.pathSeparator || '/';
 
   let node = dataArray[index];
 
@@ -210,7 +210,7 @@ export const expandByIdsWithInfo = (
 ) => {
   const idProperty = config.idProperty || 'id';
   const nodesName = config.nodesName || 'nodes';
-  const nodeCache = config.nodeCache || EMPTY_OBJECT;
+  // const nodeCache = config.nodeCache || EMPTY_OBJECT;
   const expandedNodes = config.expandedNodes || EMPTY_OBJECT;
 
   let nextItem;
@@ -346,9 +346,9 @@ export const collapseAtIndex = (
 };
 
 export const sortTreeData = (
-  sortInfo,
-  dataArray,
-  { depth = 0, deep } = EMPTY_OBJECT
+  sortInfo: any,
+  dataArray: any[],
+  { depth = 0, deep }: any = EMPTY_OBJECT
 ) => {
   let { data, maxDepth } = sortTreeDataWithInfo(sortInfo, dataArray, depth);
   if (deep) {
@@ -362,23 +362,27 @@ export const sortTreeData = (
   return data;
 };
 
-export const sortTreeDataWithInfo = (sortInfo, dataArray: any[], depth = 0) => {
+export const sortTreeDataWithInfo = (
+  sortInfo: any,
+  dataArray: any[],
+  depth = 0
+) => {
   let item;
   let index = 0;
-  let arrayAtDepth = [];
+  // let arrayAtDepth = [];
   let currentDepth;
   let currentPath;
   let prevItemDepth = -1;
-  let prevPath;
+  let _prevPath: any;
   let prevMatchingDepthPath;
-  let depthStart = -1;
-  let depthEnd = -1;
+  // let depthStart = -1;
+  // let depthEnd = -1;
 
-  let arrayToSort: any[] | undefined;
+  let arrayToSort: any;
   let currentNodeChildren = [];
-  let map = {};
+  let map: any = {};
 
-  let sortIndexStart;
+  let sortIndexStart: any;
   let maxDepth = 0;
 
   while ((item = dataArray[index])) {
@@ -434,7 +438,7 @@ export const sortTreeDataWithInfo = (sortInfo, dataArray: any[], depth = 0) => {
       prevMatchingDepthPath = currentPath;
     }
     prevItemDepth = currentDepth;
-    prevPath = currentPath;
+    _prevPath = currentPath;
   }
 
   if (currentNodeChildren.length) {

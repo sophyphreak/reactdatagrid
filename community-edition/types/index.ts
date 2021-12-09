@@ -496,12 +496,13 @@ export type TypeConfig = {
 };
 
 export type RangeResultType = {
-  group?: boolean;
-  height: number;
   top: number;
   bottom: number;
+  height: number;
   index: number;
+  group?: boolean;
   keyPath?: string[];
   leaf?: boolean;
+  value?: string;
   depth?: number;
 };

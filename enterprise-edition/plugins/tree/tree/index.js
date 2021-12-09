@@ -64,8 +64,8 @@ const augmentNode = (n, parentNode, index, config = EMPTY_OBJECT) => {
 const expandAtIndexWithInfo = (dataArray, index, config = EMPTY_OBJECT) => {
     const nodesName = config.nodesName || 'nodes';
     const idProperty = config.idProperty || 'id';
-    const generateIdFromPath = config.generateIdFromPath;
-    const pathSeparator = config.pathSeparator || '/';
+    // const generateIdFromPath = config.generateIdFromPath;
+    // const pathSeparator = config.pathSeparator || '/';
     let node = dataArray[index];
     if (!node) {
         return { data: dataArray, insertCount: 0 };
@@ -130,7 +130,7 @@ export const expandByIds = (dataArray, idMap, config = EMPTY_OBJECT) => {
 export const expandByIdsWithInfo = (dataArray, config = EMPTY_OBJECT, parentNode, result = [], idToIndexMap = {}, dataMap = {}, startIndex = 0, nodesToExpand = []) => {
     const idProperty = config.idProperty || 'id';
     const nodesName = config.nodesName || 'nodes';
-    const nodeCache = config.nodeCache || EMPTY_OBJECT;
+    // const nodeCache = config.nodeCache || EMPTY_OBJECT;
     const expandedNodes = config.expandedNodes || EMPTY_OBJECT;
     let nextItem;
     let itemAlreadyExpanded;
@@ -231,14 +231,14 @@ export const sortTreeData = (sortInfo, dataArray, { depth = 0, deep } = EMPTY_OB
 export const sortTreeDataWithInfo = (sortInfo, dataArray, depth = 0) => {
     let item;
     let index = 0;
-    let arrayAtDepth = [];
+    // let arrayAtDepth = [];
     let currentDepth;
     let currentPath;
     let prevItemDepth = -1;
-    let prevPath;
+    let _prevPath;
     let prevMatchingDepthPath;
-    let depthStart = -1;
-    let depthEnd = -1;
+    // let depthStart = -1;
+    // let depthEnd = -1;
     let arrayToSort;
     let currentNodeChildren = [];
     let map = {};
@@ -287,7 +287,7 @@ export const sortTreeDataWithInfo = (sortInfo, dataArray, depth = 0) => {
             prevMatchingDepthPath = currentPath;
         }
         prevItemDepth = currentDepth;
-        prevPath = currentPath;
+        _prevPath = currentPath;
     }
     if (currentNodeChildren.length) {
         map[prevMatchingDepthPath] = currentNodeChildren;

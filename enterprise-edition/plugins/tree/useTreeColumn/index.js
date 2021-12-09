@@ -231,7 +231,7 @@ const useTreeColumn = (props, computedProps, computedPropsRef) => {
             recursive &&
             computedProps.initialProps.collapseChildrenOnAsyncNodeCollapse) {
             const { generateIdFromPath, nodePathSeparator, } = computedProps.initialProps;
-            childNodes.forEach(childNode => {
+            childNodes.forEach((childNode) => {
                 if (!childNode) {
                     return;
                 }
