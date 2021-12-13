@@ -1204,10 +1204,13 @@ export default class DataGridRow extends React.Component {
                     }
                     return;
                 }
-                return cell
-                    .startEdit(undefined, errBack)
-                    .then(resolve)
-                    .catch(errBack);
+                setTimeout(() => {
+                    return cell
+                        .startEdit(undefined, errBack)
+                        .then(resolve)
+                        .catch(errBack);
+                }, 0);
+                return;
             };
             startEdit(foundCols, 0);
         });
