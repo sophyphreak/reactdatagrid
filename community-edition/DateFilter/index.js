@@ -18,13 +18,11 @@ class DateFilter extends Component {
         this.onEndChange = this.onEndChange.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
     }
-    componentDidUpdate = ({ filterValue: { value } }) => {
-        if (value.localeCompare(this.props.filterValue && this.props.filterValue.value)) {
-            if (this.props.filterValue) {
-                this.setValue(this.props.filterValue.value);
-            }
+    UNSAFE_componentWillReceiveProps({ filterValue: { value } }) {
+        if (this.props.filterValue && this.props.filterValue.value !== value) {
+            this.setValue(value);
         }
-    };
+    }
     onChange(value) {
         if (value === this.state.value) {
             return;
