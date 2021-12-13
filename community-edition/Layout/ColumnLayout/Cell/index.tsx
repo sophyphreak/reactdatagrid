@@ -866,6 +866,7 @@ export default class InovuaDataGridCell extends React.Component {
       cellProps: props,
       value: props.editValue,
       theme: props.theme,
+      rtl: props.rtl,
 
       autoFocus: true,
 

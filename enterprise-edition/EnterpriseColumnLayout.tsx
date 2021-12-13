@@ -442,9 +442,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     const { data, silentSetData, setItemOnReorderingGroups } = props;
     const { dropGroup, selectedGroup } = DRAG_INFO;
 
-    const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
-
     if (!selectedGroup.localeCompare(dropGroup)) {
+      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
       silentSetData(newDataSource);
       this.clearDropInfo();
       return;
@@ -454,8 +453,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       const item = this.computeItem(props);
       setItemOnReorderingGroups(dragIndex, item, {
         replace: false,
-        newData: newDataSource,
       });
+
+      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
+      silentSetData(newDataSource);
+
       this.clearDropInfo();
       return;
     }

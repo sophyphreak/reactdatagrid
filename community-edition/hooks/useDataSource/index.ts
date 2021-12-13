@@ -637,7 +637,7 @@ export default (
   const setItemOnReorderingGroups = (
     index: number,
     item: any,
-    config?: { replace?: boolean; newData?: any[] } | any
+    config?: { replace?: boolean }
   ) => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
@@ -646,19 +646,6 @@ export default (
 
     computedProps.setItemAt(index, item, config);
     computedProps.reload();
-
-    if (
-      computedProps.computedGroupBy &&
-      computedProps.computedGroupBy.length > 0
-    ) {
-      if (computedProps.onGroupByChange) {
-        computedProps.onGroupByChange(computedProps.computedGroupBy);
-      }
-    }
-
-    if (config.newData) {
-      computedProps.silentSetData(config.newData);
-    }
   };
 
   const setItemAt = (

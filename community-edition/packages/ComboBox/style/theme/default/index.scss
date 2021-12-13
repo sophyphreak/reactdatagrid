@@ -135,10 +135,10 @@
       &::before {
         content: '';
         position: absolute;
-        top: 0;
-        right: 0;
+        top: -2px;
+        right: -6px;
         width: 22px;
-        height: 100%;
+        height: calc(100% + 3px);
         background: transparent;
       }
     }

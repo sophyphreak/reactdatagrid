@@ -287,15 +287,6 @@ export default (props, computedProps, computedPropsRef) => {
         }
         computedProps.setItemAt(index, item, config);
         computedProps.reload();
-        if (computedProps.computedGroupBy &&
-            computedProps.computedGroupBy.length > 0) {
-            if (computedProps.onGroupByChange) {
-                computedProps.onGroupByChange(computedProps.computedGroupBy);
-            }
-        }
-        if (config.newData) {
-            computedProps.silentSetData(config.newData);
-        }
     };
     const setItemAt = (index, item, config) => {
         const replace = config && config.replace;

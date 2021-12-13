@@ -31,9 +31,9 @@ const App = () => {
   const [dataSource, setDataSource] = useState(people);
 
   const onEditComplete = useCallback(
-    ({ value, columnId, rowIndex }) => {
+    ({ value, columnId, rowId }) => {
       const data = [...dataSource];
-      data[rowIndex][columnId] = value;
+      data[rowId][columnId] = value;
 
       setDataSource(data);
     },
@@ -52,7 +52,6 @@ const App = () => {
         editable={true}
         columns={columns}
         dataSource={dataSource}
-        defaultCellSelection={{ '2,name': true }}
       />
     </div>
   );
