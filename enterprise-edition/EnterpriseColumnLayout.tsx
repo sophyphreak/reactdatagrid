@@ -380,9 +380,9 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     const rowHeight = rowHeightManager.getRowHeight(this.dropIndex);
     this.dragRowArrow.setHeight(rowHeight);
 
-    if (dragIndex !== dropIndex && dragIndex + 1 !== dropIndex) {
+    if (dragIndex !== this.dropIndex && dragIndex + 1 !== this.dropIndex) {
       const compareRanges = this.compareRanges({ scrollDiff });
-      this.setReorderArrowAt(dropIndex, compareRanges);
+      this.setReorderArrowAt(this.dropIndex, compareRanges);
     } else {
       this.setReorderArrowVisible(false);
     }
@@ -766,6 +766,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       return;
     }
     const { dragProxy } = DRAG_INFO;
+    this.dropIndex = -1;
     dragProxy.setVisible(false);
     DRAG_INFO = null;
 
