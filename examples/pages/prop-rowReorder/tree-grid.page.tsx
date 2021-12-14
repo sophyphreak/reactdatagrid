@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 
 import ReactDataGrid from '../../../enterprise-edition';
 
-const gridStyle = { minHeight: 550 };
+const gridStyle = { minHeight: 750 };
 
 const treeData = [
   {
@@ -74,6 +74,7 @@ const App = () => {
   const [expandedNodes, setExpandedNodes] = useState({
     1: true,
     2: true,
+    3: true,
     '3/1': true,
   });
 
@@ -101,6 +102,7 @@ const App = () => {
         columns={columns}
         dataSource={treeData}
         rowReorderColumn
+        enableHorizontalTreeRowReorder
       />
     </div>
   );

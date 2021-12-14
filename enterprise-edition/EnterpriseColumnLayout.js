@@ -19,6 +19,7 @@ import LockedRows from './plugins/locked-rows/LockedRows';
 import getRangesForGroups from './plugins/row-reorder/utils/getRangesForGroups';
 import getRangesForTree from './plugins/row-reorder/utils/getRangesForTree';
 import getDropGroup from './plugins/row-reorder/utils/getDropGroup';
+import getDropParent from './plugins/row-reorder/utils/getDropParent';
 let DRAG_INFO = null;
 let scrolling = false;
 const SCROLL_MARGIN = 40;
@@ -195,7 +196,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         dragProxy.setVisible(true);
         let dropIndex = -1;
         let dir = initialDiffTop > 0 ? 1 : -1;
-        const { rowHeightManager, computedGroupBy } = props;
+        const { rowHeightManager, computedGroupBy, computedTreeEnabled, enableHorizontalTreeRowReorder, } = props;
         const { index: newDropIndex } = getDropRowIndex({
             rowHeightManager,
             dragBoxInitialRegion,
@@ -207,6 +208,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         });
         if (newDropIndex !== -1) {
             dropIndex = newDropIndex;
+        }
+        if (dropIndex === dragIndex &&
+            computedTreeEnabled &&
+            enableHorizontalTreeRowReorder) {
+            this.computeIndentation(dragProxyLeft);
         }
         if (this.dropIndex !== dropIndex) {
             this.getValidDropPositions(props, dragIndex, dropIndex);
@@ -225,6 +231,18 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         else {
             this.setReorderArrowVisible(false);
         }
+    };
+    computeIndentation = (dragProxyLeft) => {
+        if (dragProxyLeft < -20) {
+            this.updateIndentation(-1);
+        }
+        else if (dragProxyLeft > 80) {
+            this.updateIndentation(1);
+        }
+    };
+    updateIndentation = (dir) => {
+        console.log('dir', dir);
+        // TODO - update row depth
     };
     onRowDrop = (_event, _config, props) => {
         const { dropIndex } = this;
@@ -413,6 +431,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
                 rowHeightManager,
                 initialScrollTop,
             });
+            const { dropParent } = getDropParent({
+                ranges,
+                dragBoxRegion: dragBoxInitialRegion,
+            });
+            console.log('parent', dropParent);
         }
         else {
             ranges = getRangesForRows({
