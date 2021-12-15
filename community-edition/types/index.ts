@@ -501,7 +501,7 @@ export type RangeResultType = {
   height: number;
   index: number;
   group?: boolean;
-  keyPath?: string[];
+  keyPath?: string[] | string;
   leaf?: boolean;
   value?: string;
   depth?: number;

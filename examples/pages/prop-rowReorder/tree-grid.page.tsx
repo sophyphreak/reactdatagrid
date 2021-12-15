@@ -103,6 +103,8 @@ const App = () => {
         dataSource={treeData}
         rowReorderColumn
         enableHorizontalTreeRowReorder
+        enableTreeRowReorder
+        enableRowReorderParentChange
       />
     </div>
   );

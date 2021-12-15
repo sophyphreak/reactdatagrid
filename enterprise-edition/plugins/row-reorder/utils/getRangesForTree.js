@@ -13,11 +13,15 @@ const getRangesForTree = ({ data, initialOffset, rowHeightManager, initialScroll
         const top = rowHeightManager.getRowOffset(i);
         const offset = top + initialOffset - (initialScrollTop || 0);
         const bottom = offset + rowHeight;
+        const nodeProps = row.__nodeProps;
         const result = {
             top: offset,
             bottom,
             height: rowHeight,
             index: i,
+            keyPath: nodeProps.key,
+            depth: nodeProps.depth,
+            parent: nodeProps.initialNodes !== undefined,
         };
         return result;
     });

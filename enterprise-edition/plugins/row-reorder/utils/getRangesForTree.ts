@@ -10,6 +10,9 @@ type RangeResultType = {
   bottom: number;
   height: number;
   index: number;
+  keyPath: string;
+  depth: number;
+  parent: boolean;
 };
 
 const getRangesForTree = ({
@@ -33,11 +36,16 @@ const getRangesForTree = ({
     const offset = top + initialOffset - (initialScrollTop || 0);
     const bottom = offset + rowHeight;
 
+    const nodeProps = row.__nodeProps;
+
     const result = {
       top: offset,
       bottom,
       height: rowHeight,
       index: i,
+      keyPath: nodeProps.key,
+      depth: nodeProps.depth,
+      parent: nodeProps.initialNodes !== undefined,
     };
 
     return result;

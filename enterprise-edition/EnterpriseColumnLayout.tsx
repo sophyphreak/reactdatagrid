@@ -51,6 +51,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
   private refDragRowArrow: any;
   private dragRow: any;
   private content: any;
+  private direction: number = 0;
   declare lastComputedProps?: TypeComputedProps;
   gridScrollInterval: any;
 
@@ -284,7 +285,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     dragProxy.setLeft(dragProxyPosition.left);
 
     const initialScrollTop = this.getScrollTop();
-    const { ranges, selectedGroup } = this.getRanges(props, {
+    const { ranges, selectedGroup, selectedParent } = this.getRanges(props, {
       initialScrollTop,
       contentRegion,
       dragBoxInitialRegion,
@@ -295,6 +296,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       dragIndex,
       ranges,
       selectedGroup,
+      selectedParent,
       contentRegion,
       headerHeight,
       dragBoxInitialRegion,
@@ -352,13 +354,24 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
     let dropIndex: number = -1;
     let dir = initialDiffTop > 0 ? 1 : -1;
+    this.direction = dir;
 
     const {
+      data,
       rowHeightManager,
       computedGroupBy,
       computedTreeEnabled,
+      silentSetData,
       enableHorizontalTreeRowReorder,
     } = props;
+
+    if (computedGroupBy && computedGroupBy.length > 0) {
+      this.getDropGroup();
+    }
+
+    if (computedTreeEnabled) {
+      this.getDropParent();
+    }
 
     const { index: newDropIndex } = getDropRowIndex({
       rowHeightManager,
@@ -379,7 +392,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       computedTreeEnabled &&
       enableHorizontalTreeRowReorder
     ) {
-      this.computeIndentation(dragProxyLeft);
+      this.computeIndentation(data, dragProxyLeft, dragIndex, silentSetData);
+      return;
     }
 
     if (this.dropIndex !== dropIndex) {
@@ -387,10 +401,6 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       this.dragRowArrow.setValid(this.validDropPositions[dropIndex]);
     }
     this.dropIndex = dropIndex;
-
-    if (computedGroupBy && computedGroupBy.length > 0) {
-      this.getDropGroup();
-    }
 
     const rowHeight = rowHeightManager.getRowHeight(this.dropIndex);
     this.dragRowArrow.setHeight(rowHeight);
@@ -401,19 +411,6 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     } else {
       this.setReorderArrowVisible(false);
     }
-  };
-
-  computeIndentation = (dragProxyLeft: number) => {
-    if (dragProxyLeft < -20) {
-      this.updateIndentation(-1);
-    } else if (dragProxyLeft > 80) {
-      this.updateIndentation(1);
-    }
-  };
-
-  updateIndentation = (dir: -1 | 1) => {
-    console.log('dir', dir);
-    // TODO - update row depth
   };
 
   onRowDrop = (_event: MouseEvent, _config: TypeConfig, props: any) => {
@@ -449,7 +446,6 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     }
 
     if (computedTreeEnabled) {
-      this.clearDropInfo();
       this.updateTree(props, dragIndex, dropIndex);
       return;
     }
@@ -481,8 +477,17 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     const { data, silentSetData } = props;
 
     if (this.validDropPositions[dropIndex]) {
-      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
+      const { dropDepth } = DRAG_INFO;
+      const direction = this.direction;
+      const dataSource = moveXBeforeY(data, dragIndex, dropIndex);
+      const newDataSource = this.computeDepth(
+        dataSource,
+        direction,
+        dropIndex,
+        dropDepth
+      );
 
+      this.clearDropInfo();
       silentSetData(newDataSource);
     }
   };
@@ -510,6 +515,55 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     }
 
     this.clearDropInfo();
+    return;
+  };
+
+  computeDepth = (
+    data: any[],
+    direction: number,
+    dropIndex: number,
+    dropDepth: number
+  ) => {
+    if (direction < 0) {
+      data[dropIndex].__nodeProps.depth = dropDepth;
+    }
+    if (direction > 0) {
+      data[dropIndex - 1].__nodeProps.depth = dropDepth;
+    }
+
+    return data;
+  };
+
+  computeIndentation = (
+    data: any[],
+    dragProxyLeft: number,
+    dragIndex: number,
+    silentSetData: Function
+  ) => {
+    if (dragProxyLeft < -20) {
+      this.updateIndentation(-1, data, dragIndex, silentSetData);
+    } else if (dragProxyLeft > 80) {
+      this.updateIndentation(1, data, dragIndex, silentSetData);
+    }
+  };
+
+  updateIndentation = (
+    dir: -1 | 1,
+    data: any[],
+    dragIndex: number,
+    silentSetData: Function
+  ) => {
+    let dataSource = [...data];
+    const depth = dataSource[dragIndex].__nodeProps.depth + dir;
+
+    if (depth < 0) {
+      this.clearDropInfo();
+      return;
+    }
+    dataSource[dragIndex].__nodeProps.depth = depth;
+
+    this.clearDropInfo();
+    silentSetData(dataSource);
     return;
   };
 
@@ -559,6 +613,19 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     DRAG_INFO = Object.assign({}, DRAG_INFO, {
       dropGroup,
       dropKeyPath,
+    });
+  };
+
+  getDropParent = () => {
+    const { ranges, dragBoxRegion } = DRAG_INFO;
+
+    const { dropParent, dropDepth } = getDropParent({
+      ranges,
+      dragBoxRegion,
+    });
+    DRAG_INFO = Object.assign({}, DRAG_INFO, {
+      dropParent,
+      dropDepth,
     });
   };
 
@@ -675,6 +742,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
     let ranges: RangeResultType[] = [];
     let selectedGroup: any;
+    let selectedParent: string = '';
+
     if (computedGroupBy && computedGroupBy.length > 0) {
       ranges = getRangesForGroups({
         data,
@@ -700,8 +769,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         ranges,
         dragBoxRegion: dragBoxInitialRegion,
       });
-
-      console.log('parent', dropParent);
+      selectedParent = dropParent;
     } else {
       ranges = getRangesForRows({
         count,
@@ -711,7 +779,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       });
     }
 
-    return { ranges, selectedGroup };
+    return { ranges, selectedGroup, selectedParent };
   };
 
   compareRanges = ({ scrollDiff }: { scrollDiff: number }) => {
@@ -987,7 +1055,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       dataSource,
       data,
       computedPivot,
-      // computedTreeEnabled,
+      computedTreeEnabled,
+      enableTreeRowReorder,
     } = props;
 
     let isNotRowReorder = false;
@@ -1001,9 +1070,9 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       }
     }
 
-    // if (computedTreeEnabled) {
-    //   isNotRowReorder = true;
-    // }
+    if (computedTreeEnabled && !enableTreeRowReorder) {
+      isNotRowReorder = true;
+    }
 
     if (isNotRowReorder) {
       return false;
