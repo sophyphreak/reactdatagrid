@@ -47,6 +47,10 @@ const dropGroupIndexValidation = ({
     return acc;
   }, {});
 
+  if (!data[data.length - 1].__group) {
+    validDropPositions[data.length] = true;
+  }
+
   if (isRowReorderValid) {
     validDropPositions[dropIndex] = isRowReorderValid({
       dragRowIndex: dragIndex,
