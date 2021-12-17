@@ -39,13 +39,16 @@ const App = () => {
     ({ value, columnId, rowId }) => {
       // this emulates making a remote call and updating the data source upon successful update
 
-      setTimeout(() => {
-        const data = [...dataSource];
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const data = [...dataSource];
 
-        data[rowId][columnId] = value;
+          data[rowId][columnId] = value;
 
-        setDataSource(data);
-      }, 400);
+          setDataSource(data);
+          resolve(true);
+        }, 400);
+      });
     },
     [dataSource]
   );

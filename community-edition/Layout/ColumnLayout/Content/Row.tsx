@@ -1693,48 +1693,50 @@ export default class DataGridRow extends React.Component<RowProps> {
 
     return new Promise((resolve, reject) => {
       const startEdit = (cols: any, index = 0) => {
-        const errBack = () => {
-          isEnterNavigation
-            ? this.tryNextRowEdit(dir, editIndex, true)
-            : startEdit(cols, index + 1);
-        };
-
-        const col = cols[index];
-        if (!col) {
-          this.tryNextRowEdit(
-            dir,
+        this.props.currentEditCompletePromise.current.then(() => {
+          const errBack = () => {
             isEnterNavigation
-              ? editIndex
-              : dir > 0
-              ? 0
-              : this.props.columns.length - 1
-          );
-          return reject('column not found');
-        }
+              ? this.tryNextRowEdit(dir, editIndex, true)
+              : startEdit(cols, index + 1);
+          };
 
-        const cell = this.getCellById(col.id);
-        if (!cell) {
-          // if (retries[col.id]) {
-          //   return reject('column not found');
-          // }
-          // retries[col.id] = true;
-
-          if (this.props.scrollToColumn) {
-            this.props.scrollToColumn(col.id, undefined, () => {
-              setTimeout(() => {
-                startEdit(cols, index);
-              }, 20);
-            });
+          const col = cols[index];
+          if (!col) {
+            this.tryNextRowEdit(
+              dir,
+              isEnterNavigation
+                ? editIndex
+                : dir > 0
+                ? 0
+                : this.props.columns.length - 1
+            );
+            return reject('column not found');
           }
-          return;
-        }
 
-        setTimeout(() => {
-          return cell
-            .startEdit(undefined, errBack)
-            .then(resolve)
-            .catch(errBack);
-        }, 0);
+          const cell = this.getCellById(col.id);
+          if (!cell) {
+            // if (retries[col.id]) {
+            //   return reject('column not found');
+            // }
+            // retries[col.id] = true;
+
+            if (this.props.scrollToColumn) {
+              this.props.scrollToColumn(col.id, undefined, () => {
+                setTimeout(() => {
+                  startEdit(cols, index);
+                }, 20);
+              });
+            }
+            return;
+          }
+
+          setTimeout(() => {
+            return cell
+              .startEdit(undefined, errBack)
+              .then(resolve)
+              .catch(errBack);
+          }, 0);
+        });
 
         return;
       };
