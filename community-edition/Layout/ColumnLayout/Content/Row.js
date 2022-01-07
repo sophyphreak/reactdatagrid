@@ -1175,7 +1175,8 @@ export default class DataGridRow extends React.Component {
         // let retries: any = {};
         return new Promise((resolve, reject) => {
             const startEdit = (cols, index = 0) => {
-                this.props.currentEditCompletePromise.current.then(() => {
+                this.props.currentEditCompletePromise.current
+                    .then(() => {
                     const errBack = () => {
                         isEnterNavigation
                             ? this.tryNextRowEdit(dir, editIndex, true)
@@ -1211,7 +1212,8 @@ export default class DataGridRow extends React.Component {
                             .then(resolve)
                             .catch(errBack);
                     }, 0);
-                });
+                })
+                    .catch((error) => reject(error));
                 return;
             };
             startEdit(foundCols, 0);
@@ -1552,4 +1554,5 @@ DataGridRow.propTypes = {
     renderTreeCollapseTool: PropTypes.func,
     renderTreeExpandTool: PropTypes.func,
     renderTreeLoadingTool: PropTypes.func,
+    currentEditCompletePromise: PropTypes.any,
 };
