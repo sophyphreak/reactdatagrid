@@ -888,10 +888,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
     if (index === 0) {
       boxPos = box.top;
-    } else if (index === ranges.length) {
-      boxPos = ranges[ranges.length - 1].bottom - dragRowArrowHeight;
+    } else if (index === ranges.length - 1) {
+      const lastBox = ranges[ranges.length - 1];
+      boxPos = lastBox.bottom - Math.floor(dragRowArrowHeight);
     } else {
-      boxPos = box.top - Math.floor(dragRowArrowHeight / 2);
+      boxPos = box.bottom - Math.floor(dragRowArrowHeight / 2);
     }
 
     const arrowPosition: number = boxPos - contentRegion.top;
