@@ -5,15 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-type RangeResultType = {
-  top: number;
-  bottom: number;
-  height: number;
-  index: number;
-  keyPath: string;
-  depth: number;
-  parent: boolean;
-};
+import { RangeResultType } from 'enterprise-edition/types';
 
 const getRangesForTree = ({
   data,

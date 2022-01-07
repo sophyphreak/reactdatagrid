@@ -10,37 +10,17 @@ const treeData = [
     name: 'Applications',
     folder: true,
     nodes: [
-      {
-        id: 1,
-        name: 'App store',
-        size: '4.5Mb',
-      },
-      {
-        id: 2,
-        name: 'iMovie',
-        size: '106Mb',
-      },
-      {
-        id: 3,
-        name: 'IRecall',
-        size: '200Mb',
-      },
+      { id: 1, name: 'App store', size: '4.5Mb' },
+      { id: 2, name: 'iMovie', size: '106Mb' },
+      { id: 3, name: 'IRecall', size: '200Mb' },
     ],
   },
   {
     id: 2,
     name: 'Documents',
     nodes: [
-      {
-        id: 1,
-        name: 'Todo.md',
-        size: '2Kb',
-      },
-      {
-        id: 2,
-        name: 'Calendar.md',
-        size: '15.2Kb',
-      },
+      { id: 1, name: 'Todo.md', size: '2Kb' },
+      { id: 2, name: 'Calendar.md', size: '15.2Kb' },
       { id: 3, name: 'Shopping list.csv', size: '20Kb' },
     ],
   },
@@ -52,17 +32,14 @@ const treeData = [
         id: 1,
         name: 'Email data',
         nodes: [
-          {
-            id: 1,
-            name: 'Personal.xls',
-            size: '100Gb',
-          },
+          { id: 1, name: 'Personal.xls', size: '100Gb' },
           { id: 2, name: 'Work.xls' },
         ],
       },
       { id: 2, name: 'MacRestore.gzip' },
     ],
   },
+  { id: 4, name: 'Movies' },
 ];
 
 const columns = [

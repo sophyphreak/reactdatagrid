@@ -20,6 +20,7 @@ import getRangesForGroups from './plugins/row-reorder/utils/getRangesForGroups';
 import getRangesForTree from './plugins/row-reorder/utils/getRangesForTree';
 import getDropGroup from './plugins/row-reorder/utils/getDropGroup';
 import getDropParent from './plugins/row-reorder/utils/getDropParent';
+import updateTreeData from './plugins/tree/tree/updateTreeData';
 let DRAG_INFO = null;
 let scrolling = false;
 const SCROLL_MARGIN = 40;
@@ -280,12 +281,19 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         }
     };
     updateTree = (props, dragIndex, dropIndex) => {
-        const { data, silentSetData } = props;
+        const { data, silentSetData, nodePathSeparator } = props;
+        const { selectedParent, dropParent } = DRAG_INFO;
         if (this.validDropPositions[dropIndex]) {
             const { dropDepth } = DRAG_INFO;
             const direction = this.direction;
             const dataSource = moveXBeforeY(data, dragIndex, dropIndex);
-            const newDataSource = this.computeDepth(dataSource, direction, dropIndex, dropDepth);
+            const newDataSource = this.computeNodeProps(dataSource, direction, dropIndex, dropDepth, dropParent, nodePathSeparator);
+            updateTreeData(props, {
+                selectedPath: selectedParent,
+                destinationPath: dropParent,
+                dragIndex,
+                dropIndex,
+            });
             this.clearDropInfo();
             silentSetData(newDataSource);
         }
@@ -311,12 +319,17 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         this.clearDropInfo();
         return;
     };
-    computeDepth = (data, direction, dropIndex, dropDepth) => {
+    computeNodeProps = (data, direction, dropIndex, dropDepth, destinationPath, pathSeparator) => {
+        const parentNodeIdArr = destinationPath.split(pathSeparator);
+        parentNodeIdArr.splice(parentNodeIdArr.length - 1, 1);
+        const parentNodeId = parentNodeIdArr.join(pathSeparator);
         if (direction < 0) {
             data[dropIndex].__nodeProps.depth = dropDepth;
+            data[dropIndex].__nodeProps.parentNodeId = parentNodeId;
         }
         if (direction > 0) {
             data[dropIndex - 1].__nodeProps.depth = dropDepth;
+            data[dropIndex - 1].__nodeProps.parentNodeId = parentNodeId;
         }
         return data;
     };

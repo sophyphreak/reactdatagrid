@@ -505,4 +505,5 @@ export type RangeResultType = {
   leaf?: boolean;
   value?: string;
   depth?: number;
+  parent?: boolean;
 };
