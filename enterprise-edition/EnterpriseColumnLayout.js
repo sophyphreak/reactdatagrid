@@ -286,13 +286,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         if (this.validDropPositions[dropIndex]) {
             const { dropDepth } = DRAG_INFO;
             const direction = this.direction;
-            const dataSource = moveXBeforeY(data, dragIndex, dropIndex);
+            const dataSource = moveYAfterX(data, dragIndex, dropIndex);
             const newDataSource = this.computeNodeProps(dataSource, direction, dropIndex, dropDepth, dropParent, nodePathSeparator);
             updateTreeData(props, {
                 selectedPath: selectedParent,
                 destinationPath: dropParent,
-                dragIndex,
-                dropIndex,
             });
             this.clearDropInfo();
             silentSetData(newDataSource);
@@ -329,8 +327,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             data[dropIndex].__nodeProps.parentNodeId = parentNodeId;
         }
         if (direction > 0) {
-            data[dropIndex - 1].__nodeProps.depth = dropDepth;
-            data[dropIndex - 1].__nodeProps.parentNodeId = parentNodeId;
+            data[dropIndex].__nodeProps.depth = dropDepth;
+            data[dropIndex].__nodeProps.parentNodeId = parentNodeId;
         }
         return data;
     };

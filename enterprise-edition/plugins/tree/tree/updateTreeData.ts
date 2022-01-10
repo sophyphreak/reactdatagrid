@@ -12,13 +12,9 @@ const updateTreeData = (
   {
     selectedPath,
     destinationPath,
-    dragIndex,
-    dropIndex,
   }: {
     selectedPath: string;
     destinationPath: string;
-    dragIndex: number;
-    dropIndex: number;
   }
 ) => {
   const originalData = props.originalData || [];
@@ -31,8 +27,6 @@ const updateTreeData = (
     generateIdFromPath: props.generateIdFromPath,
     selectedPath,
     destinationPath,
-    dragIndex,
-    dropIndex,
   };
 
   computeTreeData(originalData, config);

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const EMPTY_OBJECT = {};
-const updateTreeData = (props, { selectedPath, destinationPath, dragIndex, dropIndex, }) => {
+const updateTreeData = (props, { selectedPath, destinationPath, }) => {
     const originalData = props.originalData || [];
     const config = {
         idProperty: props.idProperty,
@@ -15,8 +15,6 @@ const updateTreeData = (props, { selectedPath, destinationPath, dragIndex, dropI
         generateIdFromPath: props.generateIdFromPath,
         selectedPath,
         destinationPath,
-        dragIndex,
-        dropIndex,
     };
     computeTreeData(originalData, config);
 };
