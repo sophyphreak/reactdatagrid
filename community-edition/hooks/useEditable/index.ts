@@ -21,6 +21,7 @@ const useEditable = (
 ): {} => {
   const editInfoRef = useRef<TypeEditInfo | null>(null);
   const isInEdit = useRef<Boolean>(false);
+  const currentEditCompletePromise = useRef(Promise.resolve(true));
 
   const onEditStop = useCallback((editProps: TypeEditInfo) => {
     const { current: computedProps } = computedPropsRef;
@@ -59,8 +60,11 @@ const useEditable = (
       computedProps.focus();
     }
     if (computedProps.initialProps.onEditComplete) {
-      computedProps.initialProps.onEditComplete(editProps);
+      (currentEditCompletePromise as any).current = Promise.resolve(
+        computedProps.initialProps.onEditComplete(editProps)
+      );
     }
+
     computedProps.isInEdit.current = false;
   }, []);
 
@@ -325,6 +329,7 @@ const useEditable = (
     cancelEdit,
     tryStartEdit,
     isInEdit,
+    currentEditCompletePromise,
   };
 };
 

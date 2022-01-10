@@ -8,6 +8,7 @@ import { useRef, useCallback } from 'react';
 const useEditable = (props, computedProps, computedPropsRef) => {
     const editInfoRef = useRef(null);
     const isInEdit = useRef(false);
+    const currentEditCompletePromise = useRef(Promise.resolve(true));
     const onEditStop = useCallback((editProps) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -42,7 +43,7 @@ const useEditable = (props, computedProps, computedPropsRef) => {
             computedProps.focus();
         }
         if (computedProps.initialProps.onEditComplete) {
-            computedProps.initialProps.onEditComplete(editProps);
+            currentEditCompletePromise.current = Promise.resolve(computedProps.initialProps.onEditComplete(editProps));
         }
         computedProps.isInEdit.current = false;
     }, []);
@@ -220,6 +221,7 @@ const useEditable = (props, computedProps, computedPropsRef) => {
         cancelEdit,
         tryStartEdit,
         isInEdit,
+        currentEditCompletePromise,
     };
 };
 export default useEditable;

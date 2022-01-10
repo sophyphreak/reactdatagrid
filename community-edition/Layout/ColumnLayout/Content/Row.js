@@ -1175,39 +1175,46 @@ export default class DataGridRow extends React.Component {
         // let retries: any = {};
         return new Promise((resolve, reject) => {
             const startEdit = (cols, index = 0) => {
-                const errBack = () => {
-                    isEnterNavigation
-                        ? this.tryNextRowEdit(dir, editIndex, true)
-                        : startEdit(cols, index + 1);
-                };
-                const col = cols[index];
-                if (!col) {
-                    this.tryNextRowEdit(dir, isEnterNavigation
-                        ? editIndex
-                        : dir > 0
-                            ? 0
-                            : this.props.columns.length - 1);
-                    return reject('column not found');
-                }
-                const cell = this.getCellById(col.id);
-                if (!cell) {
-                    // if (retries[col.id]) {
-                    //   return reject('column not found');
-                    // }
-                    // retries[col.id] = true;
-                    if (this.props.scrollToColumn) {
-                        this.props.scrollToColumn(col.id, undefined, () => {
-                            setTimeout(() => {
-                                startEdit(cols, index);
-                            }, 20);
-                        });
+                this.props.currentEditCompletePromise.current
+                    .then(() => {
+                    const errBack = () => {
+                        isEnterNavigation
+                            ? this.tryNextRowEdit(dir, editIndex, true)
+                            : startEdit(cols, index + 1);
+                    };
+                    const col = cols[index];
+                    if (!col) {
+                        this.tryNextRowEdit(dir, isEnterNavigation
+                            ? editIndex
+                            : dir > 0
+                                ? 0
+                                : this.props.columns.length - 1);
+                        return reject('column not found');
                     }
-                    return;
-                }
-                return cell
-                    .startEdit(undefined, errBack)
-                    .then(resolve)
-                    .catch(errBack);
+                    const cell = this.getCellById(col.id);
+                    if (!cell) {
+                        // if (retries[col.id]) {
+                        //   return reject('column not found');
+                        // }
+                        // retries[col.id] = true;
+                        if (this.props.scrollToColumn) {
+                            this.props.scrollToColumn(col.id, undefined, () => {
+                                setTimeout(() => {
+                                    startEdit(cols, index);
+                                }, 20);
+                            });
+                        }
+                        return;
+                    }
+                    setTimeout(() => {
+                        return cell
+                            .startEdit(undefined, errBack)
+                            .then(resolve)
+                            .catch(errBack);
+                    }, 0);
+                })
+                    .catch((error) => reject(error));
+                return;
             };
             startEdit(foundCols, 0);
         });
@@ -1547,4 +1554,5 @@ DataGridRow.propTypes = {
     renderTreeCollapseTool: PropTypes.func,
     renderTreeExpandTool: PropTypes.func,
     renderTreeLoadingTool: PropTypes.func,
+    currentEditCompletePromise: PropTypes.any,
 };

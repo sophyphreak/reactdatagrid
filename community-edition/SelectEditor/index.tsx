@@ -20,22 +20,25 @@ type SelectEditorProps = {
   onTabNavigation?: Function;
   onCancel?: Function;
   theme?: string;
+  rtl?: boolean;
 };
 
 const stopPropagation = (e: Event) => e.stopPropagation();
 const styleWidth100 = { width: '100%' };
 
-const renderListScroller = (props: any) => (
-  <ScrollContainer
-    {...props}
-    applyCSSContainOnScroll={false}
-    viewStyle={styleWidth100}
-    onWheel={stopPropagation}
-  />
-);
+const renderListScroller = (props: any) => {
+  return (
+    <ScrollContainer
+      {...props}
+      applyCSSContainOnScroll={false}
+      viewStyle={styleWidth100}
+      onWheel={stopPropagation}
+    />
+  );
+};
 
 const SelectEditor = (props: SelectEditorProps) => {
-  const { editorProps } = props;
+  const { editorProps, rtl } = props;
   const editorPropsStyle = editorProps ? editorProps.style : null;
 
   return (
@@ -52,10 +55,11 @@ const SelectEditor = (props: SelectEditorProps) => {
         theme={editorProps.theme ? editorProps.theme : props.theme}
         renderListScroller={props.nativeScroll ? undefined : renderListScroller}
         defaultValue={props.value}
+        rtl={rtl}
         onChange={(value: string) => {
           props.onChange && props.onChange(value);
         }}
-        constrainTo=".inovua-react-virtual-list__view-container"
+        constrainTo=".inovua-react-scroll-container__wrapper"
         style={{
           ...editorPropsStyle,
           minWidth: Math.max(0, props.cellProps.computedWidth - 30),

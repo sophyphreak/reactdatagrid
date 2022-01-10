@@ -3,6 +3,7 @@ import React, { useState, useCallback } from 'react';
 import ReactDataGrid from '../../../enterprise-edition';
 
 import people from '../people';
+
 import flags from '../flags';
 
 const gridStyle = { minHeight: 550 };
@@ -15,7 +16,9 @@ const columns = [
     minWidth: 300,
     type: 'number',
   },
+
   { name: 'name', header: 'Name', defaultFlex: 1, minWidth: 250 },
+
   {
     name: 'country',
     header: 'Country',
@@ -23,7 +26,9 @@ const columns = [
     minWidth: 100,
     render: ({ value }) => (flags[value] ? flags[value] : value),
   },
+
   { name: 'city', header: 'City', defaultFlex: 1, minWidth: 300 },
+
   { name: 'age', header: 'Age', minWidth: 150, type: 'number' },
 ];
 
@@ -32,10 +37,18 @@ const App = () => {
 
   const onEditComplete = useCallback(
     ({ value, columnId, rowId }) => {
-      const data = [...dataSource];
-      data[rowId][columnId] = value;
+      // this emulates making a remote call and updating the data source upon successful update
 
-      setDataSource(data);
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const data = [...dataSource];
+
+          data[rowId][columnId] = value;
+
+          setDataSource(data);
+          resolve(true);
+        }, 400);
+      });
     },
     [dataSource]
   );
@@ -43,6 +56,7 @@ const App = () => {
   return (
     <div>
       <h3>Grid with inline edit</h3>
+
       <ReactDataGrid
         idProperty="id"
         theme="default-dark"

@@ -229,6 +229,7 @@ export type RowProps = {
     size: number;
   }) => void;
   expandOnMouseDown?: boolean;
+  currentEditCompletePromise?: any;
 };
 
 export type EnhancedRowProps = RowProps & {

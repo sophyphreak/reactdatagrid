@@ -4,6 +4,7 @@ import ReactDataGrid from '../../../community-edition';
 
 import BoolEditor from '../../../community-edition/BoolEditor';
 import SelectEditor from '../../../community-edition/SelectEditor';
+import SelectFilter from '@inovua/reactdatagrid-community/SelectFilter';
 
 const gridStyle = { minHeight: 320 };
 
@@ -64,6 +65,12 @@ const columns = [
       collapseOnSelect: true,
       clearIcon: null,
     },
+    filterEditor: SelectFilter,
+    filterEditorProps: {
+      idProperty: 'id',
+      dataSource: countryData,
+      collapseOnSelect: true,
+    },
   },
   {
     name: 'citizen',
@@ -72,6 +79,11 @@ const columns = [
     render: ({ value }) => (value ? 'yes' : 'no'),
     editor: BoolEditor,
   },
+];
+
+const filterValue = [
+  { name: 'name', operator: 'startsWith', type: 'string', value: '' },
+  { name: 'country', operator: 'contain', type: 'string', value: '' },
 ];
 
 const App = () => {
@@ -99,6 +111,7 @@ const App = () => {
         onEditComplete={onEditComplete}
         columns={columns}
         dataSource={dataSource}
+        defaultFilterValue={filterValue}
       />
     </div>
   );

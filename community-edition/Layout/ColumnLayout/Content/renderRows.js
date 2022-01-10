@@ -173,6 +173,7 @@ const renderRows = (
     theme,
     onContextMenu,
     setActiveIndex,
+    currentEditCompletePromise,
   }
 ) => {
   const remoteOffset = computedLivePagination ? 0 : computedSkip || 0;
@@ -368,6 +369,7 @@ const renderRows = (
       renderTreeCollapseTool,
       renderTreeExpandTool,
       renderTreeLoadingTool,
+      currentEditCompletePromise,
     };
 
     if (rowProps.rowIndex === editRowIndex) {

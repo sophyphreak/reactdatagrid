@@ -9,14 +9,16 @@ import ComboBox from '../packages/ComboBox';
 import ScrollContainer from '../packages/react-scroll-container-pro/src';
 const stopPropagation = (e) => e.stopPropagation();
 const styleWidth100 = { width: '100%' };
-const renderListScroller = (props) => (React.createElement(ScrollContainer, { ...props, applyCSSContainOnScroll: false, viewStyle: styleWidth100, onWheel: stopPropagation }));
+const renderListScroller = (props) => {
+    return (React.createElement(ScrollContainer, { ...props, applyCSSContainOnScroll: false, viewStyle: styleWidth100, onWheel: stopPropagation }));
+};
 const SelectEditor = (props) => {
-    const { editorProps } = props;
+    const { editorProps, rtl } = props;
     const editorPropsStyle = editorProps ? editorProps.style : null;
     return (React.createElement("div", { className: 'InovuaReactDataGrid__cell__editor InovuaReactDataGrid__cell__editor--select' },
-        React.createElement(ComboBox, { ...editorProps, collapseOnSelect: true, focusOnClick: false, autoFocus: false, theme: editorProps.theme ? editorProps.theme : props.theme, renderListScroller: props.nativeScroll ? undefined : renderListScroller, defaultValue: props.value, onChange: (value) => {
+        React.createElement(ComboBox, { ...editorProps, collapseOnSelect: true, focusOnClick: false, autoFocus: false, theme: editorProps.theme ? editorProps.theme : props.theme, renderListScroller: props.nativeScroll ? undefined : renderListScroller, defaultValue: props.value, rtl: rtl, onChange: (value) => {
                 props.onChange && props.onChange(value);
-            }, constrainTo: ".inovua-react-virtual-list__view-container", style: {
+            }, constrainTo: ".inovua-react-scroll-container__wrapper", style: {
                 ...editorPropsStyle,
                 minWidth: Math.max(0, props.cellProps.computedWidth - 30),
             }, onBlur: props.onComplete, onItemClick: (item) => {

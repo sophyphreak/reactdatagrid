@@ -348,7 +348,7 @@ class StickyVirtualScrollContainer extends React.Component {
                     } },
                     React.createElement("div", { style: {
                             position: 'absolute',
-                            overflow: 'hidden',
+                            overflow: 'visible',
                             minWidth: '100%',
                             direction: this.props.rtl ? 'rtl' : 'ltr',
                         } },
