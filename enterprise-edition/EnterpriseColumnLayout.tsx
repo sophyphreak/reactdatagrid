@@ -25,7 +25,7 @@ import {
 import getRangesForRows from './plugins/row-reorder/utils/getRangesForRows';
 import setupRowDrag from './plugins/row-reorder/utils/setupRowDrag';
 import getDropRowIndex from './plugins/row-reorder/utils/getDropRowIndex';
-import moveXBeforeY from '@inovua/reactdatagrid-community/utils/moveXBeforeY';
+import moveYAfterX from './plugins/row-reorder/utils/moveYAfterX';
 import dropIndexValidation from './plugins/row-reorder/utils/dropIndexValidation';
 import LockedRows from './plugins/locked-rows/LockedRows';
 import getRangesForGroups from './plugins/row-reorder/utils/getRangesForGroups';
@@ -380,7 +380,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     const rowHeight = rowHeightManager.getRowHeight(this.dropIndex);
     this.dragRowArrow.setHeight(rowHeight);
 
-    if (dragIndex !== this.dropIndex && dragIndex + 1 !== this.dropIndex) {
+    if (dragIndex !== this.dropIndex) {
       const compareRanges = this.compareRanges({ scrollDiff });
       this.setReorderArrowAt(this.dropIndex, compareRanges);
     } else {
@@ -400,7 +400,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
     let { dragIndex } = DRAG_INFO;
 
-    if (dropIndex === dragIndex || dropIndex === dragIndex + 1) {
+    if (dropIndex === dragIndex) {
       this.clearDropInfo();
       return;
     }
@@ -432,7 +432,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
   ) => {
     const { data, setOriginalData } = props;
     if (this.validDropPositions[dropIndex]) {
-      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
+      const newDataSource = moveYAfterX(data, dragIndex, dropIndex);
 
       setOriginalData(newDataSource);
     }
@@ -443,7 +443,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     const { dropGroup, selectedGroup } = DRAG_INFO;
 
     if (!selectedGroup.localeCompare(dropGroup)) {
-      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
+      const newDataSource = moveYAfterX(data, dragIndex, dropIndex);
       silentSetData(newDataSource);
       this.clearDropInfo();
       return;
@@ -455,7 +455,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         replace: false,
       });
 
-      const newDataSource = moveXBeforeY(data, dragIndex, dropIndex);
+      const newDataSource = moveYAfterX(data, dragIndex, dropIndex);
       silentSetData(newDataSource);
 
       this.clearDropInfo();
