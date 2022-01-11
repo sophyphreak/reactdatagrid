@@ -66,21 +66,25 @@ const dropIndexValidation = ({
     validDropPositions = data.reduce((acc: any, curr: any, i: number) => {
       const { leafNode, path } = curr.__nodeProps;
 
-      const parentNodeId = getParentNodeId(path, nodePathSeparator);
-      const selectedParentNodeId = selectedParent
-        ? getParentNodeId(selectedParent, nodePathSeparator)
-        : '';
-
-      if (!leafNode) {
+      if (!data[dragIndex].__nodeProps.leafNode) {
         acc[i] = false;
       } else {
-        if (enableRowReorderParentChange) {
-          acc[i] = true;
+        const parentNodeId = getParentNodeId(path, nodePathSeparator);
+        const selectedParentNodeId = selectedParent
+          ? getParentNodeId(selectedParent, nodePathSeparator)
+          : '';
+
+        if (!leafNode) {
+          acc[i] = false;
         } else {
-          if (parentNodeId === selectedParentNodeId) {
+          if (enableRowReorderParentChange) {
             acc[i] = true;
           } else {
-            acc[i] = false;
+            if (parentNodeId === selectedParentNodeId) {
+              acc[i] = true;
+            } else {
+              acc[i] = false;
+            }
           }
         }
       }
