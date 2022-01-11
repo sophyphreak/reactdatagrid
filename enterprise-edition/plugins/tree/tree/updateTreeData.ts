@@ -7,29 +7,25 @@
 
 const EMPTY_OBJECT: object = {};
 
-const updateTreeData = (
-  props: any,
-  {
-    selectedPath,
-    destinationPath,
-  }: {
-    selectedPath: string;
-    destinationPath: string;
-  }
-) => {
-  const originalData = props.originalData || [];
+const updateTreeDataIds = (data: any, config: any) => {
+  const idProperty = config.idProperty;
+  const nodesName = config.nodesName;
 
-  const config = {
-    idProperty: props.idProperty,
-    nodesName: props.nodesProperty,
-    pathSeparator: props.nodePathSeparator,
-    expandedNodes: props.computedExpandedNodes,
-    generateIdFromPath: props.generateIdFromPath,
-    selectedPath,
-    destinationPath,
+  const updateIds = (dataArr: any) => {
+    dataArr.forEach((item: any, i: number) => {
+      const itemNodes = item[nodesName];
+
+      item[idProperty] = i + 1;
+
+      if (Array.isArray(itemNodes)) {
+        updateIds(itemNodes);
+      }
+    });
   };
 
-  computeTreeData(originalData, config);
+  updateIds(data);
+
+  return data;
 };
 
 const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
@@ -51,7 +47,6 @@ const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
     parentNode?: any
   ) => {
     let initialIdSelected: string = '';
-
     data.forEach((item: any, i: number) => {
       if (initialIdSelected === '') {
         initialIdSelected = idSelected;
@@ -77,6 +72,7 @@ const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
         if (path === initialIdSelected) {
           value.push(item);
           parentNodes.splice(i, 1);
+
           let normalizedId: string = '';
           for (let j = 1; j <= parentNodes.length; j++) {
             const parsedId = item[idProperty].split(pathSeparator);
@@ -128,8 +124,34 @@ const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
   const dataArr = [].concat(dataArray);
 
   const computedData = computeData(dataArr, selectedPath, destinationPath);
+  const updatedData = updateTreeDataIds(computedData, config);
 
-  return computedData;
+  return updatedData;
+};
+
+const updateTreeData = (
+  props: any,
+  {
+    selectedPath,
+    destinationPath,
+  }: {
+    selectedPath: string;
+    destinationPath: string;
+  }
+) => {
+  const originalData = props.originalData || [];
+
+  const config = {
+    idProperty: props.idProperty,
+    nodesName: props.nodesProperty,
+    pathSeparator: props.nodePathSeparator,
+    expandedNodes: props.computedExpandedNodes,
+    generateIdFromPath: props.generateIdFromPath,
+    selectedPath,
+    destinationPath,
+  };
+
+  computeTreeData(originalData, config);
 };
 
 export default updateTreeData;

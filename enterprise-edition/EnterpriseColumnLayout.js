@@ -242,7 +242,13 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     };
     onRowDrop = (_event, _config, props) => {
         const { dropIndex } = this;
-        const { onRowReorder, setActiveIndex, computedGroupBy, computedTreeEnabled, } = props;
+        const { onRowReorder, setActiveIndex, computedGroupBy, computedTreeEnabled, enableHorizontalTreeRowReorder, } = props;
+        if (dropIndex === -1 &&
+            computedTreeEnabled &&
+            enableHorizontalTreeRowReorder) {
+            this.clearDropInfo();
+            return;
+        }
         if (dropIndex === undefined) {
             this.cancelDrop();
             this.clearDropInfo();
@@ -541,8 +547,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         return { dragProxyTop, dragProxyLeft };
     };
     getValidDropPositions = (props, dragIndex, dropIndex) => {
-        const { computedGroupBy, data, count, isRowReorderValid, allowRowReoderBetweenGroups, computedTreeEnabled, } = props;
-        const { selectedGroup } = DRAG_INFO;
+        const { computedGroupBy, data, count, isRowReorderValid, allowRowReoderBetweenGroups, computedTreeEnabled, enableRowReorderParentChange, nodePathSeparator, groupPathSeparator, } = props;
+        const { selectedGroup, selectedParent } = DRAG_INFO;
         const validDropPositions = dropIndexValidation({
             data,
             count,
@@ -550,9 +556,13 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             dropIndex,
             isRowReorderValid,
             selectedGroup,
+            selectedParent,
+            nodePathSeparator,
+            groupPathSeparator,
             allowRowReoderBetweenGroups,
             computedGroupBy,
             computedTreeEnabled,
+            enableRowReorderParentChange,
         });
         this.validDropPositions = validDropPositions;
         return validDropPositions;

@@ -5,18 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 const EMPTY_OBJECT = {};
-const updateTreeData = (props, { selectedPath, destinationPath, }) => {
-    const originalData = props.originalData || [];
-    const config = {
-        idProperty: props.idProperty,
-        nodesName: props.nodesProperty,
-        pathSeparator: props.nodePathSeparator,
-        expandedNodes: props.computedExpandedNodes,
-        generateIdFromPath: props.generateIdFromPath,
-        selectedPath,
-        destinationPath,
+const updateTreeDataIds = (data, config) => {
+    const idProperty = config.idProperty;
+    const nodesName = config.nodesName;
+    const updateIds = (dataArr) => {
+        dataArr.forEach((item, i) => {
+            const itemNodes = item[nodesName];
+            item[idProperty] = i + 1;
+            if (Array.isArray(itemNodes)) {
+                updateIds(itemNodes);
+            }
+        });
     };
-    computeTreeData(originalData, config);
+    updateIds(data);
+    return data;
 };
 const computeTreeData = (dataArray, config = EMPTY_OBJECT) => {
     const idProperty = config.idProperty;
@@ -91,6 +93,20 @@ const computeTreeData = (dataArray, config = EMPTY_OBJECT) => {
     };
     const dataArr = [].concat(dataArray);
     const computedData = computeData(dataArr, selectedPath, destinationPath);
-    return computedData;
+    const updatedData = updateTreeDataIds(computedData, config);
+    return updatedData;
+};
+const updateTreeData = (props, { selectedPath, destinationPath, }) => {
+    const originalData = props.originalData || [];
+    const config = {
+        idProperty: props.idProperty,
+        nodesName: props.nodesProperty,
+        pathSeparator: props.nodePathSeparator,
+        expandedNodes: props.computedExpandedNodes,
+        generateIdFromPath: props.generateIdFromPath,
+        selectedPath,
+        destinationPath,
+    };
+    computeTreeData(originalData, config);
 };
 export default updateTreeData;

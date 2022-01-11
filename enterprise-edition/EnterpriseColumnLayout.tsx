@@ -421,7 +421,17 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       setActiveIndex,
       computedGroupBy,
       computedTreeEnabled,
+      enableHorizontalTreeRowReorder,
     } = props;
+
+    if (
+      dropIndex === -1 &&
+      computedTreeEnabled &&
+      enableHorizontalTreeRowReorder
+    ) {
+      this.clearDropInfo();
+      return;
+    }
 
     if (dropIndex === undefined) {
       this.cancelDrop();
@@ -884,8 +894,11 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       isRowReorderValid,
       allowRowReoderBetweenGroups,
       computedTreeEnabled,
+      enableRowReorderParentChange,
+      nodePathSeparator,
+      groupPathSeparator,
     } = props;
-    const { selectedGroup } = DRAG_INFO;
+    const { selectedGroup, selectedParent } = DRAG_INFO;
 
     const validDropPositions = dropIndexValidation({
       data,
@@ -894,9 +907,13 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       dropIndex,
       isRowReorderValid,
       selectedGroup,
+      selectedParent,
+      nodePathSeparator,
+      groupPathSeparator,
       allowRowReoderBetweenGroups,
       computedGroupBy,
       computedTreeEnabled,
+      enableRowReorderParentChange,
     });
 
     this.validDropPositions = validDropPositions;

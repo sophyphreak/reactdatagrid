@@ -12,9 +12,13 @@ const dropIndexValidation = ({
   dropIndex,
   isRowReorderValid,
   selectedGroup,
+  selectedParent,
+  nodePathSeparator,
+  groupPathSeparator,
   allowRowReoderBetweenGroups,
   computedGroupBy,
   computedTreeEnabled,
+  enableRowReorderParentChange,
 }: {
   data: any;
   count: number;
@@ -22,9 +26,13 @@ const dropIndexValidation = ({
   dropIndex: number;
   isRowReorderValid: Function;
   selectedGroup: string[];
+  selectedParent?: string;
+  nodePathSeparator?: string;
+  groupPathSeparator?: string;
   allowRowReoderBetweenGroups: boolean;
   computedGroupBy?: string[];
   computedTreeEnabled?: boolean;
+  enableRowReorderParentChange?: boolean;
 }) => {
   let iterateRows = false;
   let validDropPositions = [];
@@ -32,7 +40,7 @@ const dropIndexValidation = ({
   if (computedGroupBy && computedGroupBy.length > 0) {
     validDropPositions = data.reduce((acc: any, curr: any, i: number) => {
       if (curr.__group) {
-        const value = curr.keyPath.join('/');
+        const value = curr.keyPath.join(groupPathSeparator);
         if (!value.localeCompare(selectedGroup)) {
           iterateRows = true;
         } else {
@@ -56,11 +64,25 @@ const dropIndexValidation = ({
     }, {});
   } else if (computedTreeEnabled) {
     validDropPositions = data.reduce((acc: any, curr: any, i: number) => {
-      const { leafNode } = curr.__nodeProps;
+      const { leafNode, path } = curr.__nodeProps;
+
+      const parentNodeId = getParentNodeId(path, nodePathSeparator);
+      const selectedParentNodeId = selectedParent
+        ? getParentNodeId(selectedParent, nodePathSeparator)
+        : '';
+
       if (!leafNode) {
         acc[i] = false;
       } else {
-        acc[i] = true;
+        if (enableRowReorderParentChange) {
+          acc[i] = true;
+        } else {
+          if (parentNodeId === selectedParentNodeId) {
+            acc[i] = true;
+          } else {
+            acc[i] = false;
+          }
+        }
       }
 
       return acc;
@@ -82,6 +104,19 @@ const dropIndexValidation = ({
   }
 
   return validDropPositions;
+};
+
+const getParentNodeId = (path: string, pathSeparator?: string): string => {
+  if (pathSeparator) {
+    const parsedPath = path.split(pathSeparator);
+    parsedPath.pop();
+
+    const parentNodeId = parsedPath.join(pathSeparator);
+
+    return parentNodeId;
+  }
+
+  return path;
 };
 
 export default dropIndexValidation;
