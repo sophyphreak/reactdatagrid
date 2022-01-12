@@ -373,7 +373,7 @@ function emptyFn() {}
 InovuaButton.defaultProps = {
   isInovuaButton: true,
   // misc
-  theme: 'default',
+  theme: 'default-light',
   rootClassName: 'inovua-react-toolkit-button',
   align: 'center',
   verticalAlign: 'middle',

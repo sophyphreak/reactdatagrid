@@ -478,7 +478,7 @@ export default class InovuaPaginationToolbar extends React.Component {
 
 InovuaPaginationToolbar.defaultProps = {
   adjustSkipOnLimitChange: true,
-  theme: 'default',
+  theme: 'default-light',
   bordered: true,
   iconSize: 24,
   rtl: false,

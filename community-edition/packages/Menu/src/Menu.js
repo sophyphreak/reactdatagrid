@@ -1630,7 +1630,7 @@ InovuaMenu.defaultProps = {
   enableScroll: true,
   submenuStyle: null,
   scrollerProps: {},
-  theme: 'default',
+  theme: 'default-light',
   dismissOnClick: true,
   disableScroller: false,
   shadow: true,

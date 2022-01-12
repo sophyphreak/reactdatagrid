@@ -97,7 +97,7 @@ InovuaToolbar.defaultProps = {
   useTransformOnScroll: false,
   changeButtonStyles: true,
   rtl: false,
-  theme: 'default',
+  theme: 'default-light',
   overflowStrategy: 'scroll',
 };
 

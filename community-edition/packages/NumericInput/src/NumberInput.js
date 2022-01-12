@@ -1236,7 +1236,7 @@ InovuaNumericInput.defaultProps = {
   stepDelay: 60,
   prefix: '',
   suffix: '',
-  theme: 'default',
+  theme: 'default-light',
   format: 'number',
   currencyPosition: 'end',
   enableSpinnerTools: true,
