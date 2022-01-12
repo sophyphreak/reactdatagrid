@@ -19,6 +19,7 @@ import ReactDataGridCommunity from '../../community-edition';
 import CheckBox from '../../community-edition/packages/CheckBox';
 import Button from '../../community-edition/packages/Button';
 import ComboBox from '../../community-edition/packages/ComboBox';
+import Menu from '../../community-edition/packages/Menu';
 
 ReactDataGridEnterprise.defaultProps.theme = 'default-dark';
 (ReactDataGridEnterprise.defaultProps as any).licenseKey =
@@ -27,6 +28,7 @@ ReactDataGridCommunity.defaultProps.theme = 'default-dark';
 CheckBox.defaultProps.theme = 'default-dark';
 Button.defaultProps.theme = 'default-dark';
 ComboBox.defaultProps.theme = 'default-dark';
+Menu.defaultProps.theme = 'default-dark';
 
 function MyApp({ Component, pageProps }) {
   if (!(process as any).browser) {
