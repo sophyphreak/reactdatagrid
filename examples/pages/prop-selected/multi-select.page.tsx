@@ -36,18 +36,12 @@ const App = () => {
         {selected == null ? 'none' : JSON.stringify(Object.keys(selected))}.
       </p>
       <div style={{ marginBottom: 20 }}>
-        <CheckBox
-          theme="default-dark"
-          checked={multiSelect}
-          onChange={setMultiSelect}
-        >
+        <CheckBox checked={multiSelect} onChange={setMultiSelect}>
           multiSelect
         </CheckBox>
       </div>
       <ReactDataGrid
         idProperty="id"
-        theme="default-dark"
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         multiSelect={multiSelect}
         selected={selected}
         onSelectionChange={onSelectionChange}
