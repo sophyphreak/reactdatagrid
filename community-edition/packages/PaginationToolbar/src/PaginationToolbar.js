@@ -509,6 +509,7 @@ InovuaPaginationToolbar.propTypes = {
   pageSize: PropTypes.number,
   currentPage: PropTypes.number,
   pageCount: PropTypes.number,
+  gotoPage: PropTypes.func,
   onRefresh: PropTypes.func,
   hasNextPage: PropTypes.func,
   hasPrevPage: PropTypes.func,
