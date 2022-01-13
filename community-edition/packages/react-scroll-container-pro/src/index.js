@@ -906,7 +906,7 @@ InovuaScrollContainer.defaultProps = {
     scrollTrackOverTransitionDuration: '100ms',
     usePassiveScroll: true,
     tagName: 'div',
-    theme: 'default',
+    theme: 'default-light',
 };
 const propTypes = {
     alwaysShowTrack: PropTypes.bool,

@@ -445,7 +445,7 @@ InovuaRadioButtonGroup.defaultProps = {
   submitFriendly: true,
   renderItem: props => <WrappedRadioInput {...props} />,
   orientation: 'vertical',
-  theme: 'default',
+  theme: 'default-light',
   disabled: false,
   readOnly: false,
   enableKeyboardNavigation: true,

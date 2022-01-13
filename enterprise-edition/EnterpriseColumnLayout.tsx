@@ -309,7 +309,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       scrollTopMax: this.getScrollTopMax(),
     };
 
-    this.setReorderArrowAt(dragIndex, ranges);
+    this.setReorderArrowAt(dragIndex, ranges, 0);
 
     setupRowDrag(event, dragBoxInitialRegion, {
       onDrag: (event: MouseEvent, config: TypeConfig) =>
@@ -408,7 +408,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
 
     if (dragIndex !== this.dropIndex) {
       const compareRanges = this.compareRanges({ scrollDiff });
-      this.setReorderArrowAt(this.dropIndex, compareRanges);
+      this.setReorderArrowAt(this.dropIndex, compareRanges, dir);
     } else {
       this.setReorderArrowVisible(false);
     }
@@ -1020,6 +1020,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
   setReorderArrowAt = (
     index: number,
     ranges: RangeResultType[],
+    direction: number,
     visible?: boolean
   ): void => {
     visible = visible !== undefined ? visible : index !== DRAG_INFO.dragIndex;
@@ -1050,13 +1051,20 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       dragRowArrowHeight = 3;
     }
 
+    let boxSide = box.bottom;
+    if (direction < 0) {
+      boxSide = box.top;
+    } else if (direction > 0) {
+      boxSide = box.bottom;
+    }
+
     if (index === 0) {
       boxPos = box.top;
     } else if (index === ranges.length - 1) {
       const lastBox = ranges[ranges.length - 1];
       boxPos = lastBox.bottom - Math.floor(dragRowArrowHeight);
     } else {
-      boxPos = box.bottom - Math.floor(dragRowArrowHeight / 2);
+      boxPos = boxSide - Math.floor(dragRowArrowHeight / 2);
     }
 
     const arrowPosition: number = boxPos - contentRegion.top;

@@ -610,7 +610,7 @@ InovuaCheckBox.defaultProps = {
 
   childrenPosition: 'end',
   inlineBlock: true,
-  theme: 'default',
+  theme: 'default-light',
   showWarnings: !uglified,
 };
 

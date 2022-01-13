@@ -266,7 +266,7 @@ class InovuaDropDownButton extends Component {
       rtl: props.rtl,
       style,
       visible: expanded,
-      theme: 'default',
+      theme: 'default-light',
       className: `${props.rootClassName}__menu`,
       onDismiss: this.onMenuDismiss,
     };
@@ -356,7 +356,7 @@ function emptyFn() {}
 
 InovuaDropDownButton.defaultProps = {
   rootClassName: 'inovua-react-toolkit-dropdown-button',
-  theme: 'default',
+  theme: 'default-light',
   menuProps: {},
   rtl: false,
   menu: null,

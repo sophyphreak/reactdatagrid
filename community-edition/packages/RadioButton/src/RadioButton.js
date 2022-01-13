@@ -73,7 +73,7 @@ class InovuaRadioButton extends Component {
 }
 
 InovuaRadioButton.defaultProps = {
-  theme: 'default',
+  theme: 'default-light',
   rootClassName: 'inovua-react-toolkit-radio-button',
 };
 

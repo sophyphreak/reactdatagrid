@@ -175,7 +175,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             leftBoxOffset,
             scrollTopMax: this.getScrollTopMax(),
         };
-        this.setReorderArrowAt(dragIndex, ranges);
+        this.setReorderArrowAt(dragIndex, ranges, 0);
         setupRowDrag(event, dragBoxInitialRegion, {
             onDrag: (event, config) => this.onRowDrag(event, config, props),
             onDrop: (event, config) => this.onRowDrop(event, config, props),
@@ -234,7 +234,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         this.dragRowArrow.setHeight(rowHeight);
         if (dragIndex !== this.dropIndex) {
             const compareRanges = this.compareRanges({ scrollDiff });
-            this.setReorderArrowAt(this.dropIndex, compareRanges);
+            this.setReorderArrowAt(this.dropIndex, compareRanges, dir);
         }
         else {
             this.setReorderArrowVisible(false);
@@ -640,7 +640,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             diffLeft,
         };
     };
-    setReorderArrowAt = (index, ranges, visible) => {
+    setReorderArrowAt = (index, ranges, direction, visible) => {
         visible = visible !== undefined ? visible : index !== DRAG_INFO.dragIndex;
         if (!scrolling) {
             this.setReorderArrowVisible(visible);
@@ -661,6 +661,13 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         if (!Number.isInteger(dragRowArrowHeight)) {
             dragRowArrowHeight = 3;
         }
+        let boxSide = box.bottom;
+        if (direction < 0) {
+            boxSide = box.top;
+        }
+        else if (direction > 0) {
+            boxSide = box.bottom;
+        }
         if (index === 0) {
             boxPos = box.top;
         }
@@ -669,7 +676,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             boxPos = lastBox.bottom - Math.floor(dragRowArrowHeight);
         }
         else {
-            boxPos = box.bottom - Math.floor(dragRowArrowHeight / 2);
+            boxPos = boxSide - Math.floor(dragRowArrowHeight / 2);
         }
         const arrowPosition = boxPos - contentRegion.top;
         return this.setReorderArrowPosition(arrowPosition);

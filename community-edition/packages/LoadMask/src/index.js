@@ -75,7 +75,7 @@ const InovuaLoadMask = forwardRef((props, ref) => {
 InovuaLoadMask.defaultProps = {
   visible: true,
   svgLoader: true,
-  theme: 'default',
+  theme: 'default-light',
   zIndex: 100,
   pointerEvents: true,
   backgroundOpacity: 0.6,

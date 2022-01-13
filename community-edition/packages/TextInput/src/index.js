@@ -299,7 +299,7 @@ class TextInput extends Component {
 TextInput.defaultProps = {
   hidden: false,
   type: 'text',
-  theme: 'default',
+  theme: 'default-light',
   rootClassName: 'inovua-react-toolkit-text-input',
   enableClearButton: true,
   clearButtonSize: 10,

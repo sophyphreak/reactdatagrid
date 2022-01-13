@@ -1847,7 +1847,7 @@ InovuaVirtualList.defaultProps = {
 
   shouldAllowScrollbars: () => true,
   rafOnResize: false,
-  theme: 'default',
+  theme: 'default-light',
   showEmptyRows: false,
   showWarnings: !uglified,
   virtualized: true,
