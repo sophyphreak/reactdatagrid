@@ -11,6 +11,7 @@ import isMultiSelect from './isMultiSelect';
 import isSelectionControlled from './isSelectionControlled';
 import { notifySelection, handleSelection } from '../useRow/handleSelection';
 import batchUpdate from '../../utils/batchUpdate';
+import usePrevious from '../usePrevious';
 const EMPTY_OBJECT = {};
 const getUnselectedFromProps = (computedProps) => {
     if (!computedProps) {
@@ -127,6 +128,11 @@ const useSelected = (props, computedProps, computedPropsRef) => {
 };
 export default (props, computedProps, computedPropsRef) => {
     const { selected: computedSelected, setSelected, rowMultiSelectionEnabled, rowSelectionEnabled, } = useSelected(props, computedProps, computedPropsRef);
+    const previousRowMultiSelectionEnabled = usePrevious(rowMultiSelectionEnabled, rowMultiSelectionEnabled);
+    if (previousRowMultiSelectionEnabled === true &&
+        rowMultiSelectionEnabled === false) {
+        setSelected({});
+    }
     const computedRowSelectionEnabled = rowSelectionEnabled;
     const computedRowMultiSelectionEnabled = rowMultiSelectionEnabled;
     const { unselected: computedUnselected, setUnselected } = useUnselected(props, {

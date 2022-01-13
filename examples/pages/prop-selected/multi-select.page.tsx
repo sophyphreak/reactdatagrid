@@ -33,7 +33,12 @@ const App = () => {
     <div>
       <p>
         Selected rows:{' '}
-        {selected == null ? 'none' : JSON.stringify(Object.keys(selected))}.
+        {selected == null
+          ? 'none'
+          : JSON.stringify(
+              typeof selected === 'object' ? Object.keys(selected) : selected
+            )}
+        .
       </p>
       <div style={{ marginBottom: 20 }}>
         <CheckBox checked={multiSelect} onChange={setMultiSelect}>
