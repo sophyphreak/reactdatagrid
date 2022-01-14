@@ -26,6 +26,8 @@ let scrolling = false;
 const SCROLL_MARGIN = 40;
 const DRAG_ROW_MAX_HEIGHT = 100;
 const raf = global.requestAnimationFrame;
+const identity = (a) => a;
+let iterate = true;
 export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGridColumnLayout {
     dropIndex;
     dragBoxInitialHeight = 0;
@@ -175,6 +177,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             leftBoxOffset,
             scrollTopMax: this.getScrollTopMax(),
         };
+        iterate = true;
         this.setReorderArrowAt(dragIndex, ranges, 0);
         setupRowDrag(event, dragBoxInitialRegion, {
             onDrag: (event, config) => this.onRowDrag(event, config, props),
@@ -200,7 +203,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         let dropIndex = -1;
         let dir = initialDiffTop > 0 ? 1 : -1;
         this.direction = dir;
-        const { data, rowHeightManager, computedGroupBy, computedTreeEnabled, silentSetData, enableHorizontalTreeRowReorder, } = props;
+        const { rowHeightManager, computedGroupBy, computedTreeEnabled, silentSetData, enableTreeRowReorderNestingChange, } = props;
         if (computedGroupBy && computedGroupBy.length > 0) {
             this.getDropGroup();
         }
@@ -221,8 +224,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         }
         if (dropIndex === dragIndex &&
             computedTreeEnabled &&
-            enableHorizontalTreeRowReorder) {
-            this.computeIndentation(data, dragProxyLeft, dragIndex, silentSetData);
+            enableTreeRowReorderNestingChange) {
+            this.computedNesting(props, dragProxyLeft, dragIndex, silentSetData);
             return;
         }
         if (this.dropIndex !== dropIndex) {
@@ -242,10 +245,10 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     };
     onRowDrop = (_event, _config, props) => {
         const { dropIndex } = this;
-        const { onRowReorder, setActiveIndex, computedGroupBy, computedTreeEnabled, enableHorizontalTreeRowReorder, } = props;
+        const { onRowReorder, setActiveIndex, computedGroupBy, computedTreeEnabled, generateIdFromPath, enableTreeRowReorderNestingChange, } = props;
         if (dropIndex === -1 &&
             computedTreeEnabled &&
-            enableHorizontalTreeRowReorder) {
+            enableTreeRowReorderNestingChange) {
             this.clearDropInfo();
             return;
         }
@@ -267,7 +270,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             this.updateGroups(props, dragIndex, dropIndex);
             return;
         }
-        if (computedTreeEnabled) {
+        if (computedTreeEnabled && generateIdFromPath) {
             this.updateTree(props, dragIndex, dropIndex);
             return;
         }
@@ -293,7 +296,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             const { dropDepth } = DRAG_INFO;
             const direction = this.direction;
             const dataSource = moveYAfterX(data, dragIndex, dropIndex);
-            const newDataSource = this.computeNodeProps(dataSource, direction, dropIndex, dropDepth, dropParent, nodePathSeparator);
+            const newDataSource = this.recomputeNodeProps(dataSource, direction, dropIndex, dropDepth, dropParent, nodePathSeparator);
             updateTreeData(props, {
                 selectedPath: selectedParent,
                 destinationPath: dropParent,
@@ -324,7 +327,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         this.clearDropInfo();
         return;
     };
-    computeNodeProps = (data, direction, dropIndex, dropDepth, destinationPath, pathSeparator) => {
+    recomputeNodeProps = (data, direction, dropIndex, dropDepth, destinationPath, pathSeparator) => {
         const parentNodeIdArr = destinationPath.split(pathSeparator);
         parentNodeIdArr.splice(parentNodeIdArr.length - 1, 1);
         const parentNodeId = parentNodeIdArr.join(pathSeparator);
@@ -338,17 +341,86 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         }
         return data;
     };
-    computeIndentation = (data, dragProxyLeft, dragIndex, silentSetData) => {
+    computedNesting = (props, dragProxyLeft, dragIndex, silentSetData) => {
         if (dragProxyLeft < -20) {
-            this.updateIndentation(-1, data, dragIndex, silentSetData);
+            this.updateNesting(-1, props, dragIndex, silentSetData);
         }
         else if (dragProxyLeft > 80) {
-            this.updateIndentation(1, data, dragIndex, silentSetData);
+            this.updateNesting(1, props, dragIndex, silentSetData);
         }
     };
-    updateIndentation = (dir, data, dragIndex, silentSetData) => {
+    updateNesting = (dir, props, dragIndex, silentSetData) => {
+        const originalData = props.originalData;
+        const data = props.data;
+        const idProperty = props.idProperty;
+        const pathSeparator = props.nodePathSeparator;
+        const nodesName = props.nodesProperty;
+        const generateIdFromPath = props.generateIdFromPath;
         let dataSource = [...data];
+        const { selectedParent: selectedPath } = DRAG_INFO;
         const depth = dataSource[dragIndex].__nodeProps.depth + dir;
+        const computeNesting = (dataArray, result = [], parentNode) => {
+            if (iterate) {
+                for (let i = 0; i < dataArray.length; i++) {
+                    const item = dataArray[i];
+                    if (!item) {
+                        continue;
+                    }
+                    const itemId = `${item[idProperty]}`;
+                    const itemNodes = item[nodesName];
+                    const parentNodeId = parentNode
+                        ? `${parentNode[idProperty]}`
+                        : undefined;
+                    const path = parentNode
+                        ? `${parentNodeId}${pathSeparator}${itemId}`
+                        : `${itemId}`;
+                    if (generateIdFromPath) {
+                        item[idProperty] = path;
+                    }
+                    if (parentNode === undefined) {
+                        result.push(item);
+                    }
+                    else {
+                        if (path === selectedPath) {
+                            if (depth < 0) {
+                                this.clearDropInfo();
+                                break;
+                            }
+                            const parentNodes = parentNode[nodesName];
+                            const extraNodeProps = identity({
+                                depth: depth,
+                            });
+                            const itemWithExtraProps = {
+                                ...item,
+                                __extraNodeProps: extraNodeProps,
+                            };
+                            parentNodes[i] = itemWithExtraProps;
+                            iterate = false;
+                            break;
+                        }
+                    }
+                    if (Array.isArray(itemNodes)) {
+                        computeNesting(itemNodes, result, item);
+                    }
+                }
+            }
+            return result;
+        };
+        const computeIds = (dataArray) => {
+            for (let i = 0; i < dataArray.length; i++) {
+                const item = dataArray[i];
+                if (!item) {
+                    continue;
+                }
+                const itemNodes = item[nodesName];
+                item[idProperty] = i + 1;
+                if (Array.isArray(itemNodes)) {
+                    computeIds(itemNodes);
+                }
+            }
+        };
+        const newOriginalData = computeNesting(originalData);
+        computeIds(newOriginalData);
         if (depth < 0) {
             this.clearDropInfo();
             return;
@@ -547,7 +619,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         return { dragProxyTop, dragProxyLeft };
     };
     getValidDropPositions = (props, dragIndex, dropIndex) => {
-        const { computedGroupBy, data, count, isRowReorderValid, allowRowReoderBetweenGroups, computedTreeEnabled, enableRowReorderParentChange, nodePathSeparator, groupPathSeparator, } = props;
+        const { computedGroupBy, data, count, isRowReorderValid, allowRowReoderBetweenGroups, computedTreeEnabled, enableTreeRowReorderParentChange, nodePathSeparator, groupPathSeparator, generateIdFromPath, } = props;
         const { selectedGroup, selectedParent } = DRAG_INFO;
         const validDropPositions = dropIndexValidation({
             data,
@@ -562,7 +634,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             allowRowReoderBetweenGroups,
             computedGroupBy,
             computedTreeEnabled,
-            enableRowReorderParentChange,
+            generateIdFromPath,
+            enableTreeRowReorderParentChange,
         });
         this.validDropPositions = validDropPositions;
         return validDropPositions;
@@ -692,7 +765,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             ev.defaultPrevented) {
             return false;
         }
-        const { onRowReorder, rowReorderColumn, computedPagination, computedSortInfo, computedFiltered, dataSource, data, computedPivot, computedTreeEnabled, enableTreeRowReorder, } = props;
+        const { onRowReorder, rowReorderColumn, computedPagination, computedSortInfo, computedFiltered, dataSource, data, computedPivot, computedTreeEnabled, enableTreeRowReorder, generateIdFromPath, } = props;
         let isNotRowReorder = false;
         if (!onRowReorder &&
             (typeof onRowReorder !== 'function' || typeof onRowReorder !== 'boolean')) {
@@ -701,6 +774,9 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             }
         }
         if (computedTreeEnabled && !enableTreeRowReorder) {
+            isNotRowReorder = true;
+        }
+        if (computedTreeEnabled && !generateIdFromPath) {
             isNotRowReorder = true;
         }
         if (isNotRowReorder) {

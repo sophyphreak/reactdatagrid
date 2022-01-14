@@ -16,6 +16,9 @@ const augmentNode = (n, parentNode, index, config = EMPTY_OBJECT) => {
     const dataSourceCache = config.dataSourceCache || EMPTY_OBJECT;
     const nodeCache = config.nodeCache || EMPTY_OBJECT;
     const loadingNodes = config.loadingNodes || EMPTY_OBJECT;
+    if (!n) {
+        return;
+    }
     const parentNodeId = parentNode ? parentNode[idProperty] : undefined;
     const path = parentNode
         ? `${parentNodeId}${pathSeparator}${n[idProperty]}`
@@ -29,6 +32,15 @@ const augmentNode = (n, parentNode, index, config = EMPTY_OBJECT) => {
         n = { ...n, ...nodeCache[cacheKey] };
     }
     const itemNodes = n[nodesName];
+    const extraNodeProps = n ? n.__extraNodeProps : undefined;
+    const existingDepth = extraNodeProps ? extraNodeProps.depth : undefined;
+    const depth = existingDepth !== undefined
+        ? existingDepth
+        : parentNode
+            ? parentNode.__nodeProps
+                ? parentNode.__nodeProps.depth + 1
+                : 1
+            : 0;
     const nodeProps = (config.nodeProps || identity)({
         leafNode: itemNodes === undefined,
         asyncNode: itemNodes === null,
@@ -40,11 +52,7 @@ const augmentNode = (n, parentNode, index, config = EMPTY_OBJECT) => {
         key: cacheKey,
         childIndex: index,
         itemNodesCount: Array.isArray(itemNodes) ? itemNodes.length : 0,
-        depth: parentNode
-            ? parentNode.__nodeProps
-                ? parentNode.__nodeProps.depth + 1
-                : 1
-            : 0,
+        depth,
     }, n);
     if (config.isNodeLeaf) {
         nodeProps.leafNode = config.isNodeLeaf({ node: n, nodeProps });
@@ -138,30 +146,32 @@ export const expandByIdsWithInfo = (dataArray, config = EMPTY_OBJECT, parentNode
     let itemNodes;
     dataArray.forEach((item, i) => {
         item = augmentNode(item, parentNode, i /* + startIndex*/, config);
-        itemId = item[idProperty];
-        itemNodes = item[nodesName];
-        idToIndexMap[itemId] = i + startIndex;
-        dataMap[itemId] = item;
-        result.push(item);
-        if (expandedNodes[itemId]) {
-            if (Array.isArray(itemNodes)) {
-                nextItem = dataArray[i + 1];
-                itemAlreadyExpanded =
-                    nextItem &&
-                        nextItem.__nodeProps &&
-                        nextItem.__nodeProps.parentNodeId === itemId;
-                if (!itemAlreadyExpanded) {
-                    let startFrom = result.length;
-                    expandByIdsWithInfo(itemNodes, config, item, result, idToIndexMap, dataMap, startFrom, nodesToExpand);
-                    startIndex += result.length - startFrom;
+        if (item) {
+            itemId = item[idProperty];
+            itemNodes = item[nodesName];
+            idToIndexMap[itemId] = i + startIndex;
+            dataMap[itemId] = item;
+            result.push(item);
+            if (expandedNodes[itemId]) {
+                if (Array.isArray(itemNodes)) {
+                    nextItem = dataArray[i + 1];
+                    itemAlreadyExpanded =
+                        nextItem &&
+                            nextItem.__nodeProps &&
+                            nextItem.__nodeProps.parentNodeId === itemId;
+                    if (!itemAlreadyExpanded) {
+                        let startFrom = result.length;
+                        expandByIdsWithInfo(itemNodes, config, item, result, idToIndexMap, dataMap, startFrom, nodesToExpand);
+                        startIndex += result.length - startFrom;
+                    }
                 }
-            }
-            else if (item.__nodeProps.expanded &&
-                !item.__nodeProps.loading &&
-                item.__nodeProps.asyncNode &&
-                !item.__nodeProps.itemNodesCount &&
-                (!config.collapsingNodes || !config.collapsingNodes[itemId])) {
-                nodesToExpand.push(item);
+                else if (item.__nodeProps.expanded &&
+                    !item.__nodeProps.loading &&
+                    item.__nodeProps.asyncNode &&
+                    !item.__nodeProps.itemNodesCount &&
+                    (!config.collapsingNodes || !config.collapsingNodes[itemId])) {
+                    nodesToExpand.push(item);
+                }
             }
         }
     });

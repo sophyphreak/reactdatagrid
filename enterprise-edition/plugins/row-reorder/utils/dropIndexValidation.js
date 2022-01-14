@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const dropIndexValidation = ({ data, count, dragIndex, dropIndex, isRowReorderValid, selectedGroup, selectedParent, nodePathSeparator, groupPathSeparator, allowRowReoderBetweenGroups, computedGroupBy, computedTreeEnabled, enableRowReorderParentChange, }) => {
+const dropIndexValidation = ({ data, count, dragIndex, dropIndex, isRowReorderValid, selectedGroup, selectedParent, nodePathSeparator, groupPathSeparator, allowRowReoderBetweenGroups, computedGroupBy, computedTreeEnabled, generateIdFromPath, enableTreeRowReorderParentChange, }) => {
     let iterateRows = false;
     let validDropPositions = [];
     if (computedGroupBy && computedGroupBy.length > 0) {
@@ -32,7 +32,7 @@ const dropIndexValidation = ({ data, count, dragIndex, dropIndex, isRowReorderVa
             return acc;
         }, {});
     }
-    else if (computedTreeEnabled) {
+    else if (computedTreeEnabled && generateIdFromPath) {
         validDropPositions = data.reduce((acc, curr, i) => {
             const { leafNode, path } = curr.__nodeProps;
             if (!data[dragIndex].__nodeProps.leafNode) {
@@ -47,7 +47,7 @@ const dropIndexValidation = ({ data, count, dragIndex, dropIndex, isRowReorderVa
                     acc[i] = false;
                 }
                 else {
-                    if (enableRowReorderParentChange) {
+                    if (enableTreeRowReorderParentChange) {
                         acc[i] = true;
                     }
                     else {

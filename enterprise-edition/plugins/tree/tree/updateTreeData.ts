@@ -5,14 +5,32 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const EMPTY_OBJECT: object = {};
+import {
+  TypeComputedProps,
+  TypeExpandedNodes,
+} from '../../../../community-edition/types';
+
+type TypeConfig = {
+  idProperty: string;
+  nodesName: string;
+  pathSeparator: string;
+  expandedNodes: TypeExpandedNodes | undefined;
+  generateIdFromPath: boolean;
+  selectedPath: string;
+  destinationPath: string;
+};
 
 const updateTreeDataIds = (data: any, config: any) => {
   const idProperty = config.idProperty;
   const nodesName = config.nodesName;
 
-  const updateIds = (dataArr: any) => {
-    dataArr.forEach((item: any, i: number) => {
+  const updateIds = (dataArr: any[]) => {
+    for (let i = 0; i < dataArr.length; i++) {
+      const item = dataArr[i];
+      if (!item) {
+        continue;
+      }
+
       const itemNodes = item[nodesName];
 
       item[idProperty] = i + 1;
@@ -20,7 +38,7 @@ const updateTreeDataIds = (data: any, config: any) => {
       if (Array.isArray(itemNodes)) {
         updateIds(itemNodes);
       }
-    });
+    }
   };
 
   updateIds(data);
@@ -28,7 +46,7 @@ const updateTreeDataIds = (data: any, config: any) => {
   return data;
 };
 
-const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
+const computeTreeData = (dataArray: any[], config: TypeConfig) => {
   const idProperty = config.idProperty;
   const nodesName = config.nodesName;
   const pathSeparator = config.pathSeparator;
@@ -37,25 +55,34 @@ const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
   const selectedPath = config.selectedPath;
   const destinationPath = config.destinationPath;
 
-  let value: any = [];
+  let value: any[] = [];
+  let counter = 0;
 
   const computeData = (
-    data: any,
+    data: any[],
     idSelected: string,
     destinationId: string,
-    result: any = [],
+    result: any[] = [],
     parentNode?: any
   ) => {
     let initialIdSelected: string = '';
-    data.forEach((item: any, i: number) => {
+
+    for (let i = 0; i < data.length; i++) {
       if (initialIdSelected === '') {
         initialIdSelected = idSelected;
       }
 
+      if (counter === 2) {
+        break;
+      }
+
+      const item = data[i];
+      if (!item) {
+        continue;
+      }
+
       const itemId = `${item[idProperty]}`;
-
-      const itemNodes: any = item[nodesName];
-
+      const itemNodes: any[] = item[nodesName];
       const parentNodeId = parentNode ? `${parentNode[idProperty]}` : undefined;
       const path = parentNode
         ? `${parentNodeId}${pathSeparator}${item[idProperty]}`
@@ -69,68 +96,40 @@ const computeTreeData = (dataArray: any, config: any = EMPTY_OBJECT) => {
         result.push(item);
       } else {
         const parentNodes = parentNode[nodesName];
+
         if (path === initialIdSelected) {
           value.push(item);
           parentNodes.splice(i, 1);
-
-          let normalizedId: string = '';
-          for (let j = 1; j <= parentNodes.length; j++) {
-            const parsedId = item[idProperty].split(pathSeparator);
-            parsedId.splice(parsedId.length - 1, 1);
-            parsedId.push(j);
-
-            normalizedId = parsedId.join(pathSeparator);
-            parentNodes[j - 1][idProperty] = normalizedId;
-          }
+          counter++;
         }
 
         if (path === destinationId) {
           const nodeId = item[idProperty].split(pathSeparator);
           const idInNodes = nodeId.splice(nodeId.length - 1, 1);
-
           const index = parseInt(idInNodes);
           parentNodes.splice(index, 0, value[0]);
-
-          let normalizedId: string = '';
-          let idLength = -1;
-          for (let j = 0; j < parentNodes.length; j++) {
-            let parsedId: any = [];
-            parsedId = [].concat(nodeId);
-            parsedId.push(j + 1);
-
-            normalizedId = parsedId.join(pathSeparator);
-            if (idLength === -1) {
-              idLength = normalizedId.length;
-            }
-
-            parentNodes[j][idProperty] = null;
-            if (idLength === normalizedId.length) {
-              parentNodes[j][idProperty] = normalizedId;
-            }
-          }
+          counter++;
         }
       }
 
-      if (expandedNodes[itemId]) {
+      if (expandedNodes && expandedNodes[itemId]) {
         if (Array.isArray(itemNodes)) {
           computeData(itemNodes, idSelected, destinationId, result, item);
         }
       }
-    });
+    }
 
     return result;
   };
 
-  const dataArr = [].concat(dataArray);
-
-  const computedData = computeData(dataArr, selectedPath, destinationPath);
+  const computedData = computeData(dataArray, selectedPath, destinationPath);
   const updatedData = updateTreeDataIds(computedData, config);
 
   return updatedData;
 };
 
 const updateTreeData = (
-  props: any,
+  props: TypeComputedProps,
   {
     selectedPath,
     destinationPath,

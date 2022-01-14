@@ -691,8 +691,8 @@ type TypeDataGridPropsNoI18n = {
   pageSizes?: number[];
   onCellClick?: (event: MouseEvent, cellProps: TypeCellProps) => void;
   enableTreeRowReorder?: boolean;
-  enableHorizontalTreeRowReorder?: boolean;
-  enableRowReorderParentChange?: boolean;
+  enableTreeRowReorderNestingChange?: boolean;
+  enableTreeRowReorderParentChange?: boolean;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

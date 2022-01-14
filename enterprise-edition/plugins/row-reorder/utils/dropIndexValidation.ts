@@ -18,9 +18,10 @@ const dropIndexValidation = ({
   allowRowReoderBetweenGroups,
   computedGroupBy,
   computedTreeEnabled,
-  enableRowReorderParentChange,
+  generateIdFromPath,
+  enableTreeRowReorderParentChange,
 }: {
-  data: any;
+  data: any[];
   count: number;
   dragIndex: number;
   dropIndex: number;
@@ -32,13 +33,14 @@ const dropIndexValidation = ({
   allowRowReoderBetweenGroups: boolean;
   computedGroupBy?: string[];
   computedTreeEnabled?: boolean;
-  enableRowReorderParentChange?: boolean;
+  generateIdFromPath?: boolean;
+  enableTreeRowReorderParentChange?: boolean;
 }) => {
   let iterateRows = false;
   let validDropPositions = [];
 
   if (computedGroupBy && computedGroupBy.length > 0) {
-    validDropPositions = data.reduce((acc: any, curr: any, i: number) => {
+    validDropPositions = data.reduce((acc: any[], curr: any, i: number) => {
       if (curr.__group) {
         const value = curr.keyPath.join(groupPathSeparator);
         if (!value.localeCompare(selectedGroup)) {
@@ -62,8 +64,8 @@ const dropIndexValidation = ({
 
       return acc;
     }, {});
-  } else if (computedTreeEnabled) {
-    validDropPositions = data.reduce((acc: any, curr: any, i: number) => {
+  } else if (computedTreeEnabled && generateIdFromPath) {
+    validDropPositions = data.reduce((acc: any[], curr: any, i: number) => {
       const { leafNode, path } = curr.__nodeProps;
 
       if (!data[dragIndex].__nodeProps.leafNode) {
@@ -77,7 +79,7 @@ const dropIndexValidation = ({
         if (!leafNode) {
           acc[i] = false;
         } else {
-          if (enableRowReorderParentChange) {
+          if (enableTreeRowReorderParentChange) {
             acc[i] = true;
           } else {
             if (parentNodeId === selectedParentNodeId) {

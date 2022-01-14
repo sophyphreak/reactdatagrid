@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { RangeResultType } from 'enterprise-edition/types';
+import { RangeResultType } from '../../../types';
 
 const getRangesForTree = ({
   data,

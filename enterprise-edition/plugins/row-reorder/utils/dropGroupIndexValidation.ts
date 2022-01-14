@@ -13,7 +13,7 @@ const dropGroupIndexValidation = ({
   selectedGroup,
   allowRowReoderBetweenGroups,
 }: {
-  data: any;
+  data: any[];
   dragIndex: number;
   dropIndex: number;
   isRowReorderValid: Function;
@@ -22,7 +22,7 @@ const dropGroupIndexValidation = ({
 }) => {
   let iterateRows = false;
 
-  let validDropPositions = data.reduce((acc: any, curr: any, i: number) => {
+  let validDropPositions = data.reduce((acc: any[], curr: any, i: number) => {
     if (curr.__group) {
       const value = curr.keyPath.join('/');
       if (!value.localeCompare(selectedGroup)) {

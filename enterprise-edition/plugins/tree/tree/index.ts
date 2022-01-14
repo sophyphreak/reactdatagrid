@@ -28,6 +28,10 @@ const augmentNode = (
 
   const loadingNodes = config.loadingNodes || EMPTY_OBJECT;
 
+  if (!n) {
+    return;
+  }
+
   const parentNodeId = parentNode ? parentNode[idProperty] : undefined;
   const path = parentNode
     ? `${parentNodeId}${pathSeparator}${n[idProperty]}`
@@ -44,6 +48,18 @@ const augmentNode = (
   }
   const itemNodes = n[nodesName];
 
+  const extraNodeProps = n ? n.__extraNodeProps : undefined;
+  const existingDepth = extraNodeProps ? extraNodeProps.depth : undefined;
+
+  const depth =
+    existingDepth !== undefined
+      ? existingDepth
+      : parentNode
+      ? parentNode.__nodeProps
+        ? parentNode.__nodeProps.depth + 1
+        : 1
+      : 0;
+
   const nodeProps = (config.nodeProps || identity)(
     {
       leafNode: itemNodes === undefined,
@@ -56,11 +72,7 @@ const augmentNode = (
       key: cacheKey,
       childIndex: index,
       itemNodesCount: Array.isArray(itemNodes) ? itemNodes.length : 0,
-      depth: parentNode
-        ? parentNode.__nodeProps
-          ? parentNode.__nodeProps.depth + 1
-          : 1
-        : 0,
+      depth,
     },
     n
   );
@@ -221,42 +233,44 @@ export const expandByIdsWithInfo = (
   dataArray.forEach((item: any, i) => {
     item = augmentNode(item, parentNode, i /* + startIndex*/, config);
 
-    itemId = item[idProperty];
-    itemNodes = item[nodesName];
-    idToIndexMap[itemId] = i + startIndex;
-    dataMap[itemId] = item;
-    result.push(item);
+    if (item) {
+      itemId = item[idProperty];
+      itemNodes = item[nodesName];
+      idToIndexMap[itemId] = i + startIndex;
+      dataMap[itemId] = item;
+      result.push(item);
 
-    if (expandedNodes[itemId]) {
-      if (Array.isArray(itemNodes)) {
-        nextItem = dataArray[i + 1];
-        itemAlreadyExpanded =
-          nextItem &&
-          nextItem.__nodeProps &&
-          nextItem.__nodeProps.parentNodeId === itemId;
+      if (expandedNodes[itemId]) {
+        if (Array.isArray(itemNodes)) {
+          nextItem = dataArray[i + 1];
+          itemAlreadyExpanded =
+            nextItem &&
+            nextItem.__nodeProps &&
+            nextItem.__nodeProps.parentNodeId === itemId;
 
-        if (!itemAlreadyExpanded) {
-          let startFrom = result.length;
-          expandByIdsWithInfo(
-            itemNodes,
-            config,
-            item,
-            result,
-            idToIndexMap,
-            dataMap,
-            startFrom,
-            nodesToExpand
-          );
-          startIndex += result.length - startFrom;
+          if (!itemAlreadyExpanded) {
+            let startFrom = result.length;
+            expandByIdsWithInfo(
+              itemNodes,
+              config,
+              item,
+              result,
+              idToIndexMap,
+              dataMap,
+              startFrom,
+              nodesToExpand
+            );
+            startIndex += result.length - startFrom;
+          }
+        } else if (
+          item.__nodeProps.expanded &&
+          !item.__nodeProps.loading &&
+          item.__nodeProps.asyncNode &&
+          !item.__nodeProps.itemNodesCount &&
+          (!config.collapsingNodes || !config.collapsingNodes[itemId])
+        ) {
+          nodesToExpand.push(item);
         }
-      } else if (
-        item.__nodeProps.expanded &&
-        !item.__nodeProps.loading &&
-        item.__nodeProps.asyncNode &&
-        !item.__nodeProps.itemNodesCount &&
-        (!config.collapsingNodes || !config.collapsingNodes[itemId])
-      ) {
-        nodesToExpand.push(item);
       }
     }
   });

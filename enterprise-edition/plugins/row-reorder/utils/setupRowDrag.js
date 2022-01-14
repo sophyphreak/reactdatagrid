@@ -4,7 +4,7 @@
  * This source code is licensed under the Commercial License found in the
  * LICENSE file in the root directory of this source tree.
  */
-import DragHelper from '@inovua/reactdatagrid-community/packages/drag-helper';
+import DragHelper from '../../../../community-edition/packages/drag-helper';
 const emptyFn = () => { };
 const setupRowDrag = (event, region, cfg) => {
     const onDrag = cfg.onDrag || emptyFn;
