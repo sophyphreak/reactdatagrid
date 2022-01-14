@@ -140,7 +140,7 @@ const updateTreeData = (
 ) => {
   const originalData = props.originalData || [];
 
-  const config = {
+  const config: TypeConfig = {
     idProperty: props.idProperty,
     nodesName: props.nodesProperty,
     pathSeparator: props.nodePathSeparator,
