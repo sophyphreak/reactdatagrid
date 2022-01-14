@@ -511,6 +511,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       });
 
       this.clearDropInfo();
+      props.reload();
       silentSetData(newDataSource);
     }
   };
@@ -856,6 +857,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       data,
       computedGroupBy,
       computedTreeEnabled,
+      generateIdFromPath,
     } = props;
 
     let ranges: RangeResultType[] = [];
@@ -875,7 +877,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         dragBoxRegion: dragBoxInitialRegion,
       });
       selectedGroup = dropGroup;
-    } else if (computedTreeEnabled) {
+    } else if (computedTreeEnabled && generateIdFromPath) {
       ranges = getRangesForTree({
         data,
         initialOffset: contentRegion.top,
