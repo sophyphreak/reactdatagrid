@@ -14,7 +14,7 @@ const sortAsc = (a: number, b: number) => a - b;
 const identity = <T>(a: T): T => a;
 
 const augmentNode = (
-  n,
+  n: any,
   parentNode: any,
   index: number,
   config: any = EMPTY_OBJECT
@@ -27,6 +27,10 @@ const augmentNode = (
   const nodeCache = config.nodeCache || EMPTY_OBJECT;
 
   const loadingNodes = config.loadingNodes || EMPTY_OBJECT;
+
+  if (!n) {
+    return;
+  }
 
   const parentNodeId = parentNode ? parentNode[idProperty] : undefined;
   const path = parentNode
@@ -44,6 +48,18 @@ const augmentNode = (
   }
   const itemNodes = n[nodesName];
 
+  const extraNodeProps = n ? n.__extraNodeProps : undefined;
+  const existingDepth = extraNodeProps ? extraNodeProps.depth : undefined;
+
+  const depth =
+    existingDepth !== undefined
+      ? existingDepth
+      : parentNode
+      ? parentNode.__nodeProps
+        ? parentNode.__nodeProps.depth + 1
+        : 1
+      : 0;
+
   const nodeProps = (config.nodeProps || identity)(
     {
       leafNode: itemNodes === undefined,
@@ -56,11 +72,7 @@ const augmentNode = (
       key: cacheKey,
       childIndex: index,
       itemNodesCount: Array.isArray(itemNodes) ? itemNodes.length : 0,
-      depth: parentNode
-        ? parentNode.__nodeProps
-          ? parentNode.__nodeProps.depth + 1
-          : 1
-        : 0,
+      depth,
     },
     n
   );
@@ -91,8 +103,8 @@ const expandAtIndexWithInfo = (
 ) => {
   const nodesName = config.nodesName || 'nodes';
   const idProperty = config.idProperty || 'id';
-  const generateIdFromPath = config.generateIdFromPath;
-  const pathSeparator = config.pathSeparator || '/';
+  // const generateIdFromPath = config.generateIdFromPath;
+  // const pathSeparator = config.pathSeparator || '/';
 
   let node = dataArray[index];
 
@@ -210,7 +222,7 @@ export const expandByIdsWithInfo = (
 ) => {
   const idProperty = config.idProperty || 'id';
   const nodesName = config.nodesName || 'nodes';
-  const nodeCache = config.nodeCache || EMPTY_OBJECT;
+  // const nodeCache = config.nodeCache || EMPTY_OBJECT;
   const expandedNodes = config.expandedNodes || EMPTY_OBJECT;
 
   let nextItem;
@@ -221,42 +233,44 @@ export const expandByIdsWithInfo = (
   dataArray.forEach((item: any, i) => {
     item = augmentNode(item, parentNode, i /* + startIndex*/, config);
 
-    itemId = item[idProperty];
-    itemNodes = item[nodesName];
-    idToIndexMap[itemId] = i + startIndex;
-    dataMap[itemId] = item;
-    result.push(item);
+    if (item) {
+      itemId = item[idProperty];
+      itemNodes = item[nodesName];
+      idToIndexMap[itemId] = i + startIndex;
+      dataMap[itemId] = item;
+      result.push(item);
 
-    if (expandedNodes[itemId]) {
-      if (Array.isArray(itemNodes)) {
-        nextItem = dataArray[i + 1];
-        itemAlreadyExpanded =
-          nextItem &&
-          nextItem.__nodeProps &&
-          nextItem.__nodeProps.parentNodeId === itemId;
+      if (expandedNodes[itemId]) {
+        if (Array.isArray(itemNodes)) {
+          nextItem = dataArray[i + 1];
+          itemAlreadyExpanded =
+            nextItem &&
+            nextItem.__nodeProps &&
+            nextItem.__nodeProps.parentNodeId === itemId;
 
-        if (!itemAlreadyExpanded) {
-          let startFrom = result.length;
-          expandByIdsWithInfo(
-            itemNodes,
-            config,
-            item,
-            result,
-            idToIndexMap,
-            dataMap,
-            startFrom,
-            nodesToExpand
-          );
-          startIndex += result.length - startFrom;
+          if (!itemAlreadyExpanded) {
+            let startFrom = result.length;
+            expandByIdsWithInfo(
+              itemNodes,
+              config,
+              item,
+              result,
+              idToIndexMap,
+              dataMap,
+              startFrom,
+              nodesToExpand
+            );
+            startIndex += result.length - startFrom;
+          }
+        } else if (
+          item.__nodeProps.expanded &&
+          !item.__nodeProps.loading &&
+          item.__nodeProps.asyncNode &&
+          !item.__nodeProps.itemNodesCount &&
+          (!config.collapsingNodes || !config.collapsingNodes[itemId])
+        ) {
+          nodesToExpand.push(item);
         }
-      } else if (
-        item.__nodeProps.expanded &&
-        !item.__nodeProps.loading &&
-        item.__nodeProps.asyncNode &&
-        !item.__nodeProps.itemNodesCount &&
-        (!config.collapsingNodes || !config.collapsingNodes[itemId])
-      ) {
-        nodesToExpand.push(item);
       }
     }
   });
@@ -346,9 +360,9 @@ export const collapseAtIndex = (
 };
 
 export const sortTreeData = (
-  sortInfo,
-  dataArray,
-  { depth = 0, deep } = EMPTY_OBJECT
+  sortInfo: any,
+  dataArray: any[],
+  { depth = 0, deep }: any = EMPTY_OBJECT
 ) => {
   let { data, maxDepth } = sortTreeDataWithInfo(sortInfo, dataArray, depth);
   if (deep) {
@@ -362,23 +376,27 @@ export const sortTreeData = (
   return data;
 };
 
-export const sortTreeDataWithInfo = (sortInfo, dataArray: any[], depth = 0) => {
+export const sortTreeDataWithInfo = (
+  sortInfo: any,
+  dataArray: any[],
+  depth = 0
+) => {
   let item;
   let index = 0;
-  let arrayAtDepth = [];
+  // let arrayAtDepth = [];
   let currentDepth;
   let currentPath;
   let prevItemDepth = -1;
-  let prevPath;
+  let _prevPath: any;
   let prevMatchingDepthPath;
-  let depthStart = -1;
-  let depthEnd = -1;
+  // let depthStart = -1;
+  // let depthEnd = -1;
 
-  let arrayToSort: any[] | undefined;
+  let arrayToSort: any;
   let currentNodeChildren = [];
-  let map = {};
+  let map: any = {};
 
-  let sortIndexStart;
+  let sortIndexStart: any;
   let maxDepth = 0;
 
   while ((item = dataArray[index])) {
@@ -434,7 +452,7 @@ export const sortTreeDataWithInfo = (sortInfo, dataArray: any[], depth = 0) => {
       prevMatchingDepthPath = currentPath;
     }
     prevItemDepth = currentDepth;
-    prevPath = currentPath;
+    _prevPath = currentPath;
   }
 
   if (currentNodeChildren.length) {

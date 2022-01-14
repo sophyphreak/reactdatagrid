@@ -1622,6 +1622,8 @@ const GridFactory = (
     groupNestingSize: 22,
     treeNestingSize: 22,
     columnMinWidth: 40,
+    enableTreeRowReorderNestingChange: true,
+    enableTreeRowReorderParentChange: true,
     columnReorderScrollByAmount: 20,
     rowReorderScrollByAmount: 20,
     rowReorderAutoScroll: false,

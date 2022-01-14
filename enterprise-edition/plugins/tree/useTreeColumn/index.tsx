@@ -16,7 +16,7 @@ import {
 import useProperty from '@inovua/reactdatagrid-community/hooks/useProperty';
 import batchUpdate from '@inovua/reactdatagrid-community/utils/batchUpdate';
 
-const EXPANDABLE_NODE_INFO = {};
+const EXPANDABLE_NODE_INFO: any = {};
 
 const isNodeExpandableAt_FromProps = (
   computedPropsRef: MutableRefObject<TypeComputedProps | null>,
@@ -98,7 +98,7 @@ const loadNodeAsync_FromProps = (
     ...computedProps.computedLoadingNodes,
   };
 
-  const result: object[] | Promise<object[]> = loadFn!({
+  const result: object[] | Promise<object[]> | any = loadFn!({
     node: data,
     nodeProps: data.__nodeProps,
   });
@@ -181,7 +181,7 @@ const useTreeColumn = (
     if (!computedProps) {
       return;
     }
-    const { initialProps } = computedProps;
+    const { initialProps }: any = computedProps;
 
     if (data) {
       nodeProps = data.__nodeProps;
@@ -294,7 +294,7 @@ const useTreeColumn = (
 
   const clearNodeChildrenCache = (
     nodeId: string | number,
-    recursive = true,
+    recursive: boolean = true,
     treeCache: TypeNodeCache | undefined,
     clearedMap?: { [key: string]: boolean }
   ): { [key: string]: boolean } => {
@@ -326,7 +326,7 @@ const useTreeColumn = (
         generateIdFromPath,
         nodePathSeparator,
       } = computedProps.initialProps;
-      childNodes.forEach(childNode => {
+      childNodes.forEach((childNode: any) => {
         if (!childNode) {
           return;
         }
@@ -368,7 +368,7 @@ const useTreeColumn = (
   };
 
   const setNodeExpandedById = (
-    id: string | number,
+    id: string | number | any,
     expanded: boolean,
     config: { force?: boolean } = {}
   ) => {

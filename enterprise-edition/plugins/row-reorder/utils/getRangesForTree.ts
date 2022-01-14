@@ -7,7 +7,7 @@
 
 import { RangeResultType } from '../../../types';
 
-const getRangesForGroups = ({
+const getRangesForTree = ({
   data,
   initialOffset,
   rowHeightManager,
@@ -18,11 +18,7 @@ const getRangesForGroups = ({
   rowHeightManager: any;
   initialScrollTop: number;
 }): RangeResultType[] => {
-  let keyPath: string[];
-  let depth: number = 0;
-  let value: string = '';
-
-  const ranges: any[] = data.map((row: any, i: number) => {
+  const ranges: any = data.map((row: any, i: number) => {
     if (!row) {
       return;
     }
@@ -32,22 +28,16 @@ const getRangesForGroups = ({
     const offset = top + initialOffset - (initialScrollTop || 0);
     const bottom = offset + rowHeight;
 
-    if (row.__group) {
-      keyPath = row.keyPath;
-      depth = row.depth;
-      value = row.value;
-    }
+    const nodeProps = row.__nodeProps;
 
     const result = {
-      group: row.__group || false,
-      keyPath,
-      leaf: row.leaf || false,
-      value,
-      depth,
       top: offset,
-      bottom: bottom,
+      bottom,
       height: rowHeight,
       index: i,
+      keyPath: nodeProps.key,
+      depth: nodeProps.depth,
+      parent: nodeProps.initialNodes !== undefined,
     };
 
     return result;
@@ -56,4 +46,4 @@ const getRangesForGroups = ({
   return ranges;
 };
 
-export default getRangesForGroups;
+export default getRangesForTree;
