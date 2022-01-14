@@ -6,12 +6,9 @@
  */
 
 import { MouseEvent } from 'react';
-import DragHelper from '../../../../community-edition/packages/drag-helper';
+import DragHelper from '@inovua/reactdatagrid-community/packages/drag-helper';
 
-import {
-  TypeDragHelper,
-  TypeConfig,
-} from '../../../../community-edition/types';
+import { TypeDragHelper, TypeConfig } from '../../../types';
 
 const emptyFn = () => {};
 
