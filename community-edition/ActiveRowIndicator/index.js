@@ -14,7 +14,7 @@ const RTL_OFFSET = SCROLLBAR_WIDTH || 17;
 const ActiveRowIndicator = (props) => {
     const [offset, setOffset] = useState('');
     const [_scrollLeft, setScrollLeft] = useState(0);
-    const { activeIndex, rtl, rtlOffset } = props;
+    const { activeIndex, rtl, rtlOffset, activeRowIndicatorClassName } = props;
     const oldActiveIndex = usePrevious(activeIndex, -1);
     const { instance: row = {} } = props.activeRowRef.current || {};
     const { hasBorderBottom, hasBorderTop } = row;
@@ -96,7 +96,8 @@ const ActiveRowIndicator = (props) => {
     if (transform) {
         style.transform = transform;
     }
+    const innerClassName = join(`${CLASS_NAME}-active-borders-inner`, activeRowIndicatorClassName ? activeRowIndicatorClassName : '');
     return (React.createElement("div", { key: "active-row-borders", className: join(`${CLASS_NAME}-active-borders`, offset != '' ? `${CLASS_NAME}-active-borders--active` : '', hasBorderTop && `${CLASS_NAME}-active-borders--has-border-top`, hasBorderBottom && `${CLASS_NAME}-active-borders--has-border-bottom`), style: style },
-        React.createElement("div", { className: `${CLASS_NAME}-active-borders-inner` })));
+        React.createElement("div", { className: innerClassName })));
 };
 export default ActiveRowIndicator;

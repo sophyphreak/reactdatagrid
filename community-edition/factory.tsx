@@ -1421,7 +1421,7 @@ const GridFactory = (
         : computedPropsRef.rowHeight;
     computedProps.activeRowHeight = activeRowHeight || computedProps.rowHeight;
 
-    if (computedFocused) {
+    if (computedFocused && computedProps.showActiveRowIndicator) {
       computedProps.renderActiveRowIndicator = (
         handle: (
           handleProps: {
@@ -1443,6 +1443,9 @@ const GridFactory = (
             activeRowHeight={computedProps.activeRowHeight}
             activeIndex={computedProps.computedActiveIndex}
             activeRowRef={computedProps.activeRowRef}
+            activeRowIndicatorClassName={
+              computedProps.activeRowIndicatorClassName
+            }
           />
         );
       };
@@ -1651,6 +1654,7 @@ const GridFactory = (
     showColumnMenuGroupOptions: true,
     autoFocusOnEditComplete: true,
     autoFocusOnEditEscape: true,
+    showActiveRowIndicator: true,
 
     showPivotSummaryColumns: true,
     showColumnMenuToolOnHover: !isMobile,

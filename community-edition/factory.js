@@ -934,9 +934,9 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
                 ? rowHeightManager.getRowHeight(computedProps.computedActiveIndex)
                 : computedPropsRef.rowHeight;
         computedProps.activeRowHeight = activeRowHeight || computedProps.rowHeight;
-        if (computedFocused) {
+        if (computedFocused && computedProps.showActiveRowIndicator) {
             computedProps.renderActiveRowIndicator = (handle) => {
-                return (React.createElement(ActiveRowIndicator, { handle: handle, rtl: computedProps.rtl, rtlOffset: computedProps.rtlOffset, getDOMNode: computedProps.getDOMNode, dataSourceCount: computedProps.data.length, width: computedProps.minRowWidth || 0, computedRowHeights: computedProps.computedRowHeights, computedExpandedRows: computedProps.computedExpandedRows, computedExpandedNodes: computedProps.computedExpandedNodes, activeRowHeight: computedProps.activeRowHeight, activeIndex: computedProps.computedActiveIndex, activeRowRef: computedProps.activeRowRef }));
+                return (React.createElement(ActiveRowIndicator, { handle: handle, rtl: computedProps.rtl, rtlOffset: computedProps.rtlOffset, getDOMNode: computedProps.getDOMNode, dataSourceCount: computedProps.data.length, width: computedProps.minRowWidth || 0, computedRowHeights: computedProps.computedRowHeights, computedExpandedRows: computedProps.computedExpandedRows, computedExpandedNodes: computedProps.computedExpandedNodes, activeRowHeight: computedProps.activeRowHeight, activeIndex: computedProps.computedActiveIndex, activeRowRef: computedProps.activeRowRef, activeRowIndicatorClassName: computedProps.activeRowIndicatorClassName }));
             };
         }
         computedProps.computedLicenseValid = false;
@@ -1088,6 +1088,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         showColumnMenuGroupOptions: true,
         autoFocusOnEditComplete: true,
         autoFocusOnEditEscape: true,
+        showActiveRowIndicator: true,
         showPivotSummaryColumns: true,
         showColumnMenuToolOnHover: !isMobile,
         columnFilterContextMenuConstrainTo: true,

@@ -693,6 +693,8 @@ type TypeDataGridPropsNoI18n = {
   enableTreeRowReorder?: boolean;
   enableTreeRowReorderNestingChange?: boolean;
   enableTreeRowReorderParentChange?: boolean;
+  showActiveRowIndicator?: boolean;
+  activeRowIndicatorClassName?: string;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

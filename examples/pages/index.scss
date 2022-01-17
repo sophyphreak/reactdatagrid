@@ -27,6 +27,11 @@
   font-style: italic;
 }
 
+.active-row-border.active-row-border.active-row-border {
+  border: 1px solid #8ee4c1;
+  border-radius: 4px;
+}
+
 .cell-edit__copy-paste__input {
   padding: 5px;
   outline: none;
@@ -37,6 +42,6 @@
   margin-bottom: 20px;
 
   &:focus {
-    border: 1px solid #7986cb;
+    border: 1px solid #4f8d75;
   }
 }

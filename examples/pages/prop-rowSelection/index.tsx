@@ -4,6 +4,7 @@ import ReactDataGrid from '../../../community-edition';
 
 import people from '../people';
 import flags from '../flags';
+import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
 const gridStyle = { minHeight: 550 };
 
@@ -28,6 +29,7 @@ const columns = [
 
 const App = () => {
   const [selected, setSelected] = useState(null);
+  const [showActiveRowIndicator, setShowActiveRowIndicator] = useState(true);
 
   const onSelectionChange = useCallback(({ selected: selectedMap, data }) => {
     const newSelected = Object.keys(selectedMap).map((id: any) => id * 1);
@@ -38,6 +40,16 @@ const App = () => {
   return (
     <div>
       <h3>Multiple row selection - uncontrolled</h3>
+
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox
+          checked={showActiveRowIndicator}
+          onChange={setShowActiveRowIndicator}
+        >
+          showActiveRowIndicator
+        </CheckBox>
+      </div>
+
       <ReactDataGrid
         idProperty="id"
         theme="default-dark"
@@ -47,6 +59,9 @@ const App = () => {
         style={gridStyle}
         columns={columns}
         dataSource={people}
+        preventRowSelectionOnClickWithMouseMove={false}
+        showActiveRowIndicator={showActiveRowIndicator}
+        activeRowIndicatorClassName="active-row-border"
       />
       <p>
         Selected rows: {selected == null ? 'none' : JSON.stringify(selected)}.
