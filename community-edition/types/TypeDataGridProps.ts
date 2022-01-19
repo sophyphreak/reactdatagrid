@@ -695,6 +695,11 @@ type TypeDataGridPropsNoI18n = {
   enableTreeRowReorderParentChange?: boolean;
   showActiveRowIndicator?: boolean;
   activeRowIndicatorClassName?: string;
+  onTreeRowReorderChange?: ({
+    updatedTreeData,
+  }: {
+    updatedTreeData: any[];
+  }) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

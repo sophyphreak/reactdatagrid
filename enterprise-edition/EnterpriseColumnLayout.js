@@ -297,12 +297,15 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             const direction = this.direction;
             const dataSource = moveYAfterX(data, dragIndex, dropIndex);
             const newDataSource = this.recomputeNodeProps(dataSource, direction, dropIndex, dropDepth, dropParent, nodePathSeparator);
-            updateTreeData(props, {
+            const updatedTreeData = updateTreeData(props, {
                 selectedPath: selectedParent,
                 destinationPath: dropParent,
             });
             this.clearDropInfo();
             props.reload();
+            if (props.onTreeRowReorderChange) {
+                props.onTreeRowReorderChange({ updatedTreeData });
+            }
             silentSetData(newDataSource);
         }
     };

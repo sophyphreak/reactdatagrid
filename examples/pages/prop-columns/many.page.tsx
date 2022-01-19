@@ -5,13 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 import React from 'react';
 
-import DataGrid from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
 
 import people from '../people';
 
-const gridStyle = { minHeight: '80vh', margin: 20 };
+const gridStyle = { minHeight: '80vh' };
 
 const times = (arr, n, fn?) => {
   const result = [];
@@ -35,15 +36,15 @@ const times = (arr, n, fn?) => {
 const defaultGroupBy = ['country'];
 
 const defaultCellSelection = { '0-4,id': true, '0-4,desc': true };
-class App extends React.Component {
+class App extends React.Component<any, any> {
   constructor(props) {
     super(props);
-    const COLS = 100;
-    const columns = times([{ name: 'id' }], COLS, (_, i) => {
+    const COLS = 20;
+    let columns = times([{ name: 'id' }], COLS, (_, i) => {
       return {
         name: i ? `id-${i}` : 'id',
         id: i ? `id-${i}` : 'id',
-        defaultLocked: i < 2 ? 'start' : i > COLS - 2 ? 'end' : false,
+        // defaultLocked: i < 2 ? 'start' : i > COLS - 2 ? 'end' : false,
         // colspan: () => 1,
         // render: ({ value, rowIndex }) => {
         //   // console.log(`render ${rowIndex} - ${i}`);
@@ -51,7 +52,9 @@ class App extends React.Component {
         // },
       };
     });
+
     this.state = {
+      rtl: true,
       columns,
       dataSource: times(
         [
@@ -63,10 +66,9 @@ class App extends React.Component {
             { id: 0 }
           ),
         ],
-        1000
+        10
       ),
     };
-    console.log(this.state.dataSource);
   }
 
   render() {
@@ -74,17 +76,27 @@ class App extends React.Component {
       return null;
     }
     return (
-      <DataGrid
-        idProperty="id"
-        style={gridStyle}
-        theme="default-light"
-        handle={x => {
-          global.x = x;
-        }}
-        columns={this.state.columns}
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        dataSource={this.state.dataSource}
-      />
+      <div>
+        <div style={{ marginBottom: 20 }}>
+          <CheckBox
+            checked={this.state.rtl}
+            onChange={value => this.setState({ rtl: value })}
+          >
+            RTL
+          </CheckBox>
+        </div>
+        <DataGrid
+          idProperty="id"
+          style={gridStyle}
+          handle={x => {
+            global.x = x;
+          }}
+          columns={this.state.columns}
+          dataSource={this.state.dataSource}
+          rtl={this.state.rtl}
+          // virtualizeColumnsThreshold={10}
+        />
+      </div>
     );
   }
 }

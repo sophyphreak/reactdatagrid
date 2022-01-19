@@ -59,6 +59,10 @@ const App = () => {
     setExpandedNodes(expandedNodes);
   }, []);
 
+  const onTreeRowReorderChange = ({ updatedTreeData }) => {
+    console.log('data', updatedTreeData);
+  };
+
   return (
     <div>
       <h3>Basic TreeGrid</h3>
@@ -80,6 +84,7 @@ const App = () => {
         dataSource={treeData}
         rowReorderColumn
         enableTreeRowReorder
+        onTreeRowReorderChange={onTreeRowReorderChange}
       />
     </div>
   );

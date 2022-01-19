@@ -96,6 +96,7 @@ const updateTreeData = (props, { selectedPath, destinationPath, }) => {
         selectedPath,
         destinationPath,
     };
-    computeTreeData(originalData, config);
+    const updatedTreeData = computeTreeData(originalData, config);
+    return updatedTreeData;
 };
 export default updateTreeData;
