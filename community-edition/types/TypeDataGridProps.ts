@@ -695,7 +695,7 @@ type TypeDataGridPropsNoI18n = {
   enableTreeRowReorderParentChange?: boolean;
   showActiveRowIndicator?: boolean;
   activeRowIndicatorClassName?: string;
-  onTreeRowReorderChange?: ({
+  onTreeRowReorderEnd?: ({
     updatedTreeData,
   }: {
     updatedTreeData: any[];

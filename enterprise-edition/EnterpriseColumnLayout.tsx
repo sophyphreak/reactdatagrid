@@ -513,8 +513,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
       this.clearDropInfo();
       props.reload();
 
-      if (props.onTreeRowReorderChange) {
-        props.onTreeRowReorderChange({ updatedTreeData });
+      if (props.onTreeRowReorderEnd) {
+        props.onTreeRowReorderEnd({ updatedTreeData });
       }
 
       silentSetData(newDataSource);

@@ -59,7 +59,7 @@ const App = () => {
     setExpandedNodes(expandedNodes);
   }, []);
 
-  const onTreeRowReorderChange = ({ updatedTreeData }) => {
+  const onTreeRowReorderEnd = ({ updatedTreeData }) => {
     console.log('data', updatedTreeData);
   };
 
@@ -84,7 +84,7 @@ const App = () => {
         dataSource={treeData}
         rowReorderColumn
         enableTreeRowReorder
-        onTreeRowReorderChange={onTreeRowReorderChange}
+        onTreeRowReorderEnd={onTreeRowReorderEnd}
       />
     </div>
   );
