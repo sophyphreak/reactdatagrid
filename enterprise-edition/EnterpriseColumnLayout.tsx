@@ -489,7 +489,12 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
   };
 
   updateTree = (props: any, dragIndex: number, dropIndex: number) => {
-    const { data, silentSetData, nodePathSeparator } = props;
+    const {
+      data,
+      silentSetData,
+      nodePathSeparator,
+      onTreeRowReorderEnd,
+    } = props;
     const { selectedParent, dropParent } = DRAG_INFO;
 
     if (this.validDropPositions[dropIndex]) {
@@ -505,19 +510,18 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         nodePathSeparator
       );
 
-      const updatedTreeData = updateTreeData(props, {
+      updateTreeData(props, {
         selectedPath: selectedParent,
         destinationPath: dropParent,
       });
 
-      this.clearDropInfo();
-      props.reload();
-
-      if (props.onTreeRowReorderEnd) {
-        props.onTreeRowReorderEnd({ updatedTreeData });
+      if (onTreeRowReorderEnd) {
+        onTreeRowReorderEnd({ updatedTreeData: props.originalData });
       }
 
+      this.clearDropInfo();
       silentSetData(newDataSource);
+      props.reload();
     }
   };
 
