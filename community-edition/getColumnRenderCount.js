@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default ({
+const getColumnRenderCount = ({
   visibleColumns,
   availableWidth,
   lockedStartColumns,
@@ -47,3 +47,5 @@ export default ({
 
   return columnRenderCount;
 };
+
+export default getColumnRenderCount;
