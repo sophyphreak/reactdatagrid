@@ -1863,6 +1863,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
       <div
         className={`${CLASS_NAME}-details-special-bottom-border`}
+        key="row-details-special-bottom-border"
         style={{
           [rtl ? 'right' : 'left']: (groupDepth || 0) * groupNestingSize,
         }}

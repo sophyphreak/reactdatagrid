@@ -1271,7 +1271,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 (nativeScroll && scrollbars && !scrollbars.vertical) ||
                 availableWidth > minWidth
                 ? `${CLASS_NAME}-details--show-border-right`
-                : null, showBorderBottom ? `${CLASS_NAME}-details--show-border-bottom` : '') }, renderRowDetails(rowDetailsInfo)), React.createElement("div", { className: `${CLASS_NAME}-details-special-bottom-border`, style: {
+                : null, showBorderBottom ? `${CLASS_NAME}-details--show-border-bottom` : '') }, renderRowDetails(rowDetailsInfo)), React.createElement("div", { className: `${CLASS_NAME}-details-special-bottom-border`, key: "row-details-special-bottom-border", style: {
                 [rtl ? 'right' : 'left']: (groupDepth || 0) * groupNestingSize,
             } }), groupDepth
             ? [...new Array(groupDepth)].map((_, index) => (React.createElement("div", { key: index, className: `${CLASS_NAME}-details-border`, style: {
