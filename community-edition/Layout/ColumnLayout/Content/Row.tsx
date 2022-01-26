@@ -643,6 +643,7 @@ export default class DataGridRow extends React.Component<RowProps> {
 
         <div
           className={`${CLASS_NAME}-details-special-bottom-border`}
+          key="row-details-special-bottom-border"
           style={{
             [rtl ? 'right' : 'left']: (groupDepth || 0) * groupNestingSize,
           }}
