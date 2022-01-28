@@ -7,7 +7,7 @@
 
 import React from 'react';
 
-import DataGrid from '@inovua/reactdatagrid-enterprise';
+import DataGrid from '../../../enterprise-edition';
 
 import people from '../people';
 
@@ -32,7 +32,7 @@ const times = (arr, n) => {
 const defaultGroupBy = ['country'];
 
 const defaultCellSelection = { '0-4,id': true, '0-4,desc': true };
-class App extends React.Component {
+class App extends React.Component<{}, { columns: any[]; dataSource: any[] }> {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,11 +65,8 @@ class App extends React.Component {
       <DataGrid
         idProperty="id"
         style={gridStyle}
-        theme="default-light"
         columns={this.state.columns}
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         groupColumn
-        rtl
         stickyGroupRows
         dataSource={this.state.dataSource}
       />
