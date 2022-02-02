@@ -22,6 +22,7 @@ import useHeader from './hooks/useHeader';
 import useEditable from './hooks/useEditable';
 import useDataSource from './hooks/useDataSource';
 import useScrollProps from './hooks/useScrollProps';
+import useColumnsSizing from './hooks/useColumnsSizing';
 import useGroups from './hooks/useGroups';
 import useSelection from './hooks/useSelection';
 import useRow from './hooks/useRow';
@@ -338,6 +339,10 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         cProps.maybeAddColumns = maybeAddColumns;
         const columnInfo = useColumns(props, cProps, computedPropsRef);
         Object.assign(cProps, columnInfo);
+        if (edition === 'enterprise') {
+            const columnsSizing = useColumnsSizing(props, cProps, computedPropsRef);
+            Object.assign(cProps, columnsSizing);
+        }
         cProps.wasMountedRef = useRef(false);
         cProps.wasUnmountedRef = useRef(false);
         const dataInfo = useDataSource(props, cProps, computedPropsRef);

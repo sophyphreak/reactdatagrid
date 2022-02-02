@@ -300,6 +300,7 @@ export default (props, { maxAvailableWidthForColumns, lockedColumnsState, comput
         computedColumnOrder: columnOrder,
         setColumnOrder,
         setColumnVisible,
+        computeColumnSizes: setColumnSizes,
         computedPivot: props.pivot,
         totalFlexColumnCount,
         showColumnMenuTool: props.pivot ? false : props.showColumnMenuTool,

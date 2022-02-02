@@ -700,6 +700,7 @@ type TypeDataGridPropsNoI18n = {
   }: {
     updatedTreeData: any[];
   }) => void;
+  availableWidth?: number;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
