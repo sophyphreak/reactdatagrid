@@ -66,6 +66,7 @@ const App = () => {
         style={gridStyle}
         columns={columns}
         dataSource={people}
+        enableColumnsResizing
       />
     </div>
   );

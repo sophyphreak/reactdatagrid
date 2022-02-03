@@ -474,6 +474,10 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
                 virtualList.scrollLeft += increment;
             }
         };
+        const getRows = () => {
+            const vl = getVirtualList();
+            return vl.getRows();
+        };
         const scrollToId = (id, config, callback) => {
             const index = computedProps.getRowIndexById(id);
             scrollToIndex(index, config, callback);
@@ -740,6 +744,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             getItemIndexBy,
             getItemAt,
             getItemIdAt,
+            getRows,
             focus,
             blur,
             computedShowHeaderBorderRight: columnInfo.totalComputedWidth < viewportAvailableWidth ||

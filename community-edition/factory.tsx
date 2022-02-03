@@ -729,6 +729,11 @@ const GridFactory = (
       }
     };
 
+    const getRows = () => {
+      const vl = getVirtualList();
+      return vl.getRows();
+    };
+
     const scrollToId = (
       id: string | number,
       config?: any,
@@ -1119,6 +1124,7 @@ const GridFactory = (
 
       getItemAt,
       getItemIdAt,
+      getRows,
       focus,
       blur,
       computedShowHeaderBorderRight:

@@ -68,6 +68,9 @@ export default class InovuaVirtualList extends Component {
         };
         this.updateRows = throttle(this.updateRows, 16);
     }
+    getContainerNode = () => {
+        return this.containerNode;
+    };
     renderScroller = props => {
         let offset = this.getEmptyScrollOffset() || 0;
         if (this.props.nativeScroll) {

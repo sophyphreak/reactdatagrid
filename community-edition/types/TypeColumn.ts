@@ -10,18 +10,14 @@ import { TypeLockedRow, TypeComputedProps, TypeFooterRow } from '.';
 import { FC, Component, ReactNode } from 'react';
 import { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 
-export type TypeSummaryReducer = {
-  initialValue: any;
+export type TypeSummaryReducer<T = any> = {
+  initialValue: T;
   name?: string;
-  complete?: (
-    value: any,
-    data: any[],
-    computedProps?: TypeComputedProps
-  ) => any;
-  reducer: (accumulator: any, value: any, data: any | TypeComputedProps) => any;
+  complete?: (value: T, data: T[], computedProps?: TypeComputedProps) => T;
+  reducer: (accumulator: T, value: T, data: T | TypeComputedProps) => T;
 
   //also allow as reduce instead of reducer
-  reduce?: (accumulator: any, value: any, data: any | TypeComputedProps) => any;
+  reduce?: (accumulator: T, value: T, data: T | TypeComputedProps) => T;
 };
 export interface IColumn {
   name?: string;

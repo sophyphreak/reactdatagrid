@@ -105,6 +105,102 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
             computeColumnSizesToFit(availableWidth);
         }
     };
+    const computeColumnSizesAuto = (columns, callback) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        if (!columns.length) {
+            return;
+        }
+        columns.forEach((column) => {
+            callback(column);
+        });
+    };
+    const getCellForColumn = (column, row) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        let result;
+        const idProperty = computedProps.idProperty;
+        const columnId = column[idProperty];
+        const cells = row.getCells();
+        if (!cells.length) {
+            return;
+        }
+        cells.forEach((cell) => {
+            const cellProps = cell.props;
+            const cellId = cellProps[idProperty];
+            if (columnId === cellId) {
+                result = cell.domRef.current;
+            }
+        });
+        return result;
+    };
+    const getCellsForColumn = (column) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        const result = [];
+        if (computedProps.getRows) {
+            computedProps.getRows().forEach((rowInstance) => {
+                const row = rowInstance.row;
+                const cell = getCellForColumn(column, row);
+                result.push(cell);
+            });
+        }
+        return result;
+    };
+    const cloneIntoDummyContainer = (cell, dummyContainer) => {
+        const cloneCell = cell.cloneNode(true);
+        cloneCell.style.width = '';
+        cloneCell.style.position = 'static';
+        cloneCell.style.left = '';
+        cloneCell.firstChild.style.width = 'fit-content';
+        const cloneParent = document.createElement('div');
+        cloneParent.appendChild(cloneCell);
+        dummyContainer.appendChild(cloneParent);
+    };
+    const computeOptimizedWidth = (column) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return -1;
+        }
+        const cells = getCellsForColumn(column);
+        if (!cells || !cells.length) {
+            return -1;
+        }
+        const dummyContainer = document.createElement('span');
+        dummyContainer.style.position = 'fixed';
+        const vl = computedProps.getVirtualList();
+        const container = vl.getContainerNode();
+        container.appendChild(dummyContainer);
+        let snapshotWidth = 0;
+        cells.forEach(cell => {
+            snapshotWidth = cell.offsetWidth;
+            cloneIntoDummyContainer(cell, dummyContainer);
+        });
+        let dummyContainerWidth = dummyContainer.offsetWidth;
+        if (snapshotWidth < dummyContainerWidth) {
+            // the border width which is 1px it is added
+            dummyContainerWidth += 1;
+        }
+        container.removeChild(dummyContainer);
+        return dummyContainerWidth;
+    };
+    const normaliseWidth = (column, width) => {
+        const minWidth = column.minWidth;
+        const maxWidth = column.maxWidth;
+        if (minWidth && width < minWidth) {
+            width = minWidth;
+        }
+        if (maxWidth && width > maxWidth) {
+            width = maxWidth;
+        }
+        return width;
+    };
     const setColumnSizesToFit = () => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -112,8 +208,55 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         }
         checkForAvaibleWidth();
     };
+    const setColumnSizesAuto = () => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        const columns = computedProps.visibleColumns;
+        let columnsToSize = [];
+        let counter = -1;
+        const newColumnSizes = {};
+        while (counter !== 0) {
+            counter = 0;
+            computeColumnSizesAuto(columns, (column) => {
+                if (columnsToSize.indexOf(column) >= 0) {
+                    return false;
+                }
+                const optimizedWidth = computeOptimizedWidth(column);
+                if (optimizedWidth > 0) {
+                    const newWidth = normaliseWidth(column, optimizedWidth);
+                    const columnId = column.id;
+                    columnsToSize.push(column);
+                    Object.assign(newColumnSizes, { [columnId]: newWidth });
+                    counter++;
+                }
+                return true;
+            });
+        }
+        if (computedProps.virtualizeColumns) {
+            const bodyRef = computedProps.bodyRef.current;
+            const columnLayout = bodyRef.columnLayout;
+            const headerLayout = columnLayout.headerLayout;
+            const header = headerLayout.header;
+            setTimeout(() => {
+                header.updateColumns();
+            }, 10);
+        }
+        let newReservedViewportWidth = computedProps.reservedViewportWidth;
+        const columnFlexes = computedProps.columnFlexes;
+        computedProps.computeColumnSizes(newColumnSizes || {}, columnFlexes || {}, newReservedViewportWidth, {
+            getColumnBy: computedProps.getColumnBy,
+            onColumnResize: computedProps.initialProps.onColumnResize,
+            onBatchColumnResize: computedProps.initialProps.onBatchColumnResize,
+            columnSizes: computedProps.columnSizes,
+            setColumnSizes: computedProps.setColumnSizes,
+            setColumnFlexes: computedProps.setColumnFlexes,
+        });
+    };
     return {
         setColumnSizesToFit,
+        setColumnSizesAuto,
     };
 };
 export default useColumnsSizing;

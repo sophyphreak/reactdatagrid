@@ -1036,6 +1036,7 @@ export default class DataGridRow extends React.Component<RowProps> {
       renderTreeCollapseTool,
       renderTreeExpandTool,
       renderTreeLoadingTool,
+      enableColumnsResizing,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1271,6 +1272,7 @@ export default class DataGridRow extends React.Component<RowProps> {
 
       if (
         (virtualizeColumns && !cellProps.computedLocked) ||
+        enableColumnsResizing ||
         this.props.editable ||
         cellProps.computedEditable
       ) {

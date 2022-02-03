@@ -701,6 +701,8 @@ type TypeDataGridPropsNoI18n = {
     updatedTreeData: any[];
   }) => void;
   availableWidth?: number;
+  enableColumnsResizing?: boolean;
+  getRows?: () => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
