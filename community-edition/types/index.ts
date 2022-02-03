@@ -44,6 +44,7 @@ export {
   TypeComputedColumnsMap,
   TypeColumnWithId,
   IColumn,
+  TypeSummaryReducer,
 } from './TypeColumn';
 
 export { TypeRowReorderFn };
@@ -426,11 +427,6 @@ export type TypeShowGroupSummaryRow =
   | 'end'
   | boolean
   | ((group: TypeGroupDataItem) => 'start' | 'end' | boolean);
-export interface TypeSummaryReducer<T> {
-  initialValue: T;
-  reducer: (acc: T, currentValue: T, index: number, arr: any[]) => T;
-  complete?: (acc: T, arr: any[]) => T;
-}
 
 export type TypeCollapsedGroups = true | { [key: string]: boolean };
 export type TypeExpandedGroups = TypeCollapsedGroups;
