@@ -700,7 +700,6 @@ type TypeDataGridPropsNoI18n = {
   }: {
     updatedTreeData: any[];
   }) => void;
-  availableWidth?: number;
   enableColumnsResizing?: boolean;
   getRows?: () => void;
 };
@@ -1323,6 +1322,7 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   computedHasColSpan: boolean;
   updateMainMenuPosition?: (alignTo: any) => void;
   isInEdit?: any;
+  availableWidth?: number;
 };
 
 export default TypeDataGridProps;

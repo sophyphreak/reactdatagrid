@@ -34,7 +34,7 @@ export default [
     name: 'John',
     age: 32,
     student: false,
-    city: 'London',
+    city: 'The Great City Of London',
     country: 'uk',
     email: 'john@London.com',
     birthDate: '1970-12-01T00:00:00Z',
@@ -53,7 +53,7 @@ export default [
   {
     id: 4,
     firstName: 'Billy',
-    name: 'Billy',
+    name: 'Billy from Edmonton',
     age: 32,
     student: false,
     city: 'Edmonton',
