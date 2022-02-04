@@ -65,11 +65,8 @@ class App extends React.Component {
       <DataGrid
         idProperty="id"
         style={gridStyle}
-        theme="default-light"
         columns={this.state.columns}
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         groupColumn
-        rtl
         stickyGroupRows
         dataSource={this.state.dataSource}
       />

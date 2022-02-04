@@ -6,13 +6,16 @@
  */
 
 import Region from '../packages/region';
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
 
 let CACHED;
 let LISTENING_WINDOW_RESIZE;
 
 const setupWindowResize = () => {
   LISTENING_WINDOW_RESIZE = true;
-  global.addEventListener('resize', () => {
+  globalObject.addEventListener('resize', () => {
     CACHED = null;
   });
 };
@@ -27,12 +30,12 @@ function getViewportRegion() {
   }
 
   const viewportWidth = Math.max(
-    global.document.documentElement.clientWidth,
-    global.innerWidth || 0
+    globalObject.document.documentElement.clientWidth,
+    globalObject.innerWidth || 0
   );
   const viewportHeight = Math.max(
-    global.document.documentElement.clientHeight,
-    global.innerHeight || 0
+    globalObject.document.documentElement.clientHeight,
+    globalObject.innerHeight || 0
   );
 
   return (CACHED = Region.from({

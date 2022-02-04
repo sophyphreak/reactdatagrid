@@ -12,8 +12,11 @@ import RO from 'resize-observer-polyfill';
 
 import NotifyResize from './packages/NotifyResize';
 import autoBind from './packages/react-class/autoBind';
+import { getGlobal } from './getGlobal';
 
-const ResizeObserver = global.ResizeObserver || RO;
+const globalObject = getGlobal();
+
+const ResizeObserver = globalObject.ResizeObserver || RO;
 
 const useFragment = !!React.Fragment;
 const coverStyle = !useFragment

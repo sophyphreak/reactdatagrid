@@ -11,6 +11,9 @@ import Region from '../region-align';
 
 import once from './utils/once';
 import isMobile from '../isMobile';
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
 
 var Helper = function(config) {
   this.config = config;
@@ -53,7 +56,7 @@ Object.assign(Helper.prototype, {
     var events = this.config.events || EVENTS;
 
     var onDragStart = once(this.onDragStart, this);
-    var target = isMobile ? event.target : global;
+    var target = isMobile ? event.target : globalObject;
 
     var mouseUpListener = function(event) {
       this.onDrop(event);

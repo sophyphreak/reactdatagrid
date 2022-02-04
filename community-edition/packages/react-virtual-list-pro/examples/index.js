@@ -15,10 +15,13 @@ import VirtualScrollContainer, {
 } from '../../react-virtual-scroll-container-pro/src';
 
 import '../style/index.scss';
+import { getGlobal } from '../../../getGlobal';
 
-global.React = React;
-global.RowHeightManager = RowHeightManager;
-global.rhm = new RowHeightManager(55, {});
+const globalObject = getGlobal();
+
+globalObject.React = React;
+globalObject.RowHeightManager = RowHeightManager;
+globalObject.rhm = new RowHeightManager(55, {});
 
 const rowHeightManager = new RowHeightManager(40, {
   3: 70,
@@ -45,9 +48,9 @@ const rowHeightManager = new RowHeightManager(40, {
   199: 75,
 });
 const rowHeightManager1 = new RowHeightManager(20);
-global.r = rowHeightManager;
+globalObject.r = rowHeightManager;
 
-global.React = React;
+globalObject.React = React;
 const countries = [
   'USA',
   'UK',

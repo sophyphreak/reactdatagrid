@@ -5,10 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const document = global.document;
+import { getGlobal } from '../../../../getGlobal';
+
+const globalObject = getGlobal();
+
+const document = globalObject.document;
 
 export default function getSelectionEnd(o) {
-  if (o.createTextRange && !global.getSelection) {
+  if (o.createTextRange && !globalObject.getSelection) {
     let r = document.selection.createRange().duplicate();
     r.moveStart('character', -o.value.length);
     return r.text.length;

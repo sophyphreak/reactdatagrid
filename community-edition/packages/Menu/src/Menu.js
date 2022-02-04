@@ -45,18 +45,21 @@ import {
 } from './submenuAlignPositions';
 
 import { IS_IE, IS_FF } from '../../../common/ua';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 function emptyFn() {}
 
-const raf = global.requestAnimationFrame;
+const raf = globalObject.requestAnimationFrame;
 
 const getAlignToRegion = (alignTo, node) => {
   if (typeof alignTo === 'function') {
     alignTo = alignTo(node);
   }
   if (typeof alignTo == 'string') {
-    alignTo = global.document
-      ? global.document.querySelector(alignTo)
+    alignTo = globalObject.document
+      ? globalObject.document.querySelector(alignTo)
       : alignTo;
   }
 
@@ -1036,7 +1039,7 @@ class InovuaMenu extends Component {
     }
 
     // check if mouse is over a submenu
-    const elementAtMousePosition = global.document.elementFromPoint(
+    const elementAtMousePosition = globalObject.document.elementFromPoint(
       leaveOffset.x,
       leaveOffset.y
     );
@@ -1082,7 +1085,7 @@ class InovuaMenu extends Component {
 
   removeMouseMoveListener() {
     if (this.onWindowMouseMove) {
-      global.removeEventListener('mousemove', this.onWindowMouseMove);
+      globalObject.removeEventListener('mousemove', this.onWindowMouseMove);
       this.onWindowMouseMove = null;
     }
   }
@@ -1507,16 +1510,16 @@ class InovuaMenu extends Component {
   }
 
   hasFocus() {
-    return global.document
-      ? this.node === global.document.activeElement
+    return globalObject.document
+      ? this.node === globalObject.document.activeElement
       : false;
   }
 
   hasChildFocus() {
-    if (!global.document) {
+    if (!globalObject.document) {
       return false;
     }
-    return containsNode(this.node, global.document.activeElement);
+    return containsNode(this.node, globalObject.document.activeElement);
   }
 
   /**

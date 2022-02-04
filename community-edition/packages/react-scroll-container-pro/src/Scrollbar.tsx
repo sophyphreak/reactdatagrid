@@ -12,6 +12,9 @@ import cleanProps from '../../react-clean-props';
 
 import shouldComponentUpdate from './shouldComponentUpdate';
 import join from '../../join';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 const HORIZONTAL = 'horizontal';
 const VERTICAL = 'vertical';
@@ -358,8 +361,8 @@ export default class InovuaScrollbar extends Component {
 
     this.setState({ active: true });
 
-    global.addEventListener('mousemove', this.onMouseMove);
-    global.addEventListener('mouseup', this.onMouseUp);
+    globalObject.addEventListener('mousemove', this.onMouseMove);
+    globalObject.addEventListener('mouseup', this.onMouseUp);
 
     this.props.onStartDrag(this.orientation);
   }
@@ -390,8 +393,8 @@ export default class InovuaScrollbar extends Component {
   }
 
   onMouseUp() {
-    global.removeEventListener('mousemove', this.onMouseMove);
-    global.removeEventListener('mouseup', this.onMouseUp);
+    globalObject.removeEventListener('mousemove', this.onMouseMove);
+    globalObject.removeEventListener('mouseup', this.onMouseUp);
 
     this.setState({ active: false });
 

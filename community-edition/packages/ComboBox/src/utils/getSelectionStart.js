@@ -11,6 +11,11 @@
  * @param  {node} input
  * @return {Number}
  */
+
+import { getGlobal } from '../../../../getGlobal';
+
+const globalObject = getGlobal();
+
 function getSelectionStart(input) {
   if (!input) {
     return null;
@@ -19,8 +24,8 @@ function getSelectionStart(input) {
    * from http://javascript.nwbox.com/cursor_position/, but added the !window.getSelection check, which
    * is needed for newer versions of IE, which adhere to standards
    */
-  if (input.createTextRange && !global.getSelection) {
-    const document = global.document;
+  if (input.createTextRange && !globalObject.getSelection) {
+    const document = globalObject.document;
     const range = document.selection.createRange().duplicate();
     range.moveEnd('character', input.value.length);
     if (range.text == '') {

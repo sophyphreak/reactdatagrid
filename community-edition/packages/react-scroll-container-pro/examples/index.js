@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { render } from 'react-dom';
 import ScrollContainer from '../src';
 import '../style/index.scss';
+import { getGlobal } from '../../../getGlobal';
+const globalObject = getGlobal();
 const App = () => {
     const [rtl, setRtl] = useState(true);
     return (React.createElement("div", null,
@@ -17,7 +19,7 @@ const App = () => {
             "Toggle RTL - ",
             `${rtl}`),
         React.createElement(ScrollContainer, { rtl: rtl, key: `${rtl}`, ref: g => {
-                global.g = g;
+                globalObject.g = g;
             }, onContainerScrollHorizontalMax: scrollLeft => {
                 console.warn('max', scrollLeft);
             }, onContainerScrollVerticalMax: scrollTop => {

@@ -13,9 +13,12 @@ import InovuaScrollContainer, {
 } from '../../../../packages/react-scroll-container-pro/src';
 
 import ScrollerFactory from './ScrollerFactory';
+import { getGlobal } from '../../../../getGlobal';
 
-const raf = global.requestAnimationFrame;
-const caf = global.cancelAnimationFrame;
+const globalObject = getGlobal();
+
+const raf = globalObject.requestAnimationFrame;
+const caf = globalObject.cancelAnimationFrame;
 
 const VIEW_STYLE = {
   position: 'static',

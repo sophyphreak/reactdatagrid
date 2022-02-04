@@ -10,7 +10,11 @@ import { render } from 'react-dom';
 import VirtualScrollContainer, { NativeScrollContainer } from '../src';
 
 import '../style/index.scss';
-global.React = React;
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
+
+globalObject.React = React;
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -75,7 +79,7 @@ class App extends React.Component {
           rtl={this.state.rtl}
           nativeScroll={this.state.nativeScroll}
           ref={x => {
-            global.scroller = x;
+            globalObject.scroller = x;
           }}
           style={{
             position: 'relative',

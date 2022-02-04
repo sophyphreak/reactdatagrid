@@ -5,12 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
 function getParentWithTranslate(node) {
   let parent = node && node.parentNode;
   let computedStyle;
 
-  while (parent && parent !== global.document) {
-    computedStyle = global.getComputedStyle(parent);
+  while (parent && parent !== globalObject.document) {
+    computedStyle = globalObject.getComputedStyle(parent);
     if (computedStyle.transform !== 'none') {
       return parent;
     }
