@@ -14,6 +14,10 @@ import cleanupProps from './packages/react-clean-props';
 import join from './packages/join';
 import renderEmptyContent from './renderEmptyContent';
 
+import { getGlobal } from './getGlobal';
+
+const globalObject = getGlobal();
+
 const stop = e => {
   if (e.cancelable === false) {
     return;
@@ -48,7 +52,7 @@ export default class DataGridLoadMask extends React.Component {
       };
 
       if (!visible) {
-        global.requestAnimationFrame(fn);
+        globalObject.requestAnimationFrame(fn);
       } else {
         fn();
       }
