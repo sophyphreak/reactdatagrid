@@ -6,8 +6,11 @@
  */
 
 import search from './searchClosestSmallerValue';
+import { getGlobal } from '../../../getGlobal';
 
-export default global.s = (array, value) => {
+const globalObject = getGlobal();
+
+export default globalObject.s = (array, value) => {
   const keys = Object.keys(array).map(k => k * 1);
   const result = search(keys, value);
 

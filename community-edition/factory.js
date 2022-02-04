@@ -36,7 +36,9 @@ import emptyPlugins from './plugins/empty';
 import ActiveRowIndicator from './ActiveRowIndicator';
 import { communityFeatureWarn } from './warn';
 import { StickyRowsContainerClassName } from './packages/react-virtual-list-pro/src/StickyRowsContainer';
+import { getGlobal } from './getGlobal';
 let GRID_ID = 0;
+const globalObject = getGlobal();
 const DEFAULT_I18N = {
     // pagination toolbar
     pageText: 'Page ',
@@ -221,7 +223,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         });
         const onScrollbarsChange = (scrollbars) => {
             const onChange = () => {
-                const computedStyle = global.getComputedStyle(getVirtualList().getDOMNode());
+                const computedStyle = globalObject.getComputedStyle(getVirtualList().getDOMNode());
                 const virtualListBorderLeft = parseInt(computedStyle.borderLeftWidth, 10);
                 const virtualListBorderRight = parseInt(computedStyle.borderRightWidth, 10);
                 const virtualListExtraWidth = virtualListBorderLeft + virtualListBorderRight;
@@ -253,10 +255,10 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         const [selectionFixedCell, setSelectionFixedCell] = useState(null);
         const setListenOnCellEnter = (value, callback) => {
             if (value) {
-                global.addEventListener('mouseup', callback);
+                globalObject.addEventListener('mouseup', callback);
             }
             else {
-                global.removeEventListener('mouseup', callback);
+                globalObject.removeEventListener('mouseup', callback);
             }
             updateListenOnCellEnter(value);
         };
@@ -858,7 +860,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             }
             if (scrollTop && eventTarget) {
                 eventTarget.scrollTop = 0;
-                global.requestAnimationFrame(() => {
+                globalObject.requestAnimationFrame(() => {
                     if (computedProps.wasUnmountedRef.current) {
                         return;
                     }

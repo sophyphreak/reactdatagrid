@@ -11,8 +11,10 @@ import assign from '../../../common/assign';
 import cleanProps from '../../../common/cleanProps';
 
 import prepareClassName from './prepareClassName';
-
 import uglified from '../../../packages/uglified';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 class InovuaButton extends Component {
   constructor(props) {
@@ -201,7 +203,7 @@ class InovuaButton extends Component {
     }
 
     this.setState({ active: false });
-    global.removeEventListener('mouseup', this.handleMouseUp);
+    globalObject.removeEventListener('mouseup', this.handleMouseUp);
 
     props.onMouseUp(event);
     props.onDeactivate(event);
@@ -215,7 +217,7 @@ class InovuaButton extends Component {
 
     this.setState({ active: true });
 
-    global.addEventListener('mouseup', this.handleMouseUp);
+    globalObject.addEventListener('mouseup', this.handleMouseUp);
     props.onMouseDown(event);
     props.onActivate(event);
   }

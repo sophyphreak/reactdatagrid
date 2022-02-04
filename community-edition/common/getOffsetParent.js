@@ -9,12 +9,17 @@
  * If fixed the offset parent is null, so
  * must find first parent with position set.
  */
+
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
 function getOffsetParent(node) {
   const parent = node && node.parentNode;
 
   // fist check if first parent has position,
   // if not get offsetparent
-  const computedStyle = global.getComputedStyle(parent);
+  const computedStyle = globalObject.getComputedStyle(parent);
   if (computedStyle.position !== 'static') {
     return parent;
   }

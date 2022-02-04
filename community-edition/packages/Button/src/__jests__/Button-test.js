@@ -8,6 +8,9 @@
 import React from 'react';
 import Button from '../Button';
 import { shallow } from 'enzyme';
+import { getGlobal } from '../../../../getGlobal';
+
+const globalObject = getGlobal();
 
 describe('Button', () => {
   it('onClick is called when button is clicked', () => {
@@ -37,7 +40,7 @@ describe('Button', () => {
     const onDeactivate = jest.fn();
     const wrapper = shallow(<Button onDeactivate={onDeactivate} />);
     wrapper.simulate('mouseDown');
-    global.dispatchEvent(mouseupEvent);
+    globalObject.dispatchEvent(mouseupEvent);
     expect(onDeactivate).toHaveBeenCalledTimes(1);
   });
   it('style is applied on buton', () => {

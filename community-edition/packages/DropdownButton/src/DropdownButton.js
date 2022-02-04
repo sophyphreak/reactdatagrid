@@ -14,7 +14,9 @@ import Button from '../../Button';
 import ToggleIcon from '../../../common/ToggleIcon';
 import cleanProps from '../../../common/cleanProps';
 import containsNode from '../../../common/containsNode';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const ALIGN_OFFSET = { top: 5 };
 
 const returnFalse = () => false;
@@ -76,15 +78,15 @@ class InovuaDropDownButton extends Component {
       });
     }
 
-    global.addEventListener('click', this.handleClickOutside);
+    globalObject.addEventListener('click', this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    global.removeEventListener('click', this.handleClickOutside);
-    global.removeEventListener('scroll', this.handleWindowScroll, {
+    globalObject.removeEventListener('click', this.handleClickOutside);
+    globalObject.removeEventListener('scroll', this.handleWindowScroll, {
       capture: true,
     });
-    global.removeEventListener('scroll', this.handleWindowScroll, {
+    globalObject.removeEventListener('scroll', this.handleWindowScroll, {
       capture: false,
     });
   }

@@ -5,7 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ua: string = global.navigator ? global.navigator.userAgent || '' : '';
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
+const ua: string = globalObject.navigator
+  ? globalObject.navigator.userAgent || ''
+  : '';
 const IS_EDGE: boolean = ua.indexOf('Edge/') !== -1;
 const IS_MS_BROWSER: boolean = IS_EDGE || ua.indexOf('Trident') !== -1;
 const IS_IE: boolean = IS_MS_BROWSER && !IS_EDGE;

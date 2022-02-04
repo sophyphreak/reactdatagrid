@@ -9,6 +9,9 @@ import Region from '../../../packages/region-align';
 
 import assign from '../../../common/assign';
 import align from './align';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 function transformPxStringToInt(pxValue) {
   const value = parseFloat(pxValue.split('px')[0]);
@@ -60,7 +63,7 @@ export default function(props, state, domNode) {
        * so the position of the item is calculated
        * correct
        */
-      const menuComputedStyle = global.getComputedStyle(domNode);
+      const menuComputedStyle = globalObject.getComputedStyle(domNode);
       const paddingLeft = transformPxStringToInt(menuComputedStyle.paddingLeft);
       const menuItemRegion = Region.from({
         left: thisRegion.left + paddingLeft,

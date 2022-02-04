@@ -12,8 +12,11 @@ import 'typeface-roboto';
 
 import ToolBar, { Separator } from '../src';
 import '../style/index.scss';
+import { getGlobal } from '../../../getGlobal';
 
-global.React = React;
+const globalObject = getGlobal();
+
+globalObject.React = React;
 class App extends Component {
   render() {
     return (

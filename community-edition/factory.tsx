@@ -71,11 +71,14 @@ import { TypeBuildColumnsProps } from './types/TypeDataGridProps';
 import { TypeColumns } from './types/TypeColumn';
 import InovuaDataGridLayout from './Layout';
 import { StickyRowsContainerClassName } from './packages/react-virtual-list-pro/src/StickyRowsContainer';
+import { getGlobal } from './getGlobal';
 
 let GRID_ID = 0;
 export type Props = {
   plugins?: Array<TypePlugin>;
 };
+
+const globalObject = getGlobal();
 
 const DEFAULT_I18N = {
   // pagination toolbar
@@ -361,7 +364,7 @@ const GridFactory = (
       horizontal: boolean;
     }) => {
       const onChange = () => {
-        const computedStyle = (global as any).getComputedStyle(
+        const computedStyle = globalObject.getComputedStyle(
           getVirtualList().getDOMNode()
         );
         const virtualListBorderLeft = parseInt(
@@ -418,9 +421,9 @@ const GridFactory = (
       callback: (...args: any[]) => void
     ) => {
       if (value) {
-        global.addEventListener('mouseup', callback);
+        globalObject.addEventListener('mouseup', callback);
       } else {
-        global.removeEventListener('mouseup', callback);
+        globalObject.removeEventListener('mouseup', callback);
       }
 
       updateListenOnCellEnter(value);
@@ -1309,7 +1312,7 @@ const GridFactory = (
       }
       if (scrollTop && eventTarget) {
         eventTarget.scrollTop = 0;
-        global.requestAnimationFrame(() => {
+        globalObject.requestAnimationFrame(() => {
           if (computedProps.wasUnmountedRef.current) {
             return;
           }

@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { getGlobal } from '../getGlobal';
-
-const globalObject = getGlobal();
-
-export default globalObject.requestAnimationFrame;
+export function getGlobal<T extends Window>() {
+  return typeof globalThis !== 'undefined'
+    ? ((globalThis as any) as T)
+    : window;
+}

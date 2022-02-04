@@ -10,6 +10,9 @@ import { TypeDataGridProps, TypeComputedProps } from '../types';
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react';
 import clamp from '../utils/clamp';
 import usePrevious from './usePrevious';
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
 
 const useActiveIndex = (
   props: TypeDataGridProps,
@@ -43,7 +46,7 @@ const useActiveIndex = (
     if (
       !computedProps ||
       !computedProps.computedHasRowNavigation ||
-      global.isNaN(activeIndex)
+      (globalObject as any).isNaN(activeIndex)
     ) {
       return;
     }

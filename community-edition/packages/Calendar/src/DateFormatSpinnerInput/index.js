@@ -16,6 +16,9 @@ import assign from '../../../../common/assign';
 import joinFunctions from '../joinFunctions';
 import assignDefined from '../assignDefined';
 import join from '../../../../common/join';
+import { getGlobal } from '../../../../getGlobal';
+
+const globalObject = getGlobal();
 
 export default class DateFormatSpinnerInput extends Component {
   constructor(props) {
@@ -220,7 +223,7 @@ export default class DateFormatSpinnerInput extends Component {
   stop() {
     this.started = false;
     if (this.timeoutId) {
-      global.clearTimeout(this.timeoutId);
+      globalObject.clearTimeout(this.timeoutId);
     }
   }
 

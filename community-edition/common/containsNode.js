@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
 function containsNode(parent, child) {
   if (
     !parent ||
@@ -16,7 +20,7 @@ function containsNode(parent, child) {
   }
 
   // target node should still be in the tree
-  if (!global.document.body.contains(child)) {
+  if (!globalObject.document.body.contains(child)) {
     return false;
   }
 

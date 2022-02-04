@@ -33,7 +33,9 @@ import HeaderWrapper from './HeaderWrapper';
 import { getParentGroups } from './Header';
 
 import getScrollbarWidth from '../../../packages/getScrollbarWidth';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const SCROLL_MARGIN = 40;
 
 let DRAG_INFO = null;
@@ -736,8 +738,8 @@ export default class InovuaDataGridHeaderLayout extends Component {
 
     removeListeners = () => {
       removeListeners = null;
-      global.removeEventListener(mouseup, onMouseUp, false);
-      global.removeEventListener(mousemove, onMouseMove, false);
+      globalObject.removeEventListener(mouseup, onMouseUp, false);
+      globalObject.removeEventListener(mousemove, onMouseMove, false);
     };
 
     if (isMobile) {
@@ -747,8 +749,8 @@ export default class InovuaDataGridHeaderLayout extends Component {
       }, 350);
     }
 
-    global.addEventListener(mouseup, onMouseUp, false);
-    global.addEventListener(mousemove, onMouseMove, false);
+    globalObject.addEventListener(mouseup, onMouseUp, false);
+    globalObject.addEventListener(mousemove, onMouseMove, false);
   }
 
   renderReorderIndicator() {

@@ -21,7 +21,9 @@ import { IS_IE } from '../../../common/ua';
 import ScrollContainer from '../../../packages/react-scroll-container-pro';
 
 import Arrow from './Arrow';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const VIEW_STYLE_VERTICAL = { maxHeight: '100%' };
 const VIEW_STYLE_HORIZONTAL = { maxWidth: '100%' };
 
@@ -57,9 +59,9 @@ const callAll = (...fns) => (...args) => {
   });
 };
 
-const pint = global.parseInt;
-const raf = global.requestAnimationFrame;
-const getCompStyle = global.getComputedStyle;
+const pint = globalObject.parseInt;
+const raf = globalObject.requestAnimationFrame;
+const getCompStyle = globalObject.getComputedStyle;
 
 const NO_SCROLLBARS = () => false;
 
@@ -497,7 +499,7 @@ class InovuaArrowScroller extends Component {
 
   // methods
   stopScroll() {
-    global.clearInterval(this.scrollInterval);
+    globalObject.clearInterval(this.scrollInterval);
 
     this.setState({
       scrolling: false,
@@ -565,12 +567,12 @@ class InovuaArrowScroller extends Component {
     event.preventDefault();
     const mouseUpListener = () => {
       this.stopScroll();
-      global.removeEventListener(eventName, mouseUpListener);
+      globalObject.removeEventListener(eventName, mouseUpListener);
     };
 
-    global.addEventListener(eventName, mouseUpListener);
+    globalObject.addEventListener(eventName, mouseUpListener);
 
-    this.scrollInterval = global.setInterval(
+    this.scrollInterval = globalObject.setInterval(
       this.doScroll.bind(this, direction),
       this.props.scrollSpeed
     );
@@ -589,8 +591,8 @@ class InovuaArrowScroller extends Component {
 
   startMouseOverScroll(direction, event) {
     event.preventDefault();
-    global.clearInterval(this.mouseOverScrollInterval);
-    this.mouseOverScrollInterval = global.setInterval(
+    globalObject.clearInterval(this.mouseOverScrollInterval);
+    this.mouseOverScrollInterval = globalObject.setInterval(
       this.doScroll.bind(this, direction),
       this.props.mouseoverScrollSpeed
     );
@@ -603,7 +605,7 @@ class InovuaArrowScroller extends Component {
 
   stopMouseOverScroll() {
     this.stopScroll();
-    global.clearInterval(this.mouseOverScrollInterval);
+    globalObject.clearInterval(this.mouseOverScrollInterval);
   }
 
   setScrollPosition(scrollPos, { force, skip } = {}) {

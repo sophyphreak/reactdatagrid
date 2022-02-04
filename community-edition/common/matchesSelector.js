@@ -5,8 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
 const proto =
-  global && global.Element
+  globalObject && globalObject.Element
     ? Element.prototype
     : // for server-side rendering
       {

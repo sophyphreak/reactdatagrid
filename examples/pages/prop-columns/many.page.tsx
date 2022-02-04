@@ -10,6 +10,9 @@ import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 import React from 'react';
 
 import DataGrid from '../../../enterprise-edition';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+
+const globalObject = getGlobal();
 
 import people from '../people';
 
@@ -120,7 +123,7 @@ class App extends React.Component<any, any> {
           idProperty="id"
           style={gridStyle}
           handle={x => {
-            global.x = x;
+            (globalObject as any).x = x;
           }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}

@@ -21,6 +21,9 @@ import { Consumer } from '../../context';
 
 import { TypeComputedProps } from '../../types';
 import isMobile from '../../packages/isMobile';
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
 
 const height100 = { height: '100%' };
 
@@ -386,8 +389,8 @@ export default class InovuaDataGridColumnLayout extends React.Component {
     constrainTo.set({
       [this.props.rtl ? 'left' : 'right']:
         (this.props.rtl ? -1 : 1) *
-        (global.screen
-          ? global.screen.width * 3
+        (globalObject.screen
+          ? globalObject.screen.width * 3
           : Region.from(document.documentElement).getRight() * 2),
     });
 

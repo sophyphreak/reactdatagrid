@@ -18,11 +18,13 @@ import getScrollbarWidth from '../../../packages/getScrollbarWidth';
 import shouldComponentUpdate from '../../../packages/shouldComponentUpdate';
 
 import Scrollbar from './Scrollbar';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const callFn = fn => fn();
-const raf = global.requestAnimationFrame;
+const raf = globalObject.requestAnimationFrame;
 
-const ua = global.navigator ? global.navigator.userAgent || '' : '';
+const ua = globalObject.navigator ? globalObject.navigator.userAgent || '' : '';
 
 const IS_EDGE = ua.indexOf('Edge/') !== -1;
 const IS_MS_BROWSER = IS_EDGE || ua.indexOf('Trident') !== -1;
@@ -241,7 +243,7 @@ export default class InovuaScrollContainer extends Component<
     }
 
     if (domNode) {
-      position = global.getComputedStyle(domNode).position;
+      position = globalObject.getComputedStyle(domNode).position;
       nonStatic = position == 'relative' || position == 'absolute';
 
       if (!nonStatic) {
@@ -901,7 +903,7 @@ export default class InovuaScrollContainer extends Component<
     const rafFn = rafOnScroll ? raf : callFn;
 
     if (this.scrollRafId && rafOnScroll && cancelPrevScrollRaf) {
-      global.cancelAnimationFrame(this.scrollRafId);
+      globalObject.cancelAnimationFrame(this.scrollRafId);
     }
     this.scrollRafId = rafFn(() => {
       if (this.unmounted) {

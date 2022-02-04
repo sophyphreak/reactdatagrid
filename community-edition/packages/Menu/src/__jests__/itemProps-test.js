@@ -51,7 +51,7 @@ describe('props passed from items[0] to MenuItem', () => {
       expect(menuItem.prop('className')).to.contain('over-className');
     });
 
-    xit('item.overStyle global.overStyle', () => {
+    xit('item.overStyle globalObject.overStyle', () => {
       const items = [{ label: 'test', overStyle: { color: '#123456' } }];
       const wrapper = mount(
         <Menu
@@ -86,7 +86,7 @@ describe('props passed from items[0] to MenuItem', () => {
       );
     });
 
-    xit('item.disabledStyle global.disabledStyle', () => {
+    xit('item.disabledStyle globalObject.disabledStyle', () => {
       const items = [
         {
           label: 'test',
