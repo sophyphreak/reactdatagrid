@@ -5,4 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default global.requestAnimationFrame;
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
+export default globalObject.requestAnimationFrame;

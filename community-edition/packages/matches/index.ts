@@ -7,7 +7,10 @@
 
 'use strict';
 
-var proto = global.Element ? global.Element.prototype : {};
+const getGlobal = require('../../getGlobal');
+const globalObject = getGlobal();
+
+var proto = globalObject.Element ? globalObject.Element.prototype : {};
 
 var nativeMatches =
   proto.matches ||

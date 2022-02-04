@@ -14,10 +14,12 @@ import shouldComponentUpdate from '../../../packages/shouldComponentUpdate';
 import searchClosestSmallerValue from '../../../utils/searchClosestSmallerValue';
 import renderEmptyContent from '../../../renderEmptyContent';
 import { IS_IE, IS_EDGE } from '../../../detect-ua';
+import { getGlobal } from '../../../getGlobal';
+const globalObject = getGlobal();
 const EMPTY_OBJECT = {};
 const returnTrue = () => true;
 const CHUNKS_SIZE = 1;
-const raf = global.requestAnimationFrame;
+const raf = globalObject.requestAnimationFrame;
 const DEFAULT_SCROLL_POS = {
     scrollLeft: 0,
     scrollTop: 0,

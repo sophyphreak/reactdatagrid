@@ -15,6 +15,11 @@
  * @param  {function} onHide
  * @return {function} unregister
  */
+
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
 function registerHideOnClickOutsideEventListener({ getRootNode, onHide }) {
   const eventHandler = event => {
     const node = event.target;
@@ -24,7 +29,7 @@ function registerHideOnClickOutsideEventListener({ getRootNode, onHide }) {
     }
 
     // target node should still be in the tree
-    if (!global.document.body.contains(node)) {
+    if (!globalObject.document.body.contains(node)) {
       return;
     }
 
@@ -34,10 +39,10 @@ function registerHideOnClickOutsideEventListener({ getRootNode, onHide }) {
   };
 
   // register
-  global.document.addEventListener('click', eventHandler);
+  globalObject.document.addEventListener('click', eventHandler);
 
   const unregister = () => {
-    global.document.addEventListener('click', eventHandler);
+    globalObject.document.addEventListener('click', eventHandler);
   };
 
   return unregister;

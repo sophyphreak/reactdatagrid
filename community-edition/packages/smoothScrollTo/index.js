@@ -4,6 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { getGlobal } from '../../getGlobal';
+const globalObject = getGlobal();
 const DEFAULTS = {
     duration: 100,
     orientation: 'vertical',
@@ -37,7 +39,7 @@ callback) => {
         const elapsed = Date.now() - now;
         node[scrollPosName] = currentValue + elapsed * millisecondStep;
         if (elapsed < duration) {
-            global.requestAnimationFrame(scroll);
+            globalObject.requestAnimationFrame(scroll);
         }
         else {
             node[scrollPosName] = newValue;
@@ -46,5 +48,5 @@ callback) => {
             }
         }
     };
-    global.requestAnimationFrame(scroll);
+    globalObject.requestAnimationFrame(scroll);
 };

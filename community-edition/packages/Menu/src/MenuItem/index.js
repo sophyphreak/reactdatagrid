@@ -18,7 +18,9 @@ import assign from '../../../../common/assign';
 import join from '../../../../common/join';
 import cleanProps from '../../../../common/cleanProps';
 import getRegionRelativeToParent from '../getRegionRelativeToParent';
+import { getGlobal } from '../../../../getGlobal';
 
+const globalObject = getGlobal();
 const emptyFn = () => {};
 
 class MenuItem extends Component {
@@ -103,10 +105,10 @@ class MenuItem extends Component {
           active: false,
         });
       }
-      global.removeEventListener('mouseup', mouseUpListener);
+      globalObject.removeEventListener('mouseup', mouseUpListener);
     };
 
-    global.addEventListener('mouseup', mouseUpListener);
+    globalObject.addEventListener('mouseup', mouseUpListener);
     if (this.componentIsMounted) {
       this.setState({
         active: true,
@@ -121,10 +123,10 @@ class MenuItem extends Component {
           active: false,
         });
       }
-      global.removeEventListener('touchend', mouseUpListener);
+      globalObject.removeEventListener('touchend', mouseUpListener);
     };
 
-    global.addEventListener('touchend', mouseUpListener);
+    globalObject.addEventListener('touchend', mouseUpListener);
     if (this.componentIsMounted) {
       this.setState({
         active: true,

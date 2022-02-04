@@ -4,7 +4,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const document = global ? global.document : null;
+import { getGlobal } from '../../getGlobal';
+const globalObject = getGlobal();
+const document = globalObject ? globalObject.document : null;
 let scrollbarWidth;
 let hideNativeScrollbarWidth;
 export default (hideNativeScrollbarIfPossible) => {

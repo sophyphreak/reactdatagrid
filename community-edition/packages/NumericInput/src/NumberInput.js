@@ -27,7 +27,9 @@ import getTransformedStringValues, {
 } from './utils/get-transformed-string-values';
 
 import getCurrencyForCountryCode from './utils/get-currency-for-country-code';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const preventDefault = e => e.preventDefault();
 
 const emptyObject = {};
@@ -221,7 +223,7 @@ const getSuffix = props => {
       return currencySymbol;
     }
     return getCurrencyForCountryCode(
-      locale || (global.navigator ? global.navigator.language : '')
+      locale || (globalObject.navigator ? globalObject.navigator.language : '')
     );
   }
 
@@ -241,7 +243,7 @@ const getPrefix = props => {
       return currencySymbol;
     }
     return getCurrencyForCountryCode(
-      locale || (global.navigator ? global.navigator.language : '')
+      locale || (globalObject.navigator ? globalObject.navigator.language : '')
     );
   }
 };
@@ -1314,5 +1316,5 @@ InovuaNumericInput.propTypes = {
   rtl: PropTypes.bool,
 };
 
-global.isNumeric = isNumeric;
+globalObject.isNumeric = isNumeric;
 export default InovuaNumericInput;

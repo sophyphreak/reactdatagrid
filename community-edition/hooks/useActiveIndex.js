@@ -8,6 +8,8 @@ import useProperty from './useProperty';
 import { useCallback, useEffect, useRef } from 'react';
 import clamp from '../utils/clamp';
 import usePrevious from './usePrevious';
+import { getGlobal } from '../getGlobal';
+const globalObject = getGlobal();
 const useActiveIndex = (props, computedProps, computedPropsRef) => {
     let [computedActiveIndex, doSetActiveIndex] = useProperty(props, 'activeIndex', -1);
     const [computedLastActiveIndex, doSetLastActiveIndex] = useProperty(props, 'lastActiveIndex', null);
@@ -18,7 +20,7 @@ const useActiveIndex = (props, computedProps, computedPropsRef) => {
         const computedProps = computedPropsRef.current;
         if (!computedProps ||
             !computedProps.computedHasRowNavigation ||
-            global.isNaN(activeIndex)) {
+            globalObject.isNaN(activeIndex)) {
             return;
         }
         const { data } = computedProps;

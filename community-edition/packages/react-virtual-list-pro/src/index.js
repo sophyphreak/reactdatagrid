@@ -20,14 +20,16 @@ import shouldComponentUpdate from '../../../packages/shouldComponentUpdate';
 import getVisibleRange from './getVisibleRange';
 import StickyRowsContainer from './StickyRowsContainer';
 import throttle from 'lodash.throttle';
+import { getGlobal } from '../../../getGlobal';
+const globalObject = getGlobal();
 const sortAsc = (a, b) => a - b;
 const emptyFn = function () { };
 const emptyObject = Object.freeze ? Object.freeze({}) : {};
-const ua = global.navigator ? global.navigator.userAgent : '';
+const ua = globalObject.navigator ? globalObject.navigator.userAgent : '';
 const IS_EDGE = ua.indexOf('Edge/') !== -1;
 const IS_FF = ua.toLowerCase().indexOf('firefox') > -1;
 const BASE_CLASS_NAME = 'inovua-react-virtual-list';
-const ResizeObserver = global.ResizeObserver || RO;
+const ResizeObserver = globalObject.ResizeObserver || RO;
 const sum = (a, b) => a + b;
 const unique = (arr) => {
     if (Set) {
@@ -624,9 +626,9 @@ export default class InovuaVirtualList extends Component {
         });
         if (newIndexes.length && rowHeightManager == null) {
             if (this.updateRafHandle) {
-                global.cancelAnimationFrame(this.updateRafHandle);
+                globalObject.cancelAnimationFrame(this.updateRafHandle);
             }
-            this.updateRafHandle = global.requestAnimationFrame(() => {
+            this.updateRafHandle = globalObject.requestAnimationFrame(() => {
                 this.updateRafHandle = null;
                 this.onRowsUpdated(newIndexes, {
                     start: startRowIndex,
@@ -704,7 +706,7 @@ export default class InovuaVirtualList extends Component {
         if (this.props.nativeScroll !== prevProps.nativeScroll) {
             prevScrollTopPos = this.scrollTopPos;
             prevScrollLeftPos = this.scrollLeftPos;
-            global.requestAnimationFrame(() => {
+            globalObject.requestAnimationFrame(() => {
                 if (this.unmounted) {
                     return;
                 }
@@ -752,7 +754,7 @@ export default class InovuaVirtualList extends Component {
                 ? this.scrollContainer.viewNode.offsetHeight
                 : 0);
         if (this.scrollTop > maxTop) {
-            global.requestAnimationFrame(() => {
+            globalObject.requestAnimationFrame(() => {
                 if (this.unmounted) {
                     return;
                 }
@@ -946,7 +948,7 @@ export default class InovuaVirtualList extends Component {
             this.props.handleRowKeyDown(index, event);
             return;
         }
-        const activeElement = global.document.activeElement;
+        const activeElement = globalObject.document.activeElement;
         const theRow = this.getRowAt(index);
         const rowNode = theRow.getDOMNode ? theRow.getDOMNode() : theRow.node;
         if (!activeElement || !contains(rowNode, activeElement)) {
@@ -1236,7 +1238,7 @@ export default class InovuaVirtualList extends Component {
                         // the raf inside the setTimeout is needed since sometimes
                         // this.scrollTop is not correctly updated in scrollToIndex, if scrollToIndex is called
                         // directly in the setTimeout
-                        global.requestAnimationFrame(() => {
+                        globalObject.requestAnimationFrame(() => {
                             this.scrollToIndex(index, {
                                 direction,
                                 force,
