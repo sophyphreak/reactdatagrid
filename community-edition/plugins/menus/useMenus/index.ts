@@ -21,9 +21,12 @@ import {
 } from '../../../src/types';
 
 import Region from '../../../packages/region';
+import { getGlobal } from '../../../getGlobal';
 
 export { default as renderColumnContextMenu } from './renderColumnContextMenu';
 export { default as renderRowContextMenu } from './renderRowContextMenu';
+
+const globalObject = getGlobal();
 
 export default (
   props: {},
@@ -228,8 +231,8 @@ export default (
       const alignTo = Region.from(event);
 
       alignTo.shift({
-        top: -(global as any).scrollY,
-        left: -(global as any).scrollX,
+        top: -(globalObject as any).scrollY,
+        left: -(globalObject as any).scrollX,
       });
 
       showRowContextMenu(alignTo, rowProps, cellProps, () => {});

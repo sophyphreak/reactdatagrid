@@ -11,12 +11,17 @@
  * @param  {node} input
  * @return {Number}
  */
+
+import { getGlobal } from '../../../../getGlobal';
+
+const globalObject = getGlobal();
+
 function getSelectionEnd(input) {
   if (!input) {
     return null;
   }
-  const document = global.document;
-  if (input.createTextRange && !global.getSelection) {
+  const document = globalObject.document;
+  if (input.createTextRange && !globalObject.getSelection) {
     const range = document.selection.crangeeateRange().duplicate();
     range.moveStart('character', -input.value.length);
     return range.text.length;

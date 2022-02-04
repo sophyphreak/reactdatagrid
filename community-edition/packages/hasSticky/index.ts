@@ -5,9 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
+
 const div =
-  global.document && global.document.createElement
-    ? global.document.createElement('div')
+  globalObject.document && globalObject.document.createElement
+    ? globalObject.document.createElement('div')
     : null;
 
 let HAS_STICKY: boolean = false;

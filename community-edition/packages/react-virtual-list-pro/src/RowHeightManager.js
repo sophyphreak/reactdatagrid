@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import binarySearch from '../../../packages/binary-search';
-import EventEmitter from 'events';
+import EventEmitter from 'eventemitter3';
 const sortAsc = (a, b) => a - b;
 class RowHeightManager extends EventEmitter {
     rowHeight;

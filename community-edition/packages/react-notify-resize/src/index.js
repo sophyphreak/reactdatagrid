@@ -10,7 +10,9 @@ import { number, func, bool } from 'prop-types';
 
 import shallowequal from './shallowequal';
 import debounce from '../../../packages/debounce';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const STYLE_DISPLAY_NONE = { display: 'none' };
 
 const emptyFn = () => {};
@@ -141,7 +143,8 @@ class InovuaNotifyResize extends React.Component {
   }
 
   componentDidMount() {
-    const ResizeObserver = global.ResizeObserver || this.props.ResizeObserver;
+    const ResizeObserver =
+      globalObject.ResizeObserver || this.props.ResizeObserver;
     if (this.props.useNativeIfAvailable && ResizeObserver) {
       const node = this.getDOMNode();
       const target = node.parentNode;
@@ -185,7 +188,8 @@ class InovuaNotifyResize extends React.Component {
   }
 
   render() {
-    const ResizeObserver = global.ResizeObserver || this.props.ResizeObserver;
+    const ResizeObserver =
+      globalObject.ResizeObserver || this.props.ResizeObserver;
     if (this.props.useNativeIfAvailable && ResizeObserver) {
       return (
         <div

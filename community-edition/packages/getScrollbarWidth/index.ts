@@ -5,7 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const document = global ? global.document : null;
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
+
+const document = globalObject ? globalObject.document : null;
 let scrollbarWidth: number;
 let hideNativeScrollbarWidth: number;
 

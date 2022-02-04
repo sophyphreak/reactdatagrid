@@ -39,8 +39,11 @@ import computeData from './computeData';
 import batchUpdate from '../../utils/batchUpdate';
 import usePrevious from '../usePrevious';
 import isControlledProperty from '../../utils/isControlledProperty';
+import { getGlobal } from '../../getGlobal';
 
-const raf = global.requestAnimationFrame;
+const globalObject = getGlobal();
+
+const raf = globalObject.requestAnimationFrame;
 
 const isRemoteData = (props: { dataSource?: TypeDataSource }): boolean => {
   if (props.dataSource == null) {

@@ -5,7 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const ua = global.navigator ? global.navigator.userAgent : '';
+import { getGlobal } from './getGlobal';
+const globalObject = getGlobal();
+const ua = globalObject.navigator ? globalObject.navigator.userAgent : '';
 // see usage of isSafari const
 // needed in order to fix tickets/128
 const isSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Chrome') === -1;

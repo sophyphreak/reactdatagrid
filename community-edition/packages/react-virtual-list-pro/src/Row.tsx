@@ -11,6 +11,9 @@ import PropTypes from 'prop-types';
 import shouldComponentUpdate from '../../../packages/shouldComponentUpdate';
 import sealedObjectFactory from './sealedObjectFactory';
 import { RowHeightManager } from './RowHeightManager';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 const sharedRowProps = sealedObjectFactory({
   index: null,
@@ -27,8 +30,8 @@ const STR_ABSOLUTE = 'absolute';
 const STR_ZERO_PX = '0px';
 const STR_VISIBLE = 'visible';
 
-const raf = (global as any).requestAnimationFrame;
-const caf = (global as any).cancelAnimationFrame;
+const raf = (globalObject as any).requestAnimationFrame;
+const caf = (globalObject as any).cancelAnimationFrame;
 
 type TypeVirtualListRow = {
   useTransformPosition: boolean;

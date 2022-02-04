@@ -7,7 +7,7 @@
 
 import binarySearch from '../../../packages/binary-search';
 
-import EventEmitter from 'events';
+import EventEmitter from 'eventemitter3';
 
 const sortAsc = (a: number, b: number) => a - b;
 /**

@@ -18,6 +18,9 @@ import {
   getSortIcons,
   wait,
 } from './__test__/utils';
+import { getGlobal } from './getGlobal';
+
+const globalObject = getGlobal();
 
 const render = cmp => {
   const targetNode = document.createElement('div');
@@ -50,7 +53,7 @@ function simulateMouseEvent(eventType, target) {
   var evt = new MouseEvent(eventType, {
     bubbles: true,
     cancelable: true,
-    view: global,
+    view: globalObject,
   });
   target.dispatchEvent(evt);
 }

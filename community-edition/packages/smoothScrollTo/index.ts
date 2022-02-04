@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
+
 const DEFAULTS: { duration: number; orientation: 'vertical' | 'horizontal' } = {
   duration: 100,
   orientation: 'vertical',
@@ -50,7 +54,7 @@ export default (
     node[scrollPosName] = currentValue + elapsed * millisecondStep;
 
     if (elapsed < duration) {
-      global.requestAnimationFrame(scroll);
+      globalObject.requestAnimationFrame(scroll);
     } else {
       node[scrollPosName] = newValue;
       if (typeof callback === 'function') {
@@ -59,5 +63,5 @@ export default (
     }
   };
 
-  global.requestAnimationFrame(scroll);
+  globalObject.requestAnimationFrame(scroll);
 };

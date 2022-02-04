@@ -43,7 +43,9 @@ import {
   getSkipForPage,
   getCurrentPage,
 } from '../../PaginationToolbar';
+import { getGlobal } from '../../../getGlobal';
 
+const globalObject = getGlobal();
 const REMAINING_ITEMS = 'REMAINING_ITEMS';
 
 const emptyObject = {};
@@ -1050,7 +1052,7 @@ class InovuaComboBox extends Component {
       this.previousSkip = null;
     }
 
-    global.requestAnimationFrame(() => {
+    globalObject.requestAnimationFrame(() => {
       if (this.toolsNode) {
         this.handleToolsSize();
       }
@@ -1366,7 +1368,7 @@ class InovuaComboBox extends Component {
       event.relatedTarget &&
       containsNode(this.comboNode, event.relatedTarget)
     ) {
-      global.requestAnimationFrame(() => {
+      globalObject.requestAnimationFrame(() => {
         this.focus();
       });
       return;
@@ -1821,7 +1823,7 @@ class InovuaComboBox extends Component {
       : { width: 0, height: 0 }
   ) {
     const node = this.comboNode;
-    const computedStyle = global.getComputedStyle(node);
+    const computedStyle = globalObject.getComputedStyle(node);
 
     const width =
       size.width +
@@ -1975,7 +1977,7 @@ class InovuaComboBox extends Component {
   clear() {
     this.setValue(null);
     this.setText(null);
-    global.requestAnimationFrame(() => {
+    globalObject.requestAnimationFrame(() => {
       if (this.toolsNode) {
         this.handleToolsSize();
       }

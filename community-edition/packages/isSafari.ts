@@ -5,14 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { getGlobal } from '../getGlobal';
+
+const globalObject = getGlobal();
+
 let IS_SAFARI: boolean;
 export default (): boolean => {
   if (IS_SAFARI !== undefined) {
     return IS_SAFARI;
   }
 
-  const ua = ((global as unknown) as Window).navigator
-    ? ((global as unknown) as Window).navigator.userAgent
+  const ua = ((globalObject as unknown) as Window).navigator
+    ? ((globalObject as unknown) as Window).navigator.userAgent
     : '';
 
   return (IS_SAFARI =

@@ -14,6 +14,9 @@ import setInputSelection from './utils/setInputSelection';
 import throttle from '../../../common/throttle';
 import join from '../../../common/join';
 import getCursorPosition from './utils/getCursorPosition';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 class TextInput extends Component {
   constructor(props) {
@@ -172,7 +175,9 @@ class TextInput extends Component {
 
   hasFocus() {
     const activeElement =
-      global && global.document && global.document.activeElement;
+      globalObject &&
+      globalObject.document &&
+      globalObject.document.activeElement;
     return this.inputNode === activeElement;
   }
 
