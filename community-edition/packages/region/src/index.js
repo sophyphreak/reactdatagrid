@@ -8,7 +8,7 @@
 import hasOwn from '../../../packages/hasOwn';
 
 import applyStatics from './statics';
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('eventemitter3');
 
 var inherits = require('./inherits');
 var VALIDATE = require('./validate');
