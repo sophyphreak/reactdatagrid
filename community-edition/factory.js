@@ -480,6 +480,12 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             const vl = getVirtualList();
             return vl.getRows();
         };
+        const getHeader = () => {
+            const body = bodyRef.current;
+            const columnLayout = body && body.getColumnLayout();
+            const header = columnLayout.getHeader();
+            return header;
+        };
         const scrollToId = (id, config, callback) => {
             const index = computedProps.getRowIndexById(id);
             scrollToIndex(index, config, callback);
@@ -728,6 +734,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             getScrollTop,
             getScrollLeft,
             getScrollLeftMax,
+            getHeader,
             isCellVisible,
             naturalRowHeight: typeof props.rowHeight !== 'number',
             isRowRendered,
@@ -1160,6 +1167,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         isBinaryOperator: operator => {
             return operator === 'inrange' || operator === 'notinrange';
         },
+        skipHeaderOnAutoSize: false,
     };
     const maybeAddCols = [];
     plugins.forEach((plugin) => {

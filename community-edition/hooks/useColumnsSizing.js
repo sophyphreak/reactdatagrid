@@ -154,16 +154,54 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         return result;
     };
     const cloneIntoDummyContainer = (cell, dummyContainer) => {
-        const cloneCell = cell.cloneNode(true);
-        cloneCell.style.width = '';
-        cloneCell.style.position = 'static';
-        cloneCell.style.left = '';
-        cloneCell.firstChild.style.width = 'fit-content';
-        const cloneParent = document.createElement('div');
-        cloneParent.appendChild(cloneCell);
-        dummyContainer.appendChild(cloneParent);
+        const cellClone = cell.cloneNode(true);
+        cellClone.style.width = '';
+        cellClone.style.minWidth = '';
+        cellClone.style.maxWidth = '';
+        cellClone.style.position = 'static';
+        cellClone.style.left = '';
+        const rowClassName = 'InovuaReactDataGrid__row';
+        const headerClassName = 'InovuaReactDataGrid__header';
+        const headerCellClassName = 'InovuaReactDataGrid__column-header';
+        const isHeader = cellClone.classList.contains(headerCellClassName);
+        let cellContent;
+        cellContent = [...cellClone.children].find((cell) => {
+            const className = isHeader
+                ? 'InovuaReactDataGrid__column-header__content'
+                : 'InovuaReactDataGrid__cell__content';
+            return cell.classList.contains(className);
+        });
+        if (cellContent) {
+            cellContent.style.width = 'fit-content';
+        }
+        else {
+            cellClone.style.width = 'fit-content';
+        }
+        const cloneRow = document.createElement('div');
+        const cloneRowClassList = cloneRow.classList;
+        if (isHeader) {
+            cloneRowClassList.add(headerClassName);
+            cloneRow.style.position = 'static';
+        }
+        else {
+            cloneRowClassList.add(rowClassName);
+        }
+        let rowElement = cell.parentElement;
+        while (rowElement) {
+            const isRow = [rowClassName, headerClassName].some((cls) => rowElement.classList.contains(cls));
+            if (isRow) {
+                for (let i = 0; i < rowElement.classList.length; i++) {
+                    const item = rowElement.classList[i];
+                    cloneRowClassList.add(item);
+                }
+                break;
+            }
+            rowElement = rowElement.parentElement;
+        }
+        cloneRow.appendChild(cellClone);
+        dummyContainer.appendChild(cloneRow);
     };
-    const computeOptimizedWidth = (column) => {
+    const computeOptimizedWidth = (column, skipHeader) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return -1;
@@ -172,19 +210,40 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         if (!cells || !cells.length) {
             return -1;
         }
+        if (!skipHeader) {
+            let headerCell;
+            const header = computedProps.getHeader();
+            const headerCells = header.getCells();
+            headerCells.find((cell) => {
+                const cellProps = cell.props;
+                if (cellProps.id === column.id) {
+                    headerCell = cell.getDOMNode();
+                }
+            });
+            if (headerCell &&
+                headerCell.classList.contains('InovuaReactDataGrid__column-header__resize-wrapper')) {
+                headerCell = [...headerCell.children].find((cell) => cell.classList.contains('InovuaReactDataGrid__column-header'));
+            }
+            cells.push(headerCell);
+        }
+        return addCellsToContainer(cells, skipHeader);
+    };
+    const addCellsToContainer = (cells, skipHeader) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return -1;
+        }
         const dummyContainer = document.createElement('span');
         dummyContainer.style.position = 'fixed';
         const vl = computedProps.getVirtualList();
         const container = vl.getContainerNode();
         container.appendChild(dummyContainer);
-        let snapshotWidth = 0;
-        cells.forEach(cell => {
-            snapshotWidth = cell.offsetWidth;
-            cloneIntoDummyContainer(cell, dummyContainer);
-        });
+        cells.forEach(cell => cloneIntoDummyContainer(cell, dummyContainer));
         let dummyContainerWidth = dummyContainer.offsetWidth;
-        if (snapshotWidth < dummyContainerWidth) {
-            // the border width which is 1px it is added
+        if (!skipHeader) {
+            dummyContainerWidth += 3;
+        }
+        else {
             dummyContainerWidth += 1;
         }
         container.removeChild(dummyContainer);
@@ -208,11 +267,12 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         }
         checkForAvaibleWidth();
     };
-    const setColumnSizesAuto = () => {
+    const setColumnSizesAuto = (skipHeader) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
         }
+        const shouldSkipHeader = skipHeader != null ? skipHeader : computedProps.skipHeaderOnAutoSize;
         const columns = computedProps.visibleColumns;
         let columnsToSize = [];
         let counter = -1;
@@ -223,7 +283,7 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
                 if (columnsToSize.indexOf(column) >= 0) {
                     return false;
                 }
-                const optimizedWidth = computeOptimizedWidth(column);
+                const optimizedWidth = computeOptimizedWidth(column, shouldSkipHeader);
                 if (optimizedWidth > 0) {
                     const newWidth = normaliseWidth(column, optimizedWidth);
                     const columnId = column.id;

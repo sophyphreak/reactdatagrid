@@ -737,6 +737,14 @@ const GridFactory = (
       return vl.getRows();
     };
 
+    const getHeader = () => {
+      const body = bodyRef.current;
+      const columnLayout = body && body.getColumnLayout();
+      const header = columnLayout.getHeader();
+
+      return header;
+    };
+
     const scrollToId = (
       id: string | number,
       config?: any,
@@ -1106,6 +1114,7 @@ const GridFactory = (
       getScrollTop,
       getScrollLeft,
       getScrollLeftMax,
+      getHeader,
       isCellVisible,
       naturalRowHeight: typeof props.rowHeight !== 'number',
 
@@ -1737,6 +1746,8 @@ const GridFactory = (
     isBinaryOperator: operator => {
       return operator === 'inrange' || operator === 'notinrange';
     },
+
+    skipHeaderOnAutoSize: false,
   };
 
   const maybeAddCols: any[] = [];

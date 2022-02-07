@@ -2201,4 +2201,5 @@ DataGridRow.propTypes = {
   renderTreeExpandTool: PropTypes.func,
   renderTreeLoadingTool: PropTypes.func,
   currentEditCompletePromise: PropTypes.any,
+  enableColumnsResizing: PropTypes.bool,
 };

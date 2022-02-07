@@ -165,6 +165,10 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     return this.columnLayout ? this.columnLayout.scrollLeft || 0 : 0;
   };
 
+  getColumnLayout = () => {
+    return this.columnLayout;
+  };
+
   setScrollLeft = scrollLeft => {
     if (this.columnLayout) {
       this.columnLayout.setScrollLeft(scrollLeft);
