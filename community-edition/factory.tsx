@@ -105,6 +105,9 @@ const DEFAULT_I18N = {
   lockEnd: 'Lock end',
   unlock: 'Unlock',
   columns: 'Columns',
+  autoresizeThisColumn: 'Autoresize this column',
+  autoresizeAllColumns: 'Autoresize all columns',
+  autoSizeToFit: 'Autosize to fit',
 
   // operators,
   contains: 'Contains',
