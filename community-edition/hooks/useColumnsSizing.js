@@ -265,8 +265,8 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
-        const { enableColumnsResizing } = computedProps;
-        if (!enableColumnsResizing) {
+        const { enableColumnAutosize } = computedProps;
+        if (!enableColumnAutosize) {
             showWarning('setColumnSizesToFit');
             return;
         }
@@ -277,8 +277,8 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
-        const { enableColumnsResizing } = computedProps;
-        if (!enableColumnsResizing) {
+        const { enableColumnAutosize } = computedProps;
+        if (!enableColumnAutosize) {
             showWarning('setColumnsSizesAuto');
             return;
         }
@@ -346,8 +346,8 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
-        const { enableColumnsResizing } = computedProps;
-        if (!enableColumnsResizing) {
+        const { enableColumnAutosize } = computedProps;
+        if (!enableColumnAutosize) {
             showWarning('setColumnSizeAuto');
             return;
         }
@@ -357,7 +357,7 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         return;
     };
     const showWarning = (method) => {
-        return console.error(`The 'enableColumnsResizing' prop should be 'true' in order for ${method} to work.`);
+        return console.error(`In order for ${method} to work, the 'enableColumnAutosize' prop should be 'true'.`);
     };
     return {
         setColumnSizesToFit,

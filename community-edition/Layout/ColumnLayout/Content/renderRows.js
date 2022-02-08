@@ -174,7 +174,7 @@ const renderRows = (
     onContextMenu,
     setActiveIndex,
     currentEditCompletePromise,
-    enableColumnsResizing,
+    enableColumnAutosize,
   }
 ) => {
   const remoteOffset = computedLivePagination ? 0 : computedSkip || 0;
@@ -371,7 +371,7 @@ const renderRows = (
       renderTreeExpandTool,
       renderTreeLoadingTool,
       currentEditCompletePromise,
-      enableColumnsResizing,
+      enableColumnAutosize,
     };
 
     if (rowProps.rowIndex === editRowIndex) {

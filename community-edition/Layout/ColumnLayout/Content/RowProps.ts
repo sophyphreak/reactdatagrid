@@ -230,7 +230,7 @@ export type RowProps = {
   }) => void;
   expandOnMouseDown?: boolean;
   currentEditCompletePromise?: any;
-  enableColumnsResizing?: boolean;
+  enableColumnAutosize?: boolean;
 };
 
 export type EnhancedRowProps = RowProps & {

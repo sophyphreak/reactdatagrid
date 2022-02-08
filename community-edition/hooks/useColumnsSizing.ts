@@ -365,9 +365,9 @@ const useColumnsSizing = (
       return;
     }
 
-    const { enableColumnsResizing } = computedProps;
+    const { enableColumnAutosize } = computedProps;
 
-    if (!enableColumnsResizing) {
+    if (!enableColumnAutosize) {
       showWarning('setColumnSizesToFit');
       return;
     }
@@ -387,9 +387,9 @@ const useColumnsSizing = (
       return;
     }
 
-    const { enableColumnsResizing } = computedProps;
+    const { enableColumnAutosize } = computedProps;
 
-    if (!enableColumnsResizing) {
+    if (!enableColumnAutosize) {
       showWarning('setColumnsSizesAuto');
       return;
     }
@@ -486,9 +486,9 @@ const useColumnsSizing = (
       return;
     }
 
-    const { enableColumnsResizing } = computedProps;
+    const { enableColumnAutosize } = computedProps;
 
-    if (!enableColumnsResizing) {
+    if (!enableColumnAutosize) {
       showWarning('setColumnSizeAuto');
       return;
     }
@@ -502,7 +502,7 @@ const useColumnsSizing = (
 
   const showWarning = (method: string) => {
     return console.error(
-      `The 'enableColumnsResizing' prop should be 'true' in order for ${method} to work.`
+      `In order for ${method} to work, the 'enableColumnAutosize' prop should be 'true'.`
     );
   };
 

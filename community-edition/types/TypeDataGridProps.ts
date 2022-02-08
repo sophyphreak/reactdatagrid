@@ -700,7 +700,7 @@ type TypeDataGridPropsNoI18n = {
   }: {
     updatedTreeData: any[];
   }) => void;
-  enableColumnsResizing?: boolean;
+  enableColumnAutosize?: boolean;
   getRows?: () => void;
   getHeader?: () => void;
   skipHeaderOnAutoSize?: boolean;

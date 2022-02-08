@@ -86,7 +86,7 @@ const App = () => {
         style={gridStyle}
         columns={columns}
         dataSource={people}
-        enableColumnsResizing
+        enableColumnAutosize
         defaultGroupBy={[]}
       />
     </div>
