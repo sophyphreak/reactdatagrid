@@ -272,7 +272,7 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         }
         checkForAvaibleWidth();
     };
-    const setColumnsSizesAuto = ({ columns, skipHeader, }) => {
+    const setColumnsSizesAuto = ({ columnIds, skipHeader, }) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
@@ -284,21 +284,21 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         }
         const shouldSkipHeader = skipHeader != null ? skipHeader : computedProps.skipHeaderOnAutoSize;
         let allIds = [];
-        let allColumns = [];
-        if (columns !== undefined) {
-            if (Array.isArray(columns)) {
-                allIds = columns;
+        let columns = [];
+        if (columnIds !== undefined) {
+            if (Array.isArray(columnIds)) {
+                allIds = columnIds;
             }
         }
         for (let i = 0; i < allIds.length; i++) {
             const id = allIds[i];
             const column = computedProps.getColumnBy(id);
-            allColumns.push(column);
+            columns.push(column);
         }
-        if (allColumns && allColumns.length === 0) {
-            allColumns = computedProps.visibleColumns;
+        if (columns && columns.length === 0) {
+            columns = computedProps.visibleColumns;
         }
-        if (!allColumns || allColumns.length === 0) {
+        if (!columns || columns.length === 0) {
             return;
         }
         let columnsToSize = [];
@@ -306,7 +306,7 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         const newColumnSizes = {};
         while (counter !== 0) {
             counter = 0;
-            computeColumnSizesAuto(allColumns, (column) => {
+            computeColumnSizesAuto(columns, (column) => {
                 if (columnsToSize.indexOf(column) >= 0) {
                     return false;
                 }
@@ -352,7 +352,7 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
             return;
         }
         if (id) {
-            setColumnsSizesAuto({ columns: [id], skipHeader });
+            setColumnsSizesAuto({ columnIds: [id], skipHeader });
         }
         return;
     };

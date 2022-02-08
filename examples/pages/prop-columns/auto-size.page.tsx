@@ -32,13 +32,16 @@ const columns = [
 const App = () => {
   const [gridRef, setGridRef] = useState(null);
 
-  const setColumnsSizesAuto = (skipHeader: boolean) => {
-    if (gridRef.current.setColumnsSizesAuto) {
-      gridRef.current.setColumnsSizesAuto({
-        skipHeader,
-      });
-    }
-  };
+  const setColumnsSizesAuto = useCallback(
+    (skipHeader: boolean) => {
+      if (gridRef.current.setColumnsSizesAuto) {
+        gridRef.current.setColumnsSizesAuto({
+          skipHeader,
+        });
+      }
+    },
+    [gridRef]
+  );
 
   return (
     <div>

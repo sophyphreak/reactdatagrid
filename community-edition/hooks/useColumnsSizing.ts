@@ -376,10 +376,10 @@ const useColumnsSizing = (
   };
 
   const setColumnsSizesAuto = ({
-    columns,
+    columnIds,
     skipHeader,
   }: {
-    columns?: string[];
+    columnIds?: string[];
     skipHeader?: boolean;
   }) => {
     const { current: computedProps } = computedPropsRef;
@@ -398,24 +398,24 @@ const useColumnsSizing = (
       skipHeader != null ? skipHeader : computedProps.skipHeaderOnAutoSize!;
 
     let allIds: string[] = [];
-    let allColumns: TypeComputedColumn[] = [];
-    if (columns !== undefined) {
-      if (Array.isArray(columns)) {
-        allIds = columns;
+    let columns: TypeComputedColumn[] = [];
+    if (columnIds !== undefined) {
+      if (Array.isArray(columnIds)) {
+        allIds = columnIds;
       }
     }
 
     for (let i = 0; i < allIds.length; i++) {
       const id = allIds[i];
       const column: any = computedProps.getColumnBy(id);
-      allColumns.push(column);
+      columns.push(column);
     }
 
-    if (allColumns && allColumns.length === 0) {
-      allColumns = computedProps.visibleColumns;
+    if (columns && columns.length === 0) {
+      columns = computedProps.visibleColumns;
     }
 
-    if (!allColumns || allColumns.length === 0) {
+    if (!columns || columns.length === 0) {
       return;
     }
 
@@ -426,29 +426,23 @@ const useColumnsSizing = (
 
     while (counter !== 0) {
       counter = 0;
-      computeColumnSizesAuto(
-        allColumns,
-        (column: TypeComputedColumn): boolean => {
-          if (columnsToSize.indexOf(column) >= 0) {
-            return false;
-          }
-
-          const optimizedWidth = computeOptimizedWidth(
-            column,
-            shouldSkipHeader
-          );
-
-          if (optimizedWidth > 0) {
-            const newWidth = normaliseWidth(column, optimizedWidth);
-            const columnId: string = column.id;
-            columnsToSize.push(column);
-            Object.assign(newColumnSizes, { [columnId]: newWidth });
-            counter++;
-          }
-
-          return true;
+      computeColumnSizesAuto(columns, (column: TypeComputedColumn): boolean => {
+        if (columnsToSize.indexOf(column) >= 0) {
+          return false;
         }
-      );
+
+        const optimizedWidth = computeOptimizedWidth(column, shouldSkipHeader);
+
+        if (optimizedWidth > 0) {
+          const newWidth = normaliseWidth(column, optimizedWidth);
+          const columnId: string = column.id;
+          columnsToSize.push(column);
+          Object.assign(newColumnSizes, { [columnId]: newWidth });
+          counter++;
+        }
+
+        return true;
+      });
     }
 
     if (computedProps.virtualizeColumns) {
@@ -494,7 +488,7 @@ const useColumnsSizing = (
     }
 
     if (id) {
-      setColumnsSizesAuto({ columns: [id], skipHeader });
+      setColumnsSizesAuto({ columnIds: [id], skipHeader });
     }
 
     return;
