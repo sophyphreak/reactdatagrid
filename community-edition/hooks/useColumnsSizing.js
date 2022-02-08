@@ -267,19 +267,36 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         }
         checkForAvaibleWidth();
     };
-    const setColumnSizesAuto = (skipHeader) => {
+    const setColumnsSizesAuto = ({ columns, skipHeader, }) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
         }
         const shouldSkipHeader = skipHeader != null ? skipHeader : computedProps.skipHeaderOnAutoSize;
-        const columns = computedProps.visibleColumns;
+        let allIds = [];
+        let allColumns = [];
+        if (columns !== undefined) {
+            if (Array.isArray(columns)) {
+                allIds = columns;
+            }
+        }
+        for (let i = 0; i < allIds.length; i++) {
+            const id = allIds[i];
+            const column = computedProps.getColumnBy(id);
+            allColumns.push(column);
+        }
+        if (allColumns && allColumns.length === 0) {
+            allColumns = computedProps.visibleColumns;
+        }
+        if (!allColumns || allColumns.length === 0) {
+            return;
+        }
         let columnsToSize = [];
         let counter = -1;
         const newColumnSizes = {};
         while (counter !== 0) {
             counter = 0;
-            computeColumnSizesAuto(columns, (column) => {
+            computeColumnSizesAuto(allColumns, (column) => {
                 if (columnsToSize.indexOf(column) >= 0) {
                     return false;
                 }
@@ -314,9 +331,20 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
             setColumnFlexes: computedProps.setColumnFlexes,
         });
     };
+    const setColumnSizeAuto = (id, skipHeader) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        if (id) {
+            setColumnsSizesAuto({ columns: [id], skipHeader });
+        }
+        return;
+    };
     return {
         setColumnSizesToFit,
-        setColumnSizesAuto,
+        setColumnsSizesAuto,
+        setColumnSizeAuto,
     };
 };
 export default useColumnsSizing;

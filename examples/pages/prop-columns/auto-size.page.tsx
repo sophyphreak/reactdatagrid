@@ -32,9 +32,11 @@ const columns = [
 const App = () => {
   const [gridRef, setGridRef] = useState(null);
 
-  const setColumnSizesAuto = (skipHeader: boolean) => {
-    if (gridRef.current.setColumnSizesAuto) {
-      gridRef.current.setColumnSizesAuto(skipHeader);
+  const setColumnsSizesAuto = (skipHeader: boolean) => {
+    if (gridRef.current.setColumnsSizesAuto) {
+      gridRef.current.setColumnsSizesAuto({
+        skipHeader,
+      });
     }
   };
 
@@ -55,13 +57,25 @@ const App = () => {
       </div>
 
       <div style={{ marginBottom: 20 }}>
-        <Button onClick={() => setColumnSizesAuto(false)}>
+        <Button
+          onClick={() => {
+            if (gridRef.current.setColumnSizeAuto) {
+              gridRef.current.setColumnSizeAuto('name');
+            }
+          }}
+        >
+          Set 'name' column size auto
+        </Button>
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <Button onClick={() => setColumnsSizesAuto(false)}>
           Set column sizes auto
         </Button>
       </div>
 
       <div style={{ marginBottom: 20 }}>
-        <Button onClick={() => setColumnSizesAuto(true)}>
+        <Button onClick={() => setColumnsSizesAuto(true)}>
           Set column sizes auto (skipHeader)
         </Button>
       </div>
@@ -73,7 +87,7 @@ const App = () => {
         columns={columns}
         dataSource={people}
         enableColumnsResizing
-        defaultGroupBy={['country']}
+        defaultGroupBy={[]}
       />
     </div>
   );
