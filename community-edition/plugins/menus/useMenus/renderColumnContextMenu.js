@@ -341,7 +341,7 @@ export default (computedProps, computedPropsRef) => {
                         return;
                     }
                     if (computedProps.setColumnsSizesAuto) {
-                        computedProps.setColumnsSizesAuto({});
+                        computedProps.setColumnsSizesAuto();
                     }
                 },
             },

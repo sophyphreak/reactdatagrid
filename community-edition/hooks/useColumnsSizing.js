@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import getScrollbarWidth from '../packages/getScrollbarWidth';
+const EMPTY_OBJECT = {};
 const removeItemFromArray = (array, obj) => {
     const index = array.indexOf(obj);
     if (index >= 0) {
@@ -272,7 +273,7 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         }
         checkForAvaibleWidth();
     };
-    const setColumnsSizesAuto = ({ columnIds, skipHeader, }) => {
+    const setColumnsSizesAuto = ({ columnIds, skipHeader, } = EMPTY_OBJECT) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;

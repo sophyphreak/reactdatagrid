@@ -13,6 +13,8 @@ import {
 } from '../types';
 import getScrollbarWidth from '../packages/getScrollbarWidth';
 
+const EMPTY_OBJECT = {};
+
 const removeItemFromArray = <T>(array: T[], obj: T) => {
   const index: number = array.indexOf(obj);
 
@@ -381,7 +383,7 @@ const useColumnsSizing = (
   }: {
     columnIds?: string[];
     skipHeader?: boolean;
-  }) => {
+  } = EMPTY_OBJECT) => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
       return;

@@ -415,7 +415,7 @@ export default (
             }
 
             if (computedProps.setColumnsSizesAuto) {
-              computedProps.setColumnsSizesAuto({});
+              computedProps.setColumnsSizesAuto();
             }
           },
         },
