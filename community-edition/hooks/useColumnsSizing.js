@@ -265,11 +265,21 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        const { enableColumnsResizing } = computedProps;
+        if (!enableColumnsResizing) {
+            showWarning('setColumnSizesToFit');
+            return;
+        }
         checkForAvaibleWidth();
     };
     const setColumnsSizesAuto = ({ columns, skipHeader, }) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
+            return;
+        }
+        const { enableColumnsResizing } = computedProps;
+        if (!enableColumnsResizing) {
+            showWarning('setColumnsSizesAuto');
             return;
         }
         const shouldSkipHeader = skipHeader != null ? skipHeader : computedProps.skipHeaderOnAutoSize;
@@ -336,10 +346,18 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        const { enableColumnsResizing } = computedProps;
+        if (!enableColumnsResizing) {
+            showWarning('setColumnSizeAuto');
+            return;
+        }
         if (id) {
             setColumnsSizesAuto({ columns: [id], skipHeader });
         }
         return;
+    };
+    const showWarning = (method) => {
+        return console.error(`The 'enableColumnsResizing' prop should be 'true' in order for ${method} to work.`);
     };
     return {
         setColumnSizesToFit,

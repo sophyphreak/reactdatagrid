@@ -1748,6 +1748,7 @@ const GridFactory = (
     },
 
     skipHeaderOnAutoSize: false,
+    enableColumnsResizing: true,
   };
 
   const maybeAddCols: any[] = [];

@@ -1168,6 +1168,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             return operator === 'inrange' || operator === 'notinrange';
         },
         skipHeaderOnAutoSize: false,
+        enableColumnsResizing: true,
     };
     const maybeAddCols = [];
     plugins.forEach((plugin) => {
