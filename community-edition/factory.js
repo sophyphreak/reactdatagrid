@@ -166,6 +166,12 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         };
         const getVirtualList = () => bodyRef.current != null ? bodyRef.current.getVirtualList() : null;
         const getColumnLayout = () => bodyRef.current != null ? bodyRef.current.columnLayout : null;
+        const getDefaultSize = () => {
+            if (props.viewportSize) {
+                return props.viewportSize;
+            }
+            return defaultSize;
+        };
         const [computedLoading, doSetLoading] = useProperty(props, 'loading');
         const loadingTimeoutIdRef = useRef();
         const setLoading = (loading) => {
@@ -198,8 +204,13 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         const [lockedColumnsState, setLockedColumnsState] = useState({});
         const [scrollbars, setScrollbars] = useState({ vertical: false, horizontal: false });
         const [reservedViewportWidth, setReservedViewportWidth] = useProperty(props, 'reservedViewportWidth', 0);
-        const [size, setSize] = useSize(defaultSize);
+        const [size, setSize] = useSize(getDefaultSize());
         const [viewportAvailableWidth, setViewportAvailableWidth] = useState(0);
+        useEffect(() => {
+            if (props.viewportSize) {
+                setSize(props.viewportSize);
+            }
+        }, [props.viewportSize]);
         const onResize = (size) => {
             batchUpdate().commit(() => {
                 if (IS_MS_BROWSER || IS_FF) {

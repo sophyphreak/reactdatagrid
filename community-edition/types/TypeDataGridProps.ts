@@ -705,6 +705,7 @@ type TypeDataGridPropsNoI18n = {
   getHeader?: () => void;
   skipHeaderOnAutoSize?: boolean;
   enableColumnHover?: boolean;
+  viewportSize?: TypeSize;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
