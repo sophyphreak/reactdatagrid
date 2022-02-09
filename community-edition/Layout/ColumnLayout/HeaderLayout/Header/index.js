@@ -386,6 +386,11 @@ export default class InovuaDataGridHeader extends React.Component {
             children: newColumns,
         });
     };
+    onMouseEnter = () => {
+        if (this.props.onMouseEnter) {
+            this.props.onMouseEnter(this.props);
+        }
+    };
     render() {
         const { props } = this;
         const { rtl, virtualizeColumns } = props;
@@ -396,7 +401,7 @@ export default class InovuaDataGridHeader extends React.Component {
             : this.renderColumns();
         const cleanedProps = cleanProps(props, InovuaDataGridHeader.propTypes);
         delete cleanedProps.columnWidthPrefixSums;
-        return (React.createElement("div", { ...cleanedProps, className: className, data: null, style: style, ref: this.domRef, onFocus: this.onFocus }, children));
+        return (React.createElement("div", { ...cleanedProps, className: className, data: null, style: style, ref: this.domRef, onFocus: this.onFocus, onMouseEnter: this.onMouseEnter }, children));
     }
     onFocus = (event) => {
         const body = selectParent('.InovuaReactDataGrid__body', event.target);

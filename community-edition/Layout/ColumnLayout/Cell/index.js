@@ -494,6 +494,7 @@ export default class InovuaDataGridCell extends React.Component {
             onMouseDown: cellProps.onMouseDown || initialDOMProps.onMouseDown,
             onTouchStart: cellProps.onTouchStart || initialDOMProps.onTouchStart,
             onMouseEnter: cellProps.onMouseEnter || initialDOMProps.onMouseEnter,
+            onMouseLeave: cellProps.onMouseLeave || initialDOMProps.onMouseLeave,
             style: initialDOMProps.style
                 ? Object.assign({}, initialDOMProps.style, cellProps.style)
                 : cellProps.style,
@@ -502,6 +503,16 @@ export default class InovuaDataGridCell extends React.Component {
         domProps.ref = this.domRef;
         return headerCell ? (RENDER_HEADER(cellProps, domProps, this, this.state)) : (React.createElement("div", { ...domProps, children: cellProps.children, id: null, name: null, value: null, title: null, data: null }));
     }
+    onMouseEnter = (_event) => {
+        const props = this.getProps();
+        const initialDOMProps = this.getInitialDOMProps();
+        if (props.onMouseEnter) {
+            props.onMouseEnter(props);
+        }
+        else if (initialDOMProps.onMouseEnter) {
+            initialDOMProps.onMouseEnter();
+        }
+    };
     renderNodeTool(props) {
         const { data, renderTreeCollapseTool, renderTreeExpandTool, renderTreeLoadingTool, } = props;
         const nodeProps = data.__nodeProps || emptyObject;

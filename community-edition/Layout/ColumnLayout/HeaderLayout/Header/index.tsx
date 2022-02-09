@@ -528,6 +528,12 @@ export default class InovuaDataGridHeader extends React.Component<
     });
   };
 
+  onMouseEnter = () => {
+    if (this.props.onMouseEnter) {
+      this.props.onMouseEnter(this.props);
+    }
+  };
+
   render() {
     const { props } = this;
     const { rtl, virtualizeColumns } = props;
@@ -554,6 +560,7 @@ export default class InovuaDataGridHeader extends React.Component<
         style={style}
         ref={this.domRef}
         onFocus={this.onFocus}
+        onMouseEnter={this.onMouseEnter}
       >
         {children}
       </div>
