@@ -259,6 +259,14 @@ const GridFactory = (
     const getColumnLayout = () =>
       bodyRef.current != null ? bodyRef.current.columnLayout : null;
 
+    const getDefaultSize = () => {
+      if (props.viewportSize) {
+        return props.viewportSize;
+      }
+
+      return defaultSize;
+    };
+
     const [computedLoading, doSetLoading] = useProperty<boolean>(
       props,
       'loading'
@@ -318,10 +326,16 @@ const GridFactory = (
     const [reservedViewportWidth, setReservedViewportWidth] = useProperty<
       number
     >(props, 'reservedViewportWidth', 0);
-    const [size, setSize] = useSize(defaultSize);
+    const [size, setSize] = useSize(getDefaultSize());
     const [viewportAvailableWidth, setViewportAvailableWidth] = useState<
       number
     >(0);
+
+    useEffect(() => {
+      if (props.viewportSize) {
+        setSize(props.viewportSize);
+      }
+    }, [props.viewportSize]);
 
     const onResize = (size: { width: number; height: number }) => {
       batchUpdate().commit(() => {
