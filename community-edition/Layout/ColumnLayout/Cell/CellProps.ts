@@ -230,6 +230,7 @@ export type CellProps = {
   showContextMenu?: (menuTool: any, onHide: any) => void;
   setActiveIndex?: func;
   renderColumnReorderProxy?: (props: any) => void;
+  columnHoverClassName?: string;
 };
 
 export type EnhancedCellProps = CellProps & {

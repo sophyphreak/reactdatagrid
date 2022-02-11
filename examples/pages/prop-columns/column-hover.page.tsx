@@ -9,27 +9,6 @@ import ComboBox from '@inovua/reactdatagrid-community/packages/ComboBox';
 
 const gridStyle = { minHeight: 550 };
 
-const columns = [
-  {
-    name: 'id',
-    header: 'Id',
-    defaultWidth: 60,
-    type: 'number',
-    // resizable: false,
-  },
-  { name: 'name', header: 'Name', defaultWidth: 100 },
-  {
-    name: 'country',
-    header: 'Country',
-    defaultWidth: 100,
-    // resizable: false,
-    render: ({ value }: { value: string }) =>
-      flags[value] ? flags[value] : value,
-  },
-  { name: 'city', header: 'City', defaultWidth: 120, resizable: false },
-  { name: 'age', header: 'Age', defaultWidth: 100, type: 'number' },
-];
-
 const columns1 = [
   {
     name: 'id',
@@ -246,6 +225,32 @@ const comboDataSource = [
   { id: 'pink-light', label: 'Pink Light' },
 ];
 
+const columns = [
+  {
+    name: 'id',
+    header: 'Id',
+    defaultWidth: 60,
+    type: 'number',
+    // resizable: false,
+  },
+  { name: 'name', header: 'Name', defaultWidth: 100 },
+  {
+    name: 'country',
+    header: 'Country',
+    defaultWidth: 100,
+    // resizable: false,
+    render: ({ value }: { value: string }) =>
+      flags[value] ? flags[value] : value,
+  },
+  {
+    name: 'city',
+    header: 'City',
+    defaultWidth: 120,
+    resizable: false,
+  },
+  { name: 'age', header: 'Age', defaultWidth: 100, type: 'number' },
+];
+
 const App = () => {
   const [enableColumnHover, setEnableColumnHover] = useState(true);
   const [virtualizeColumns, setVirtualizeColumns] = useState(true);
@@ -281,10 +286,11 @@ const App = () => {
         idProperty="id"
         theme={theme}
         style={gridStyle}
-        columns={columns1}
+        columns={columns}
         dataSource={people}
         enableColumnHover={enableColumnHover}
         virtualizeColumn={virtualizeColumns}
+        columnHoverClassName="custom-column-hover-class-name"
       />
     </div>
   );

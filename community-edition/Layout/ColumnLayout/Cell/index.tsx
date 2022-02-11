@@ -352,6 +352,7 @@ export default class InovuaDataGridCell extends React.Component {
       inEdit,
       columnIndex,
       columnIndexHovered,
+      columnHoverClassName,
     } = props;
 
     let { userSelect, headerUserSelect } = props;
@@ -437,7 +438,11 @@ export default class InovuaDataGridCell extends React.Component {
       showBorderTop && `${baseClassName}--show-border-top`,
       showBorderBottom && `${baseClassName}--show-border-bottom`,
       noBackground && `${baseClassName}--no-background`,
-      columnIndex === columnIndexHovered ? `${baseClassName}--over` : ''
+      columnIndex === columnIndexHovered
+        ? columnHoverClassName
+          ? join(`${baseClassName}--over`, columnHoverClassName)
+          : `${baseClassName}--over`
+        : ''
     );
 
     if (cellSelected) {
@@ -1762,4 +1767,5 @@ InovuaDataGridCell.propTypes = {
   setActiveIndex: PropTypes.func,
 
   renderColumnReorderProxy: PropTypes.func,
+  columnHoverClassName: PropTypes.string,
 };

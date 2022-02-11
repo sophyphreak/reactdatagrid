@@ -1040,6 +1040,7 @@ export default class DataGridRow extends React.Component<RowProps> {
       onColumnMouseEnter,
       onColumnMouseLeave,
       columnIndexHovered,
+      columnHoverClassName,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1217,6 +1218,7 @@ export default class DataGridRow extends React.Component<RowProps> {
         onColumnMouseEnter,
         onColumnMouseLeave,
         columnIndexHovered,
+        columnHoverClassName,
       };
 
       if (computedCellSelection && getCellSelectionKey) {
@@ -2208,4 +2210,5 @@ DataGridRow.propTypes = {
   renderTreeLoadingTool: PropTypes.func,
   currentEditCompletePromise: PropTypes.any,
   enableColumnAutosize: PropTypes.bool,
+  columnHoverClassName: PropTypes.string,
 };

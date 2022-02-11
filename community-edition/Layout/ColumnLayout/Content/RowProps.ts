@@ -234,6 +234,7 @@ export type RowProps = {
   onColumnMouseEnter?: () => void;
   onColumnMouseLeave?: () => void;
   columnIndexHovered?: number;
+  columnHoverClassName?: string;
 };
 
 export type EnhancedRowProps = RowProps & {
