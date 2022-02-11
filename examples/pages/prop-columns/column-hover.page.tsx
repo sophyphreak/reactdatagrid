@@ -247,8 +247,14 @@ const columns = [
     header: 'City',
     defaultWidth: 120,
     resizable: false,
+    enableColumnHover: false,
   },
-  { name: 'age', header: 'Age', defaultWidth: 100, type: 'number' },
+  {
+    name: 'age',
+    header: 'Age',
+    defaultWidth: 100,
+    type: 'number',
+  },
 ];
 
 const App = () => {

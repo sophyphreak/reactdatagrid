@@ -1328,6 +1328,7 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   updateMainMenuPosition?: (alignTo: any) => void;
   isInEdit?: any;
   availableWidth?: number;
+  computedEnableColumnHover?: boolean;
 };
 
 export default TypeDataGridProps;

@@ -12,19 +12,21 @@ const useColumnHover = (_props, _computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
-        if (computedProps.enableColumnHover) {
+        if (computedProps.computedEnableColumnHover ||
+            cellProps.computedEnableColumnHover) {
             const columnIndex = cellProps.columnIndex;
             if (columnIndex != null) {
                 setColumnIndexHovered(columnIndex);
             }
         }
     };
-    const onColumnMouseLeave = () => {
+    const onColumnMouseLeave = (cellProps) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
         }
-        if (computedProps.enableColumnHover) {
+        if (computedProps.computedEnableColumnHover ||
+            cellProps.computedEnableColumnHover) {
             setColumnIndexHovered(-1);
         }
     };

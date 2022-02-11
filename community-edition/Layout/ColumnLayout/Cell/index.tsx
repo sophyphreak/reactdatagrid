@@ -801,6 +801,7 @@ export default class InovuaDataGridCell extends React.Component {
     const initialDOMProps = this.getInitialDOMProps();
 
     if (
+      !props.computedEnableColumnHover ||
       props.groupProps ||
       props.groupSpacerColumn ||
       props.isRowDetailsCell ||
@@ -821,6 +822,7 @@ export default class InovuaDataGridCell extends React.Component {
     const initialDOMProps = this.getInitialDOMProps();
 
     if (
+      !props.computedEnableColumnHover ||
       props.groupProps ||
       props.groupSpacerColumn ||
       props.isRowDetailsCell ||
@@ -830,7 +832,7 @@ export default class InovuaDataGridCell extends React.Component {
     }
 
     if (props.onColumnMouseLeave) {
-      props.onColumnMouseLeave();
+      props.onColumnMouseLeave(props);
     } else if (initialDOMProps.onMouseLeave) {
       initialDOMProps.onMouseLeave();
     }

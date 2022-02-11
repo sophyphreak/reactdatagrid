@@ -521,6 +521,7 @@ const GridFactory = (
       showVerticalCellBorders,
       shareSpaceOnResize: props.shareSpaceOnResize || false,
       onNextRender,
+      computedEnableColumnHover: props.enableColumnHover || undefined,
     };
 
     cProps.i18n = (key, defaultLabel) => {

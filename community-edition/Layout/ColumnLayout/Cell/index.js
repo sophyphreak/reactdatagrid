@@ -510,7 +510,8 @@ export default class InovuaDataGridCell extends React.Component {
     onMouseEnter = (_event) => {
         const props = this.getProps();
         const initialDOMProps = this.getInitialDOMProps();
-        if (props.groupProps ||
+        if (!props.computedEnableColumnHover ||
+            props.groupProps ||
             props.groupSpacerColumn ||
             props.isRowDetailsCell ||
             props.isCheckboxColumn) {
@@ -526,14 +527,15 @@ export default class InovuaDataGridCell extends React.Component {
     onMouseLeave = (_event) => {
         const props = this.getProps();
         const initialDOMProps = this.getInitialDOMProps();
-        if (props.groupProps ||
+        if (!props.computedEnableColumnHover ||
+            props.groupProps ||
             props.groupSpacerColumn ||
             props.isRowDetailsCell ||
             props.isCheckboxColumn) {
             return;
         }
         if (props.onColumnMouseLeave) {
-            props.onColumnMouseLeave();
+            props.onColumnMouseLeave(props);
         }
         else if (initialDOMProps.onMouseLeave) {
             initialDOMProps.onMouseLeave();

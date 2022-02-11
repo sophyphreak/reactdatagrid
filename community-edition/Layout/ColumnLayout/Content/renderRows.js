@@ -179,6 +179,7 @@ const renderRows = (
     currentEditCompletePromise,
     enableColumnAutosize,
     columnHoverClassName,
+    computedEnableColumnHover,
   }
 ) => {
   const remoteOffset = computedLivePagination ? 0 : computedSkip || 0;
@@ -380,6 +381,7 @@ const renderRows = (
       currentEditCompletePromise,
       enableColumnAutosize,
       columnHoverClassName,
+      computedEnableColumnHover,
     };
 
     if (rowProps.rowIndex === editRowIndex) {

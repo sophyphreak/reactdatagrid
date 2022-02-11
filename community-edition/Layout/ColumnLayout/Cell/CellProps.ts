@@ -231,6 +231,7 @@ export type CellProps = {
   setActiveIndex?: func;
   renderColumnReorderProxy?: (props: any) => void;
   columnHoverClassName?: string;
+  computedEnableColumnHover?: boolean;
 };
 
 export type EnhancedCellProps = CellProps & {

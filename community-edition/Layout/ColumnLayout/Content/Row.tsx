@@ -1041,6 +1041,7 @@ export default class DataGridRow extends React.Component<RowProps> {
       onColumnMouseLeave,
       columnIndexHovered,
       columnHoverClassName,
+      computedEnableColumnHover,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1129,6 +1130,13 @@ export default class DataGridRow extends React.Component<RowProps> {
 
       const groupExpandCell =
         !groupColumn && groupProps && groupProps.depth == computedVisibleIndex;
+
+      const isColumnHover =
+        column.computedEnableColumnHover != null
+          ? column.computedEnableColumnHover
+          : computedEnableColumnHover
+          ? computedEnableColumnHover
+          : undefined;
 
       let hidden = groupProps
         ? expandGroupTitle && !groupColumn
@@ -1219,6 +1227,7 @@ export default class DataGridRow extends React.Component<RowProps> {
         onColumnMouseLeave,
         columnIndexHovered,
         columnHoverClassName,
+        computedEnableColumnHover: isColumnHover,
       };
 
       if (computedCellSelection && getCellSelectionKey) {

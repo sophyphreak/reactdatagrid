@@ -22,7 +22,10 @@ const useColumnHover = (
       return;
     }
 
-    if (computedProps.enableColumnHover) {
+    if (
+      computedProps.computedEnableColumnHover ||
+      cellProps.computedEnableColumnHover
+    ) {
       const columnIndex = cellProps.columnIndex;
       if (columnIndex != null) {
         setColumnIndexHovered(columnIndex);
@@ -30,13 +33,16 @@ const useColumnHover = (
     }
   };
 
-  const onColumnMouseLeave = () => {
+  const onColumnMouseLeave = (cellProps: CellProps) => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
       return;
     }
 
-    if (computedProps.enableColumnHover) {
+    if (
+      computedProps.computedEnableColumnHover ||
+      cellProps.computedEnableColumnHover
+    ) {
       setColumnIndexHovered(-1);
     }
   };

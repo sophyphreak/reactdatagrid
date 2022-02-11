@@ -336,6 +336,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             showVerticalCellBorders,
             shareSpaceOnResize: props.shareSpaceOnResize || false,
             onNextRender,
+            computedEnableColumnHover: props.enableColumnHover || undefined,
         };
         cProps.i18n = (key, defaultLabel) => {
             return props.i18n[key] || DEFAULT_I18N[key] || defaultLabel;

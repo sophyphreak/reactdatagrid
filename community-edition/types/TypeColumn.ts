@@ -149,6 +149,8 @@ export type TypeComputedColumn = TypeColumn &
     computedHeader?: any;
     prevBorderRight?: boolean;
     nextBorderLeft?: boolean;
+    enableColumnHover?: boolean;
+    computedEnableColumnHover?: boolean;
   };
 export type TypeColumns = TypeColumn[];
 
