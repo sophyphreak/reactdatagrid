@@ -231,6 +231,9 @@ export type RowProps = {
   expandOnMouseDown?: boolean;
   currentEditCompletePromise?: any;
   enableColumnAutosize?: boolean;
+  onColumnMouseEnter?: () => void;
+  onColumnMouseLeave?: () => void;
+  columnIndexHovered?: number;
 };
 
 export type EnhancedRowProps = RowProps & {

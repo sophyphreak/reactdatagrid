@@ -90,10 +90,6 @@ export default class InovuaDataGridList extends Component<ListProps> {
     return this.virtualList.isRowVisible(index);
   };
 
-  onCellMouseEnter = (index: number) => {
-    return;
-  };
-
   computeRows = (
     props,
     {
@@ -128,7 +124,6 @@ export default class InovuaDataGridList extends Component<ListProps> {
         editRowIndex: this.editRowIndex,
         editColumnIndex: this.editColumnIndex,
         editColumnId: this.editColumnId,
-        onCellMouseEnter: this.onCellMouseEnter,
       },
       props
     );

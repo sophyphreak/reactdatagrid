@@ -73,6 +73,7 @@ import { TypeColumns } from './types/TypeColumn';
 import InovuaDataGridLayout from './Layout';
 import { StickyRowsContainerClassName } from './packages/react-virtual-list-pro/src/StickyRowsContainer';
 import { getGlobal } from './getGlobal';
+import useColumnHover from './hooks/useColumnHover';
 
 let GRID_ID = 0;
 export type Props = {
@@ -569,6 +570,8 @@ const GridFactory = (
       const columnsSizing = useColumnsSizing(props, cProps, computedPropsRef);
       Object.assign(cProps, columnsSizing);
     }
+
+    Object.assign(cProps, useColumnHover(props, cProps, computedPropsRef));
 
     cProps.wasMountedRef = useRef(false);
     cProps.wasUnmountedRef = useRef(false);

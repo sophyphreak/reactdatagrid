@@ -46,5 +46,6 @@ export default {
     groupBy: false,
     defaultWidth: 50,
     minWidth: 40,
+    isRowDetailsCell: true,
 };
 export { ROW_EXPAND_COL_ID as rowExpandColumnId };

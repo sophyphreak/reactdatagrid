@@ -59,9 +59,6 @@ export default class InovuaDataGridList extends Component {
     isRowFullyVisible = index => {
         return this.virtualList.isRowVisible(index);
     };
-    onCellMouseEnter = (index) => {
-        return;
-    };
     computeRows = (props, { from, to, rowHeight, renderIndex, empty, setRowSpan, sticky, } = EMPTY_OBJECT) => {
         const { columnRenderCount } = props;
         return renderRows({
@@ -83,7 +80,6 @@ export default class InovuaDataGridList extends Component {
             editRowIndex: this.editRowIndex,
             editColumnIndex: this.editColumnIndex,
             editColumnId: this.editColumnId,
-            onCellMouseEnter: this.onCellMouseEnter,
         }, props);
     };
     tryRowEdit = (nextEditRowIndex, dir, columnIndex, isEnterNavigation) => {

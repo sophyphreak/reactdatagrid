@@ -347,10 +347,11 @@ export default class InovuaDataGridCell extends React.Component {
       computedPivot,
       computedResizable,
       groupColumnVisible,
-      lockable,
       computedFilterable,
       rtl,
       inEdit,
+      columnIndex,
+      columnIndexHovered,
     } = props;
 
     let { userSelect, headerUserSelect } = props;
@@ -435,7 +436,8 @@ export default class InovuaDataGridCell extends React.Component {
         `${baseClassName}--show-border-${rtl ? 'left' : 'right'}`,
       showBorderTop && `${baseClassName}--show-border-top`,
       showBorderBottom && `${baseClassName}--show-border-bottom`,
-      noBackground && `${baseClassName}--no-background`
+      noBackground && `${baseClassName}--no-background`,
+      columnIndex === columnIndexHovered ? `${baseClassName}--over` : ''
     );
 
     if (cellSelected) {
@@ -764,8 +766,8 @@ export default class InovuaDataGridCell extends React.Component {
       onDoubleClick: cellProps.onDoubleClick || initialDOMProps.onDoubleClick,
       onMouseDown: cellProps.onMouseDown || initialDOMProps.onMouseDown,
       onTouchStart: cellProps.onTouchStart || initialDOMProps.onTouchStart,
-      onMouseEnter: cellProps.onMouseEnter || initialDOMProps.onMouseEnter,
-      onMouseLeave: cellProps.onMouseLeave || initialDOMProps.onMouseLeave,
+      onMouseEnter: this.onMouseEnter,
+      onMouseLeave: this.onMouseLeave,
       style: initialDOMProps.style
         ? Object.assign({}, initialDOMProps.style, cellProps.style)
         : cellProps.style,
@@ -792,10 +794,30 @@ export default class InovuaDataGridCell extends React.Component {
   onMouseEnter = (_event: MouseEvent) => {
     const props = this.getProps();
     const initialDOMProps = this.getInitialDOMProps();
-    if (props.onMouseEnter) {
-      props.onMouseEnter(props);
+
+    if (props.groupProps || props.groupSpacerColumn || props.isRowDetailsCell) {
+      return;
+    }
+
+    if (props.onColumnMouseEnter) {
+      props.onColumnMouseEnter(props);
     } else if (initialDOMProps.onMouseEnter) {
       initialDOMProps.onMouseEnter();
+    }
+  };
+
+  onMouseLeave = (_event: MouseEvent) => {
+    const props = this.getProps();
+    const initialDOMProps = this.getInitialDOMProps();
+
+    if (props.groupProps || props.groupSpacerColumn || props.isRowDetailsCell) {
+      return;
+    }
+
+    if (props.onColumnMouseLeave) {
+      props.onColumnMouseLeave();
+    } else if (initialDOMProps.onMouseLeave) {
+      initialDOMProps.onMouseLeave();
     }
   };
 

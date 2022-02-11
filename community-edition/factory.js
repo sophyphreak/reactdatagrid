@@ -38,6 +38,7 @@ import ActiveRowIndicator from './ActiveRowIndicator';
 import { communityFeatureWarn } from './warn';
 import { StickyRowsContainerClassName } from './packages/react-virtual-list-pro/src/StickyRowsContainer';
 import { getGlobal } from './getGlobal';
+import useColumnHover from './hooks/useColumnHover';
 let GRID_ID = 0;
 const globalObject = getGlobal();
 const DEFAULT_I18N = {
@@ -359,6 +360,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             const columnsSizing = useColumnsSizing(props, cProps, computedPropsRef);
             Object.assign(cProps, columnsSizing);
         }
+        Object.assign(cProps, useColumnHover(props, cProps, computedPropsRef));
         cProps.wasMountedRef = useRef(false);
         cProps.wasUnmountedRef = useRef(false);
         const dataInfo = useDataSource(props, cProps, computedPropsRef);

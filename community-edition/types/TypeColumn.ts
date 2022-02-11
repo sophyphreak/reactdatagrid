@@ -104,6 +104,7 @@ export interface IColumn {
   readonly render?: (...args: any[]) => ReactNode;
   readonly renderSummary?: (...args: any[]) => ReactNode;
   readonly groupSummaryReducer?: TypeSummaryReducer;
+  readonly isRowDetailsCell?: boolean;
 }
 
 export interface TypeColWithNameProperty extends IColumn {

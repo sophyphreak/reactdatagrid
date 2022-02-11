@@ -260,6 +260,13 @@
           .InovuaReactDataGrid__row-index-column {
             background: $INOVUA_DATAGRID_ROW_EVEN_HOVER_BG_COLOR;
           }
+
+          .InovuaReactDataGrid__cell {
+            &--over {
+              background: $INOVUA_DATAGRID_ROW_EVEN_AND_COLUMN_HOVER_BG_COLOR;
+              color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+            }
+          }
         }
 
         &:not(.InovuaReactDataGrid__row--scrolling):not(.InovuaReactDataGrid__row--empty).InovuaReactDataGrid__row--selected
@@ -269,6 +276,13 @@
 
           .InovuaReactDataGrid__row-index-column {
             background: $INOVUA_DATAGRID_ROW_EVEN_SELECTED_HOVER_BG_COLOR;
+          }
+
+          .InovuaReactDataGrid__cell {
+            &--over {
+              background: $INOVUA_DATAGRID_ROW_EVEN_AND_COLUMN_HOVER_BG_COLOR;
+              color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+            }
           }
         }
       }
@@ -283,6 +297,13 @@
           .InovuaReactDataGrid__row-index-column {
             background: $INOVUA_DATAGRID_ROW_ODD_HOVER_BG_COLOR;
           }
+
+          .InovuaReactDataGrid__cell {
+            &--over {
+              background: $INOVUA_DATAGRID_ROW_EVEN_AND_COLUMN_HOVER_BG_COLOR;
+              color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+            }
+          }
         }
 
         &:not(.InovuaReactDataGrid__row--scrolling):not(.InovuaReactDataGrid__row--empty).InovuaReactDataGrid__row--selected
@@ -292,6 +313,13 @@
 
           .InovuaReactDataGrid__row-index-column {
             background: $INOVUA_DATAGRID_ROW_ODD_SELECTED_HOVER_BG_COLOR;
+          }
+
+          .InovuaReactDataGrid__cell {
+            &--over {
+              background: $INOVUA_DATAGRID_ROW_EVEN_AND_COLUMN_HOVER_BG_COLOR;
+              color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+            }
           }
         }
       }

@@ -963,14 +963,6 @@ export default class DataGridRow extends React.Component<RowProps> {
     });
   }
 
-  onColumnCellsMouseEnter = (cellProps: any) => {
-    const columnIndex = cellProps.computedVisibleIndex;
-
-    if (this.props.onCellMouseEnter) {
-      this.props.onCellMouseEnter(columnIndex);
-    }
-  };
-
   getPropsForCells(startIndex?: number, endIndex?: number): CellProps[] {
     // if (startIndex !== undefined || endIndex !== undefined) {
     //   console.warn(
@@ -1045,6 +1037,9 @@ export default class DataGridRow extends React.Component<RowProps> {
       renderTreeExpandTool,
       renderTreeLoadingTool,
       enableColumnAutosize,
+      onColumnMouseEnter,
+      onColumnMouseLeave,
+      columnIndexHovered,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1219,7 +1214,9 @@ export default class DataGridRow extends React.Component<RowProps> {
         renderTreeCollapseTool,
         renderTreeExpandTool,
         renderTreeLoadingTool,
-        onMouseEnter: this.onColumnCellsMouseEnter,
+        onColumnMouseEnter,
+        onColumnMouseLeave,
+        columnIndexHovered,
       };
 
       if (computedCellSelection && getCellSelectionKey) {
