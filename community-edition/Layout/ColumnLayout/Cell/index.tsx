@@ -795,7 +795,12 @@ export default class InovuaDataGridCell extends React.Component {
     const props = this.getProps();
     const initialDOMProps = this.getInitialDOMProps();
 
-    if (props.groupProps || props.groupSpacerColumn || props.isRowDetailsCell) {
+    if (
+      props.groupProps ||
+      props.groupSpacerColumn ||
+      props.isRowDetailsCell ||
+      props.isCheckboxColumn
+    ) {
       return;
     }
 
@@ -810,7 +815,12 @@ export default class InovuaDataGridCell extends React.Component {
     const props = this.getProps();
     const initialDOMProps = this.getInitialDOMProps();
 
-    if (props.groupProps || props.groupSpacerColumn || props.isRowDetailsCell) {
+    if (
+      props.groupProps ||
+      props.groupSpacerColumn ||
+      props.isRowDetailsCell ||
+      props.isCheckboxColumn
+    ) {
       return;
     }
 

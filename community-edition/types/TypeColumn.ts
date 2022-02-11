@@ -105,6 +105,7 @@ export interface IColumn {
   readonly renderSummary?: (...args: any[]) => ReactNode;
   readonly groupSummaryReducer?: TypeSummaryReducer;
   readonly isRowDetailsCell?: boolean;
+  readonly isCheckboxColumn?: boolean;
 }
 
 export interface TypeColWithNameProperty extends IColumn {
