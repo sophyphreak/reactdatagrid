@@ -623,6 +623,7 @@ export default class InovuaDataGridHeader extends React.Component<
       onColumnMouseEnter,
       onColumnMouseLeave,
       columnIndexHovered,
+      columnHoverClassName,
     } = props;
 
     let columns = props.columns;
@@ -709,6 +710,7 @@ export default class InovuaDataGridHeader extends React.Component<
         onColumnMouseLeave,
         columnIndex: i,
         columnIndexHovered,
+        columnHoverClassName,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);

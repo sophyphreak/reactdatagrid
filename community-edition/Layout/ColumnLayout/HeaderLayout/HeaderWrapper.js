@@ -78,6 +78,7 @@ export default class HeaderWrapper extends React.Component {
       columnIndexHovered,
       onColumnMouseEnter,
       onColumnMouseLeave,
+      columnHoverClassName,
     } = props;
 
     let scrollbarWidth = 0;
@@ -187,6 +188,7 @@ export default class HeaderWrapper extends React.Component {
           columnIndexHovered={columnIndexHovered}
           onColumnMouseEnter={onColumnMouseEnter}
           onColumnMouseLeave={onColumnMouseLeave}
+          columnHoverClassName={columnHoverClassName}
         />
         <div className="InovuaReactDataGrid__header-wrapper__fill">
           {props.computedFilterable && (
