@@ -55,7 +55,6 @@ $base: 'InovuaReactDataGrid__cell';
 
   .InovuaReactDataGrid__row {
     &--even {
-
       &:not(.InovuaReactDataGrid__row--scrolling):not(.InovuaReactDataGrid__row--empty) {
         .InovuaReactDataGrid__cell {
           &--over {

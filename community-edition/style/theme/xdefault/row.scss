@@ -300,7 +300,7 @@
 
           .InovuaReactDataGrid__cell {
             &--over {
-              background: $INOVUA_DATAGRID_ROW_EVEN_AND_COLUMN_HOVER_BG_COLOR;
+              background: $INOVUA_DATAGRID_ROW_ODD_AND_COLUMN_HOVER_BG_COLOR;
               color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
             }
           }
@@ -317,7 +317,7 @@
 
           .InovuaReactDataGrid__cell {
             &--over {
-              background: $INOVUA_DATAGRID_ROW_EVEN_AND_COLUMN_HOVER_BG_COLOR;
+              background: $INOVUA_DATAGRID_ROW_ODD_AND_COLUMN_HOVER_BG_COLOR;
               color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
             }
           }
