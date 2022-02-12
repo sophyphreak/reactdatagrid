@@ -2220,4 +2220,8 @@ DataGridRow.propTypes = {
   currentEditCompletePromise: PropTypes.any,
   enableColumnAutosize: PropTypes.bool,
   columnHoverClassName: PropTypes.string,
+  computedEnableColumnHover: PropTypes.bool,
+  onColumnMouseEnter: PropTypes.func,
+  onColumnMouseLeave: PropTypes.func,
+  columnIndexHovered: PropTypes.number,
 };

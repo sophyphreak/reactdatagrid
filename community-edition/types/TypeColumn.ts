@@ -13,11 +13,15 @@ import { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 export type TypeSummaryReducer<T = any> = {
   initialValue: T;
   name?: string;
-  complete?: (value: T, data: T[], computedProps?: TypeComputedProps) => T;
-  reducer: (accumulator: T, value: T, data: T | TypeComputedProps) => T;
+  complete?: (
+    accumulator: T,
+    data: any[],
+    computedProps?: TypeComputedProps
+  ) => T;
+  reducer: (accumulator: T, value: any, data: any | TypeComputedProps) => T;
 
   //also allow as reduce instead of reducer
-  reduce?: (accumulator: T, value: T, data: T | TypeComputedProps) => T;
+  reduce?: (accumulator: T, value: any, data: any | TypeComputedProps) => T;
 };
 export interface IColumn {
   name?: string;

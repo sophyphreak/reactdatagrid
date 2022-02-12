@@ -112,6 +112,10 @@ const propTypes = {
     setScrollLeft: PropTypes.func,
     sortedColumnsInfo: PropTypes.any,
     renderMenuTool: PropTypes.func,
+    columnHoverClassName: PropTypes.string,
+    onColumnMouseEnter: PropTypes.func,
+    onColumnMouseLeave: PropTypes.func,
+    columnIndexHovered: PropTypes.number,
 };
 export default class InovuaDataGridHeader extends React.Component {
     static defaultProps = defaultProps;

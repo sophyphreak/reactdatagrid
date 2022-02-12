@@ -131,6 +131,10 @@ const propTypes = {
   setScrollLeft: PropTypes.func,
   sortedColumnsInfo: PropTypes.any,
   renderMenuTool: PropTypes.func,
+  columnHoverClassName: PropTypes.string,
+  onColumnMouseEnter: PropTypes.func,
+  onColumnMouseLeave: PropTypes.func,
+  columnIndexHovered: PropTypes.number,
 };
 
 type TypeHeaderProps = {} | any;
