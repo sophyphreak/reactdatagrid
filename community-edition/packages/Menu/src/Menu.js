@@ -208,7 +208,7 @@ class InovuaMenu extends Component {
     const scrollerArrow =
       props.showScrollArrows === undefined ? 'auto' : !!props.showScrollArrows;
 
-    return (
+    const menu = (
       <div
         tabIndex={0}
         {...cleanProps(props, InovuaMenu.propTypes)}
@@ -231,6 +231,15 @@ class InovuaMenu extends Component {
         )}
       </div>
     );
+
+    if (props.depth === 0 && props.displayInModal) {
+      return (
+        <div className={`${props.rootClassName}--modal`} onClick={this.dismiss}>
+          {menu}
+        </div>
+      );
+    }
+    return menu;
   }
 
   // RENDERING LOGIC
@@ -1643,6 +1652,7 @@ InovuaMenu.defaultProps = {
   hideSubMenuDelay: 150,
   expanderSize: 10,
   scrollOnMouseEnter: true,
+  displayInModal: false,
 
   // events
   onClick: () => {},

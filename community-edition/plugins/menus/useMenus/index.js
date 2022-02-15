@@ -60,10 +60,16 @@ export default (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        if (computedProps.preventBlur) {
+            computedProps.preventBlur.current = false;
+        }
         if (computedProps.columnContextMenuProps) {
             const columnContextMenuOnHide = columnContextMenuInfoRef.current.menuOnHide;
             if (typeof columnContextMenuOnHide == 'function') {
                 columnContextMenuOnHide();
+            }
+            if (computedProps.computedFocused) {
+                computedProps.forceBlur();
             }
             computedProps.setColumnContextMenuProps(null);
         }
@@ -76,6 +82,9 @@ export default (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        if (computedProps.preventBlur) {
+            computedProps.preventBlur.current = false;
+        }
         if (computedProps.preventBlurOnContextMenuOpen &&
             computedProps.preventBlurOnContextMenuOpen.current) {
             computedProps.preventBlurOnContextMenuOpen.current = false;
@@ -85,6 +94,9 @@ export default (props, computedProps, computedPropsRef) => {
             if (typeof rowContextMenuOnHide == 'function') {
                 rowContextMenuOnHide();
             }
+            if (computedProps.computedFocused) {
+                computedProps.forceBlur();
+            }
             computedProps.setRowContextMenuProps(null);
         }
     }, []);
@@ -92,6 +104,9 @@ export default (props, computedProps, computedPropsRef) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
+        }
+        if (computedProps.preventBlur) {
+            computedProps.preventBlur.current = true;
         }
         if (computedProps.columnContextMenuProps) {
             computedProps.hideColumnContextMenu();
@@ -139,6 +154,9 @@ export default (props, computedProps, computedPropsRef) => {
         }
         if (!initialProps.renderRowContextMenu) {
             return;
+        }
+        if (computedProps.preventBlur) {
+            computedProps.preventBlur.current = true;
         }
         if (computedProps.preventBlurOnContextMenuOpen) {
             computedProps.preventBlurOnContextMenuOpen.current = true;

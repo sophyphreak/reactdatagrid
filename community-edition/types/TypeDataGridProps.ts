@@ -1329,6 +1329,22 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   isInEdit?: any;
   availableWidth?: number;
   computedEnableColumnHover?: boolean;
+  preventBlurOnContextMenuOpen?: MutableRefObject<boolean>;
+  copySelectedCellsToClipboard?: () => void;
+  copyActiveRowToClipboard?: () => void;
+  pasteSelectedCellsFromClipboard?: () => void;
+  pasteActiveRowFromClipboard?: () => void;
+  tryStartEdit?: ({
+    rowIndex,
+    columnId,
+    dir,
+  }: {
+    rowIndex: number;
+    columnId: number | string;
+    dir: number;
+  }) => void;
+  forceBlur: (event?: FocusEvent) => void;
+  preventBlur?: MutableRefObject<boolean>;
 };
 
 export default TypeDataGridProps;

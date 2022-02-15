@@ -44,7 +44,11 @@ export default (
   rowProps: any;
   computedActiveItem: any;
   isGroup: (item: any) => boolean;
+  forceBlur: (event?: FocusEvent) => void;
+  preventBlur: MutableRefObject<boolean>;
 } => {
+  const preventBlur: MutableRefObject<boolean> = useRef(false);
+
   const computedOnKeyDown = (event: KeyboardEvent) => {
     if (props.onKeyDown) {
       props.onKeyDown(event);
@@ -56,7 +60,10 @@ export default (
       return;
     }
 
-    if (event.nativeEvent && event.nativeEvent.__handled_in_details) {
+    if (
+      (event as any).nativeEvent &&
+      (event as any).nativeEvent.__handled_in_details
+    ) {
       return;
     }
 
@@ -167,11 +174,13 @@ export default (
     if (editKeyPressed) {
       handled = true;
       if (computedProps.visibleColumns && computedProps.visibleColumns.length) {
-        computedProps.tryStartEdit({
-          rowIndex: activeItem ? activeIndex : 0,
-          columnId: computedProps.visibleColumns[0].id,
-          dir: 1,
-        });
+        if (computedProps.tryStartEdit) {
+          computedProps.tryStartEdit({
+            rowIndex: activeItem ? activeIndex : 0,
+            columnId: computedProps.visibleColumns[0].id,
+            dir: 1,
+          });
+        }
       }
     }
 
@@ -198,8 +207,8 @@ export default (
 
     if (handled) {
       event.preventDefault();
-      if (event.nativeEvent) {
-        event.nativeEvent.__handled_in_details = true;
+      if ((event as any).nativeEvent) {
+        (event as any).nativeEvent.__handled_in_details = true;
       }
     }
 
@@ -226,7 +235,22 @@ export default (
     }
   };
 
-  const onFullBlur = useCallback((event: FocusEvent) => {}, []);
+  const onFullBlur = useCallback((_event: FocusEvent) => {}, []);
+
+  const forceBlur = useCallback((event: FocusEvent) => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    if (computedProps.computedFocused) {
+      computedProps.computedSetFocused(false);
+    }
+
+    if (props.onBlur) {
+      props.onBlur(event);
+    }
+  }, []);
 
   const isGroup = useCallback((item: any): boolean => {
     return !!item && !!item.__group;
@@ -244,12 +268,12 @@ export default (
       props.onFocus(event);
     }
 
-    if (event.nativeEvent.preventParentFocus) {
+    if ((event as any).nativeEvent.preventParentFocus) {
       onFullBlur(event);
       return;
     }
 
-    event.nativeEvent.preventParentFocus = true;
+    (event as any).nativeEvent.preventParentFocus = true;
 
     if (computedProps.computedWillReceiveFocusRef.current) {
       // component will receive focus in the computedOnRowClick,
@@ -267,7 +291,6 @@ export default (
 
   const computedOnBlur = useCallback((event: FocusEvent) => {
     const { current: computedProps } = computedPropsRef;
-
     if (!computedProps) {
       return;
     }
@@ -282,6 +305,10 @@ export default (
       computedProps.preventBlurOnContextMenuOpen &&
       computedProps.preventBlurOnContextMenuOpen.current
     ) {
+      return;
+    }
+
+    if (computedProps.preventBlur && computedProps.preventBlur.current) {
       return;
     }
 
@@ -333,7 +360,7 @@ export default (
     computedProps: TypeComputedProps,
     queue: TypeBatchUpdateQueue
   ) => {
-    if (event.nativeEvent.skipSelect) {
+    if ((event as any).nativeEvent.skipSelect) {
       if (computedProps.enableKeyboardNavigation) {
         queue(() => {
           computedProps.setActiveIndex(rowProps.rowIndex);
@@ -620,6 +647,8 @@ export default (
     computedOnKeyDown,
     computedOnFocus,
     computedOnBlur,
+    forceBlur,
+    preventBlur,
     computedOnRowClick,
     computedOnCellMouseDown,
     isGroup,

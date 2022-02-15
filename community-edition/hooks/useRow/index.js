@@ -10,6 +10,7 @@ import { handleSelection } from './handleSelection';
 import handleRowNavigation from './handleRowNavigation';
 import handleCellNavigation from './handleCellNavigation';
 export default (props, computedProps, computedPropsRef) => {
+    const preventBlur = useRef(false);
     const computedOnKeyDown = (event) => {
         if (props.onKeyDown) {
             props.onKeyDown(event);
@@ -18,7 +19,8 @@ export default (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
-        if (event.nativeEvent && event.nativeEvent.__handled_in_details) {
+        if (event.nativeEvent &&
+            event.nativeEvent.__handled_in_details) {
             return;
         }
         const sameElement = event.target === computedProps.getScrollingElement();
@@ -112,11 +114,13 @@ export default (props, computedProps, computedPropsRef) => {
         if (editKeyPressed) {
             handled = true;
             if (computedProps.visibleColumns && computedProps.visibleColumns.length) {
-                computedProps.tryStartEdit({
-                    rowIndex: activeItem ? activeIndex : 0,
-                    columnId: computedProps.visibleColumns[0].id,
-                    dir: 1,
-                });
+                if (computedProps.tryStartEdit) {
+                    computedProps.tryStartEdit({
+                        rowIndex: activeItem ? activeIndex : 0,
+                        columnId: computedProps.visibleColumns[0].id,
+                        dir: 1,
+                    });
+                }
             }
         }
         if (activeItem && event.key === 'Enter') {
@@ -168,7 +172,19 @@ export default (props, computedProps, computedPropsRef) => {
             }
         }
     };
-    const onFullBlur = useCallback((event) => { }, []);
+    const onFullBlur = useCallback((_event) => { }, []);
+    const forceBlur = useCallback((event) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        if (computedProps.computedFocused) {
+            computedProps.computedSetFocused(false);
+        }
+        if (props.onBlur) {
+            props.onBlur(event);
+        }
+    }, []);
     const isGroup = useCallback((item) => {
         return !!item && !!item.__group;
     }, []);
@@ -209,6 +225,9 @@ export default (props, computedProps, computedPropsRef) => {
         event.preventDefault();
         if (computedProps.preventBlurOnContextMenuOpen &&
             computedProps.preventBlurOnContextMenuOpen.current) {
+            return;
+        }
+        if (computedProps.preventBlur && computedProps.preventBlur.current) {
             return;
         }
         if (props.onBlur) {
@@ -435,6 +454,8 @@ export default (props, computedProps, computedPropsRef) => {
         computedOnKeyDown,
         computedOnFocus,
         computedOnBlur,
+        forceBlur,
+        preventBlur,
         computedOnRowClick,
         computedOnCellMouseDown,
         isGroup,

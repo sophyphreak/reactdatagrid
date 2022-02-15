@@ -109,6 +109,10 @@ export default (
       return;
     }
 
+    if (computedProps.preventBlur) {
+      computedProps.preventBlur.current = false;
+    }
+
     if (computedProps.columnContextMenuProps) {
       const columnContextMenuOnHide =
         columnContextMenuInfoRef.current.menuOnHide;
@@ -116,6 +120,9 @@ export default (
         columnContextMenuOnHide();
       }
 
+      if (computedProps.computedFocused) {
+        computedProps.forceBlur();
+      }
       computedProps.setColumnContextMenuProps(null);
     }
   }, []);
@@ -128,6 +135,10 @@ export default (
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
       return;
+    }
+
+    if (computedProps.preventBlur) {
+      computedProps.preventBlur.current = false;
     }
 
     if (
@@ -143,6 +154,9 @@ export default (
         rowContextMenuOnHide();
       }
 
+      if (computedProps.computedFocused) {
+        computedProps.forceBlur();
+      }
       computedProps.setRowContextMenuProps(null);
     }
   }, []);
@@ -158,6 +172,11 @@ export default (
       if (!computedProps) {
         return;
       }
+
+      if (computedProps.preventBlur) {
+        computedProps.preventBlur.current = true;
+      }
+
       if (computedProps.columnContextMenuProps) {
         computedProps.hideColumnContextMenu();
         return;
@@ -217,6 +236,10 @@ export default (
 
       if (!initialProps.renderRowContextMenu) {
         return;
+      }
+
+      if (computedProps.preventBlur) {
+        computedProps.preventBlur.current = true;
       }
 
       if (computedProps.preventBlurOnContextMenuOpen) {
