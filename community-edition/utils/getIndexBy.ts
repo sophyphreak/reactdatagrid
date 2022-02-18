@@ -5,11 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export default (data: any[], by: string, id: number | string) => {
+const getIndexBy = (
+  data: any[],
+  by: string,
+  id: number | string,
+  getItemId: (item: any) => void,
+  compoundIdProperty?: boolean
+) => {
   let index = -1;
 
   for (let i = 0, len = data.length; i < len; i++) {
-    if (data[i][by] === id) {
+    const item = data[i];
+    const itemId = compoundIdProperty ? getItemId(item) : item[by];
+
+    if (itemId === id) {
       // we found our id
       index = i;
       break;
@@ -18,3 +27,5 @@ export default (data: any[], by: string, id: number | string) => {
 
   return index;
 };
+
+export default getIndexBy;
