@@ -12,6 +12,10 @@ import {
   TypeDataGridProps,
 } from '../types';
 import getScrollbarWidth from '../packages/getScrollbarWidth';
+import { id as checkboxColumnId } from '../normalizeColumns/defaultCheckColumnId';
+import { id as rowReorderColumnId } from '../normalizeColumns/defaultRowReorderColumnId';
+import { id as rowIndexColumnId } from '../normalizeColumns/defaultRowIndexColumnId';
+import { id as rowExapandColumnId } from '../normalizeColumns/defaultRowExpandColumnId';
 
 const EMPTY_OBJECT = {};
 
@@ -27,6 +31,19 @@ const getColumnsWidths = (columns: TypeComputedColumn[]) => {
   return columns.reduce((width: number, column: any) => {
     return width + column.computedWidth;
   }, 0);
+};
+
+const checkForSpecialColumns = (id: string) => {
+  const specialColumns = [
+    checkboxColumnId,
+    rowReorderColumnId,
+    rowIndexColumnId,
+    rowExapandColumnId,
+  ];
+  if (specialColumns.indexOf(id) === -1) {
+    return false;
+  }
+  return true;
 };
 
 const useColumnsSizing = (
@@ -161,7 +178,11 @@ const useColumnsSizing = (
     }
 
     columns.forEach((column: TypeComputedColumn) => {
-      callback(column);
+      if (column.resizable === false || checkForSpecialColumns(column.id)) {
+        // do nothing
+      } else {
+        callback(column);
+      }
     });
   };
 
@@ -173,8 +194,7 @@ const useColumnsSizing = (
 
     let result;
 
-    const idProperty = computedProps.idProperty;
-    const columnId = column[idProperty];
+    const columnId = column.id;
 
     const cells = row.getCells();
     if (!cells.length) {
@@ -183,7 +203,7 @@ const useColumnsSizing = (
 
     cells.forEach((cell: any) => {
       const cellProps = cell.props;
-      const cellId = cellProps[idProperty];
+      const cellId = cellProps.id;
 
       if (columnId === cellId) {
         result = cell.domRef.current;

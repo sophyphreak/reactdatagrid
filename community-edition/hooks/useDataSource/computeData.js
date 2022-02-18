@@ -122,6 +122,9 @@ const computeData = (config, computedProps, batchUpdateQueue) => {
                 dataSourceCache: computedProps.computedDataSourceCache,
                 generateIdFromPath: computedProps.generateIdFromPath,
                 collapsingNodes: computedProps.collapsingNodesRef.current,
+                idProperty: !computedProps.compoundIdProperty
+                    ? computedProps.idProperty
+                    : 'id',
             });
         }
         return config;

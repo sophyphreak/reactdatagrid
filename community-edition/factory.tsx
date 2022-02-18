@@ -607,7 +607,24 @@ const GridFactory = (
       if (item.__group && Array.isArray(item.keyPath)) {
         return item.keyPath.join(props.groupPathSeparator);
       }
+      const itemId = computeIdProperty()
+        ? compoundItemId(item)
+        : simpleItemId(item);
+
+      return itemId;
+    }, []);
+
+    const simpleItemId = useCallback((item: any) => {
       return item[props.idProperty];
+    }, []);
+
+    const compoundItemId = useCallback((item: any) => {
+      const parts = props.idProperty.split(props.idPropertySeparator);
+      return parts.reduce((itemObj, id) => {
+        if (itemObj) {
+          return itemObj[id] ? itemObj[id] : itemObj;
+        }
+      }, item);
     }, []);
 
     const getItemIndexBy = (fn: (...args: any[]) => boolean): number => {
@@ -633,7 +650,12 @@ const GridFactory = (
       if (!computedPropsRef.current) {
         return undefined;
       }
-      return getItemWithCache(computedPropsRef.current.data[index]);
+      const item = computedPropsRef.current.data[index];
+      if (!item) {
+        return;
+      }
+
+      return getItemWithCache(item);
     };
     const getItemWithCache = (item: any) => {
       if (
@@ -652,6 +674,28 @@ const GridFactory = (
 
       return item;
     };
+
+    const getItemIndex = (item: any): number => {
+      const { current: computedProps } = computedPropsRef;
+      if (!computedProps) {
+        return -1;
+      }
+
+      const data = computedProps.data;
+      const itemId = getItemId(item);
+
+      for (let i = 0; i < data.length; i++) {
+        const dataItem = data[i];
+        const dataItemId = getItemId(dataItem);
+
+        if (dataItemId === itemId) {
+          return i;
+        }
+      }
+
+      return -1;
+    };
+
     const getItemIdAt = (index: number) => {
       return getItemId(getItemAt(index));
     };
@@ -1116,6 +1160,14 @@ const GridFactory = (
       scrollContainer.blur();
     };
 
+    const computeIdProperty = useCallback(() => {
+      const idProperty = props.idProperty;
+      if (idProperty.includes(props.idPropertySeparator)) {
+        return true;
+      }
+      return false;
+    }, []);
+
     const computedProps: TypeComputedProps = {
       ...cProps,
       gridId: useMemo(() => ++GRID_ID, []),
@@ -1154,6 +1206,7 @@ const GridFactory = (
       getItemId,
       getRowId: getItemIdAt,
       getItemIndexBy,
+      getItemIndex,
 
       getItemAt,
       getItemIdAt,
@@ -1168,6 +1221,7 @@ const GridFactory = (
       totalComputedWidth: columnInfo.totalComputedWidth,
       minRowWidth: columnInfo.totalComputedWidth,
       columnResizeHandleWidth: clamp(props.columnResizeHandleWidth, 2, 25),
+      compoundIdProperty: computeIdProperty(),
     };
 
     computedProps.rtlOffset = props.rtl
@@ -1666,6 +1720,7 @@ const GridFactory = (
     defaultCollapsedGroups: {},
     groupPathSeparator: '/',
     nodePathSeparator: '/',
+    idPropertySeparator: '.',
     groupNestingSize: 22,
     treeNestingSize: 22,
     columnMinWidth: 40,

@@ -707,6 +707,7 @@ type TypeDataGridPropsNoI18n = {
   enableColumnHover?: boolean;
   viewportSize?: TypeSize;
   columnHoverClassName?: string;
+  idPropertySeparator: string;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
@@ -770,6 +771,7 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   getItemId: (item: object) => any;
   getItemAt: (index: number) => any;
   getItemIdAt: (index: number) => any;
+  getItemIndex: (id: string | number) => number;
   i18n: (key: string, defaultValue?: string) => string | ReactNode;
   rowHeightManager: any;
   computedSortInfo: TypeSortInfo;
@@ -1270,7 +1272,12 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   setItemAt: (
     index: number,
     item: any,
-    config?: { replace?: boolean; property?: string; value?: any }
+    config?: {
+      replace?: boolean;
+      property?: string;
+      value?: any;
+      deepCloning?: boolean;
+    }
   ) => void;
   setItemsAt: (items: any, config?: { replace?: boolean }) => void;
   activeRowRef: MutableRefObject<{ instance: any; node: HTMLElement } | null>;
@@ -1329,6 +1336,7 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
   isInEdit?: any;
   availableWidth?: number;
   computedEnableColumnHover?: boolean;
+  compoundIdProperty?: boolean;
 };
 
 export default TypeDataGridProps;

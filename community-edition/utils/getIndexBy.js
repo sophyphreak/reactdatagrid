@@ -4,10 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-export default (data, by, id) => {
+const getIndexBy = (data, by, id, getItemId, compoundIdProperty) => {
     let index = -1;
     for (let i = 0, len = data.length; i < len; i++) {
-        if (data[i][by] === id) {
+        const item = data[i];
+        const itemId = compoundIdProperty ? getItemId(item) : item[by];
+        if (itemId === id) {
             // we found our id
             index = i;
             break;
@@ -15,3 +17,4 @@ export default (data, by, id) => {
     }
     return index;
 };
+export default getIndexBy;
