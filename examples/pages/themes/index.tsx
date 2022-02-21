@@ -19,12 +19,12 @@ import CheckBox from '../../../community-edition/packages/CheckBox';
 import Calendar, {
   TransitionView,
 } from '../../../community-edition/packages/Calendar';
-import '../../../community-edition/packages/Calendar/style/index.scss';
+// import '../../../community-edition/packages/Calendar/style/index.scss';
 import Button from '../../../community-edition/packages/Button';
 import ComboBox from '../../../community-edition/packages/ComboBox';
 
 import moment from 'moment';
-import './index.scss';
+// import './index.scss';
 
 const DATASET_URL: string = 'https://demos.reactdatagrid.io/api/v1';
 

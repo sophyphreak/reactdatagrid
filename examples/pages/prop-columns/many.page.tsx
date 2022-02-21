@@ -5,10 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Button from '@inovua/reactdatagrid-community/packages/Button';
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 import React from 'react';
 
 import DataGrid from '../../../enterprise-edition';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+
+const globalObject = getGlobal();
 
 import people from '../people';
 
@@ -54,22 +58,34 @@ class App extends React.Component<any, any> {
     });
 
     this.state = {
-      rtl: true,
+      rtl: false,
       columns,
-      dataSource: times(
-        [
-          [...new Array(COLS)].reduce(
-            (acc, _, i) => {
-              acc[`id-${i}`] = i;
-              return acc;
-            },
-            { id: 0 }
-          ),
-        ],
-        10
-      ),
+
+      dataSource: [],
     };
   }
+
+  componentDidMount(): void {
+    this.loadDataSource(10);
+  }
+
+  loadDataSource = n => {
+    const COLS = 20;
+    const data = times(
+      [
+        [...new Array(COLS)].reduce(
+          (acc, _, i) => {
+            acc[`id-${i}`] = i;
+            return acc;
+          },
+          { id: 0 }
+        ),
+      ],
+      n
+    );
+
+    this.setState({ dataSource: data });
+  };
 
   render() {
     if (!process.browser) {
@@ -85,11 +101,29 @@ class App extends React.Component<any, any> {
             RTL
           </CheckBox>
         </div>
+        <div style={{ marginBottom: 20 }}>
+          <Button
+            onClick={() => {
+              this.loadDataSource(1);
+            }}
+          >
+            Set 1 row
+          </Button>
+        </div>
+        <div style={{ marginBottom: 20 }}>
+          <Button
+            onClick={() => {
+              this.loadDataSource(100);
+            }}
+          >
+            Set 100 rows
+          </Button>
+        </div>
         <DataGrid
           idProperty="id"
           style={gridStyle}
           handle={x => {
-            global.x = x;
+            (globalObject as any).x = x;
           }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}

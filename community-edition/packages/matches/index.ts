@@ -7,7 +7,10 @@
 
 'use strict';
 
-var proto = global.Element ? global.Element.prototype : {};
+import { getGlobal } from '../../getGlobal';
+const globalObject = getGlobal();
+
+var proto = globalObject.Element ? globalObject.Element.prototype : {};
 
 var nativeMatches =
   proto.matches ||
@@ -16,4 +19,4 @@ var nativeMatches =
   proto.oMatchesSelector ||
   proto.webkitMatchesSelector;
 
-module.exports = nativeMatches;
+export default nativeMatches;

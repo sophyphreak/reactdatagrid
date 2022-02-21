@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import Region from '../region';
 /**
  *
@@ -16,12 +15,10 @@ import Region from '../region';
  *
  * @return this
  */
-Region.prototype.alignToRegion = function(region, alignPositions) {
-  Region.align(this, region, alignPositions);
-
-  return this;
+Region.prototype.alignToRegion = function (region, alignPositions) {
+    Region.align(this, region, alignPositions);
+    return this;
 };
-
 /**
  * Aligns this region to the given point, in the anchor position
  * @param {Object} point eg: {x: 20, y: 600}
@@ -34,8 +31,7 @@ Region.prototype.alignToRegion = function(region, alignPositions) {
  *
  * @return this
  */
-Region.prototype.alignToPoint = function(point, anchor) {
-  Region.alignToPoint(this, point, anchor);
-
-  return this;
+Region.prototype.alignToPoint = function (point, anchor) {
+    Region.alignToPoint(this, point, anchor);
+    return this;
 };

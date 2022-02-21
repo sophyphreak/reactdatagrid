@@ -7,8 +7,5 @@
 function myFunction() {
     /* this is a simple comment */
 }
-// module.exports =
-//   myFunction.toString() !=
-//   'function myFunction(abc) { /* this is a simple comment */ }';
 export default myFunction.toString() !=
     'function myFunction(abc) { /* this is a simple comment */ }';

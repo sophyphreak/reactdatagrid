@@ -221,7 +221,9 @@ const remoteColumns = [
       }
 
       return [
-        <div style={phoneStyle}>{phoneIcon}</div>,
+        <div style={phoneStyle} key="phone-icon">
+          {phoneIcon}
+        </div>,
         <span key="whitespace" style={{ marginLeft: 22 }}></span>,
         value,
       ];
@@ -337,6 +339,8 @@ const remoteDataSource = ({ skip, sortInfo, limit }) => {
 const App = () => {
   const [pagination, setPagination] = useState(true);
 
+  const [remoteGrid, setRemoteGrid] = useState(true);
+
   const [localSelected, setLocalSelected] = useState(null);
   const [remoteSelected, setRemoteSelected] = useState(null);
   const [localGridRef, setLocalGridRef] = useState(null);
@@ -367,46 +371,55 @@ const App = () => {
           Pagination
         </CheckBox>
       </div>
-      <h3>Local Data</h3>
-      <ReactDataGrid
-        key={`grid-local-${pagination}`}
-        idProperty="id"
-        theme="default-dark"
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        handle={setLocalGridRef}
-        enableSelection
-        multiSelect
-        pagination={pagination}
-        checkboxColumn
-        onSelectionChange={onLocalSelectionChange}
-        style={localGridStyle}
-        columns={localColumns}
-        dataSource={people}
-      />
-      <p>
-        Local selected rows:{' '}
-        {localSelected == null ? 'none' : JSON.stringify(localSelected)}.
-      </p>
-      <h3>Remote Data</h3>
-      <ReactDataGrid
-        key={`grid-remote-${pagination}`}
-        idProperty="id"
-        theme="default-dark"
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-        handle={setRemoteGridRef}
-        enableSelection
-        multiSelect
-        pagination={pagination}
-        checkboxColumn
-        onSelectionChange={onRemoteSelectionChange}
-        style={remoteGridStyle}
-        columns={remoteColumns}
-        dataSource={remoteDataSource}
-      />
-      <p>
-        Remote selected rows:{' '}
-        {remoteSelected == null ? 'none' : JSON.stringify(remoteSelected)}
-      </p>
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox checked={remoteGrid} onChange={setRemoteGrid}>
+          Remote Grid
+        </CheckBox>
+      </div>
+      {!remoteGrid && [
+        <h3 key="local-title">Local Data</h3>,
+        <ReactDataGrid
+          key={`grid-local-${pagination}`}
+          idProperty="id"
+          theme="default-dark"
+          licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
+          handle={setLocalGridRef}
+          enableSelection
+          multiSelect
+          pagination={pagination}
+          checkboxColumn
+          onSelectionChange={onLocalSelectionChange}
+          style={localGridStyle}
+          columns={localColumns}
+          dataSource={people}
+        />,
+        <p key="local-text">
+          Local selected rows:{' '}
+          {localSelected == null ? 'none' : JSON.stringify(localSelected)}.
+        </p>,
+      ]}
+      {remoteGrid && [
+        <h3 key="title">Remote Data</h3>,
+        <ReactDataGrid
+          key={`grid-remote-${pagination}`}
+          idProperty="id"
+          theme="default-dark"
+          licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
+          handle={setRemoteGridRef}
+          enableSelection
+          multiSelect
+          pagination={pagination}
+          checkboxColumn
+          onSelectionChange={onRemoteSelectionChange}
+          style={remoteGridStyle}
+          columns={remoteColumns}
+          dataSource={remoteDataSource}
+        />,
+        <p key="text">
+          Remote selected rows:{' '}
+          {remoteSelected == null ? 'none' : JSON.stringify(remoteSelected)}
+        </p>,
+      ]}
     </div>
   );
 };

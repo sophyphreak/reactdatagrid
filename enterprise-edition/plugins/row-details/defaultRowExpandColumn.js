@@ -18,7 +18,7 @@ export default {
     cellSelectable: false,
     headerAlign: 'center',
     textAlign: 'center',
-    render: ({ isRowExpandable, rowExpanded, toggleRowExpand }) => {
+    render: ({ isRowExpandable, rowExpanded, toggleRowExpand, }) => {
         if (!isRowExpandable || !isRowExpandable()) {
             return;
         }
@@ -29,7 +29,8 @@ export default {
         };
         return React.cloneElement(rowExpanded ? ICON_EXPANDED : ICON_COLLAPSED, {
             style,
-            onClick: event => {
+            key: 'toggle_icon',
+            onClick: (event) => {
                 event.stopPropagation();
                 toggleRowExpand();
             },
@@ -45,5 +46,6 @@ export default {
     groupBy: false,
     defaultWidth: 50,
     minWidth: 40,
+    isRowDetailsCell: true,
 };
 export { ROW_EXPAND_COL_ID as rowExpandColumnId };

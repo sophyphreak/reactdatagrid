@@ -42,12 +42,47 @@ $base: 'InovuaReactDataGrid__cell';
         background: $INOVUA_DATAGRID_LOCKED_ROW_BORDER_COLOR;
       }
     }
+
   }
 
   .InovuaReactDataGrid__virtual-list-sticky-rows-container {
     .InovuaReactDataGrid__row-cell-wrap {
       .InovuaReactDataGrid__cell.InovuaReactDataGrid__cell--show-border-top {
         border-top: 1px solid transparent;
+      }
+    }
+  }
+
+  .InovuaReactDataGrid__row {
+    &--even {
+      &:not(.InovuaReactDataGrid__row--scrolling):not(.InovuaReactDataGrid__row--empty) {
+        .InovuaReactDataGrid__cell {
+          &--over {
+            background: $INOVUA_DATAGRID_ROW_EVEN_HOVER_BG_COLOR;
+            color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+          }
+        }
+      }
+    }
+
+    &--no-zebra,
+    &--odd {
+      &:not(.InovuaReactDataGrid__row--scrolling):not(.InovuaReactDataGrid__row--empty) {
+        .InovuaReactDataGrid__cell {
+          &--over {
+            background: $INOVUA_DATAGRID_ROW_ODD_HOVER_BG_COLOR;
+            color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+          }
+        }
+      }
+    }
+  }
+
+  .InovuaReactDataGrid__header {
+    .InovuaReactDataGrid__column-header {
+      &--over {
+        background: $INOVUA_DATAGRID_ROW_EVEN_HOVER_BG_COLOR;
+        color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
       }
     }
   }

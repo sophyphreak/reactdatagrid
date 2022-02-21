@@ -14,14 +14,16 @@ const renderRowDetails = ({ data }) => {
     <div style={{ padding: 20 }}>
       <h3>Row details:</h3>
       <table>
-        {Object.keys(data).map(name => {
-          return (
-            <tr key={name}>
-              <td>{name}</td>
-              <td>{data[name]}</td>
-            </tr>
-          );
-        })}
+        <tbody>
+          {Object.keys(data).map(name => {
+            return (
+              <tr key={name}>
+                <td>{name}</td>
+                <td>{data[name]}</td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
     </div>
   );

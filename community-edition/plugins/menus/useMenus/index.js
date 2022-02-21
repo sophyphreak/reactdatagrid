@@ -7,8 +7,10 @@
 import { useState, useRef, useCallback, } from 'react';
 import { IS_IE } from '../../../detect-ua';
 import Region from '../../../packages/region';
+import { getGlobal } from '../../../getGlobal';
 export { default as renderColumnContextMenu } from './renderColumnContextMenu';
 export { default as renderRowContextMenu } from './renderRowContextMenu';
+const globalObject = getGlobal();
 export default (props, computedProps, computedPropsRef) => {
     const [columnContextMenuProps, setColumnContextMenuProps] = useState(null);
     const [rowContextMenuProps, setRowContextMenuProps] = useState(null);
@@ -147,8 +149,8 @@ export default (props, computedProps, computedPropsRef) => {
             : undefined;
         const alignTo = Region.from(event);
         alignTo.shift({
-            top: -global.scrollY,
-            left: -global.scrollX,
+            top: -globalObject.scrollY,
+            left: -globalObject.scrollX,
         });
         showRowContextMenu(alignTo, rowProps, cellProps, () => { });
     }, []);

@@ -10,6 +10,10 @@ import { render } from 'react-dom';
 import ScrollContainer from '../src';
 import '../style/index.scss';
 
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
+
 const App = () => {
   const [rtl, setRtl] = useState(true);
   return (
@@ -26,7 +30,7 @@ const App = () => {
         rtl={rtl}
         key={`${rtl}`}
         ref={g => {
-          global.g = g;
+          globalObject.g = g;
         }}
         onContainerScrollHorizontalMax={scrollLeft => {
           console.warn('max', scrollLeft);

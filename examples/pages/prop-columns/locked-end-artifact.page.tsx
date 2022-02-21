@@ -3,6 +3,9 @@ import React from 'react';
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 
 import people from '../people';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+
+const globalObject = getGlobal();
 
 const gridStyle = { minHeight: 550, maxWidth: 1000 };
 
@@ -38,7 +41,7 @@ const App = () => {
       <ReactDataGrid
         idProperty="id"
         onReady={api => {
-          (global as any).api = api;
+          (globalObject as any).api = api;
         }}
         reorderColumns={false}
         style={gridStyle}

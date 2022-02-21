@@ -8,6 +8,8 @@ import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import shouldComponentUpdate from '../../../packages/shouldComponentUpdate';
 import sealedObjectFactory from './sealedObjectFactory';
+import { getGlobal } from '../../../getGlobal';
+const globalObject = getGlobal();
 const sharedRowProps = sealedObjectFactory({
     index: null,
     count: null,
@@ -21,8 +23,8 @@ const STR_HIDDEN = 'hidden';
 const STR_ABSOLUTE = 'absolute';
 const STR_ZERO_PX = '0px';
 const STR_VISIBLE = 'visible';
-const raf = global.requestAnimationFrame;
-const caf = global.cancelAnimationFrame;
+const raf = globalObject.requestAnimationFrame;
+const caf = globalObject.cancelAnimationFrame;
 export default class InovuaVirtualListRow extends React.Component {
     mounted = true;
     _appliedIndex;

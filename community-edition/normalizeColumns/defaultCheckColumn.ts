@@ -28,6 +28,7 @@ export default {
   checkboxTabIndex: null,
   defaultWidth: 40,
   minWidth: 40,
+  isCheckboxColumn: true,
 };
 
 export { CHECK_COL_ID as checkboxColumnId };

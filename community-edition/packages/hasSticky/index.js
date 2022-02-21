@@ -4,8 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const div = global.document && global.document.createElement
-    ? global.document.createElement('div')
+import { getGlobal } from '../../getGlobal';
+const globalObject = getGlobal();
+const div = globalObject.document && globalObject.document.createElement
+    ? globalObject.document.createElement('div')
     : null;
 let HAS_STICKY = false;
 let sticky;

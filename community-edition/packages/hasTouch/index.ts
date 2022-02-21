@@ -5,7 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = !!(
-  'ontouchstart' in global ||
-  (global.DocumentTouch && document instanceof DocumentTouch)
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
+
+export default !!(
+  'ontouchstart' in globalObject ||
+  ((globalObject as any).DocumentTouch &&
+    (document as any) instanceof DocumentTouch)
 );

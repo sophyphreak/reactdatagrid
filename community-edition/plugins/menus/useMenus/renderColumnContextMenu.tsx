@@ -190,6 +190,10 @@ export default (
       ? cellProps.showColumnMenuSortOptions
       : computedProps.initialProps.showColumnMenuSortOptions;
 
+  const enableColumnAutosize = computedProps.enableColumnAutosize
+    ? computedProps.enableColumnAutosize
+    : computedProps.initialProps.enableColumnAutosize;
+
   let columnsItem: any = {
     label: computedProps.i18n('columns'),
     itemId: 'columns',
@@ -356,6 +360,66 @@ export default (
             computedProps.hideColumnContextMenu();
           },
         },
+    computedProps.enableColumnAutosize ? '-' : null,
+    computedProps.enableColumnAutosize === false
+      ? null
+      : {
+          label: computedProps.i18n('autoSizeToFit'),
+          itemId: 'autoSizeToFit',
+          menuProps: {
+            dismissOnClick: true,
+          },
+          onClick: () => {
+            const { current: computedProps } = computedPropsRef;
+            if (!computedProps) {
+              return;
+            }
+
+            if (computedProps.setColumnSizesToFit) {
+              computedProps.setColumnSizesToFit();
+            }
+          },
+        },
+    computedProps.enableColumnAutosize === false
+      ? null
+      : {
+          label: computedProps.i18n('autoresizeThisColumn'),
+          itemId: 'autoresizeThisColumn',
+          menuProps: {
+            dismissOnClick: true,
+          },
+          onClick: () => {
+            const { current: computedProps } = computedPropsRef;
+            if (!computedProps) {
+              return;
+            }
+
+            const columnId = cellProps.id;
+            if (computedProps.setColumnSizeAuto) {
+              computedProps.setColumnSizeAuto(columnId);
+            }
+          },
+        },
+    enableColumnAutosize === false
+      ? null
+      : {
+          label: computedProps.i18n('autoresizeAllColumns'),
+          itemId: 'autoresizeAllColumns',
+          menuProps: {
+            dismissOnClick: true,
+          },
+          onClick: () => {
+            const { current: computedProps } = computedPropsRef;
+            if (!computedProps) {
+              return;
+            }
+
+            if (computedProps.setColumnsSizesAuto) {
+              computedProps.setColumnsSizesAuto();
+            }
+          },
+        },
+
     columnsItem ? '-' : null,
     columnsItem,
   ].filter(notEmpty);

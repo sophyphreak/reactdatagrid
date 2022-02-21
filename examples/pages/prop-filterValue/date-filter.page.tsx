@@ -14,8 +14,11 @@ import moment from 'moment';
 import NumberFilter from '@inovua/reactdatagrid-enterprise/NumberFilter';
 import DateFilter from '@inovua/reactdatagrid-enterprise/DateFilter';
 import DateInput from '@inovua/reactdatagrid-community/packages/Calendar/DateInput';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
 
-global.moment = moment;
+const globalObject = getGlobal();
+
+globalObject.moment = moment;
 
 const gridStyle = { minHeight: 350, marginTop: 10 };
 

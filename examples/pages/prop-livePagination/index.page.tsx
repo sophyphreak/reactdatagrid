@@ -8,6 +8,9 @@
 import React, { useState } from 'react';
 
 import DataGrid from '../../../enterprise-edition';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+
+const globalObject = getGlobal();
 
 const DATASET_URL = 'https://demos.reactdatagrid.io/api/v1/';
 
@@ -67,7 +70,7 @@ const App = () => {
         defaultLimit={15}
         columns={columns}
         handle={x => {
-          (global as any).x = x;
+          (globalObject as any).x = x;
         }}
         livePagination
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}

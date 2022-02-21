@@ -10,6 +10,9 @@ import React, { useState } from 'react';
 import DataGrid from '@inovua/reactdatagrid-enterprise';
 
 import people from '../people';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+
+const globalObject = getGlobal();
 
 const gridStyle = { minHeight: 350 };
 
@@ -22,9 +25,9 @@ const columns = [
 
 const dataSource = people;
 
-(global as any).cellSelection = [];
+(globalObject as any).cellSelection = [];
 const onCellSelectionChange = (activeCell: [number, number] | null) => {
-  (global as any).cellSelection.push(activeCell);
+  (globalObject as any).cellSelection.push(activeCell);
 };
 
 const App = () => {
@@ -32,7 +35,7 @@ const App = () => {
     boolean
   >(true);
 
-  global.setEnableKeyboardNavigation = setEnableKeyboardNavigation;
+  (globalObject as any).setEnableKeyboardNavigation = setEnableKeyboardNavigation;
 
   return (
     <DataGrid

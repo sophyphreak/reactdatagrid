@@ -21,11 +21,13 @@ import getRangesForTree from './plugins/row-reorder/utils/getRangesForTree';
 import getDropGroup from './plugins/row-reorder/utils/getDropGroup';
 import getDropParent from './plugins/row-reorder/utils/getDropParent';
 import updateTreeData from './plugins/tree/tree/updateTreeData';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+const globalObject = getGlobal();
 let DRAG_INFO = null;
 let scrolling = false;
 const SCROLL_MARGIN = 40;
 const DRAG_ROW_MAX_HEIGHT = 100;
-const raf = global.requestAnimationFrame;
+const raf = globalObject.requestAnimationFrame;
 const identity = (a) => a;
 let iterate = true;
 export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGridColumnLayout {
@@ -86,8 +88,8 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             const props = this.lastComputedProps;
             const { rowReorderScrollByAmount, rowReorderAutoScrollSpeed } = props;
             if (scrolling && dir) {
-                global.clearInterval(this.gridScrollInterval);
-                this.gridScrollInterval = global.setInterval(() => this.startScrolling(rowReorderScrollByAmount, dir), rowReorderAutoScrollSpeed);
+                globalObject.clearInterval(this.gridScrollInterval);
+                this.gridScrollInterval = globalObject.setInterval(() => this.startScrolling(rowReorderScrollByAmount, dir), rowReorderAutoScrollSpeed);
             }
         }
     };
@@ -112,7 +114,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
     onScrollingRegionMouseLeave = () => {
         scrolling = false;
         this.setReorderArrowVisible(true);
-        global.clearInterval(this.gridScrollInterval);
+        globalObject.clearInterval(this.gridScrollInterval);
     };
     getDragRowInstance = (dragIndex) => {
         const visibleRows = this.getContentRows();
@@ -645,7 +647,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         return validDropPositions;
     };
     clearDropInfo = () => {
-        global.clearInterval(this.gridScrollInterval);
+        globalObject.clearInterval(this.gridScrollInterval);
         this.dragBoxInitialHeight = 0;
         this.setReorderArrowVisible(false);
         if (!DRAG_INFO) {
