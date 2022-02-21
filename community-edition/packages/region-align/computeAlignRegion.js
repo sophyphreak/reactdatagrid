@@ -4,11 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import Region from '../region';
-
 import ALIGN_TO_NORMALIZED from './alignToNormalized';
-
 /**
  * @localdoc Given source and target regions, and the given alignments required, returns a region that is the resulting allignment.
  * Does not modify the sourceRegion.
@@ -63,23 +60,15 @@ import ALIGN_TO_NORMALIZED from './alignToNormalized';
  *  * heightChanged   - boolean value indicating if the height of the returned region is different from the height of sourceRegion
  */
 function COMPUTE_ALIGN_REGION(sourceRegion, targetRegion, positions, config) {
-  sourceRegion = Region.from(sourceRegion);
-
-  var sourceClone = sourceRegion.clone();
-  var position = ALIGN_TO_NORMALIZED(
-    sourceClone,
-    targetRegion,
-    positions,
-    config
-  );
-
-  return {
-    position: position,
-    region: sourceClone,
-    widthChanged: sourceClone.getWidth() != sourceRegion.getWidth(),
-    heightChanged: sourceClone.getHeight() != sourceRegion.getHeight(),
-    positionChanged: sourceClone.equalsPosition(sourceRegion),
-  };
+    sourceRegion = Region.from(sourceRegion);
+    var sourceClone = sourceRegion.clone();
+    var position = ALIGN_TO_NORMALIZED(sourceClone, targetRegion, positions, config);
+    return {
+        position: position,
+        region: sourceClone,
+        widthChanged: sourceClone.getWidth() != sourceRegion.getWidth(),
+        heightChanged: sourceClone.getHeight() != sourceRegion.getHeight(),
+        positionChanged: sourceClone.equalsPosition(sourceRegion),
+    };
 }
-
 export default COMPUTE_ALIGN_REGION;

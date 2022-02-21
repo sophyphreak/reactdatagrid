@@ -4,16 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import separateEvents from './separateEvents';
 import { registerListeners, unregisterListeners } from './registerEvents';
-import {
-  createShowHandler,
-  createHideHandler,
-  createToggleHandler,
-} from './generateHandlers';
+import { createShowHandler, createHideHandler, createToggleHandler, } from './generateHandlers';
 import createHideOnClickOutsideAction from './createHideOnClickOutsideAction';
-
 /**
  * Decides when to trigger onShow or onHide.
  *
@@ -76,231 +70,193 @@ import createHideOnClickOutsideAction from './createHideOnClickOutsideAction';
  * @return { unregister: Function }
  */
 function eventManager(config) {
-  const {
-    showEvent = [],
-    hideEvent = [],
-    target,
-
+    const { showEvent = [], hideEvent = [], target, 
     // falgs
-    hideOnScroll,
-    hideOnClickOutside,
-    hideOnEscape,
-
+    hideOnScroll, hideOnClickOutside, hideOnEscape, 
     // actions
-    onShow,
-    onHide,
-
+    onShow, onHide, 
     // delays
-    getShowDelay,
-    getHideDelay,
-
+    getShowDelay, getHideDelay, 
     // states
-    getVisible,
-
+    getVisible, 
     // nodes
-    getOverlayNode = () => {},
-    getActiveTargetNode,
-  } = config;
-
-  // is mutated
-  const timeoutState = {
-    showId: null,
-    hideId: null,
-    targetThatTriggeredEvent: null,
-  };
-
-  // common events must toggle
-  // they must be separated and removed from hideEvent and showEvent
-  const {
-    normalizedShowEvents,
-    normalizedHideEvents,
-    toggleEvents,
-  } = separateEvents({
-    showEvent,
-    hideEvent,
-  });
-
-  const showAction = createShowHandler({
-    timeoutState,
-    target,
-    getActiveTargetNode,
-    action: onShow,
-    getDelay: getShowDelay,
-  });
-  if (normalizedShowEvents && onShow) {
-    // register show
-    registerListeners({
-      events: normalizedShowEvents,
-      action: showAction,
-    });
-  }
-
-  // register hide
-  const hideAction = createHideHandler({
-    timeoutState,
-    target,
-    getActiveTargetNode,
-    action: onHide,
-    getDelay: getHideDelay,
-  });
-
-  if (normalizedHideEvents && onHide) {
-    registerListeners({
-      events: normalizedHideEvents,
-      action: hideAction,
-    });
-  }
-
-  let toggleAction;
-  if (toggleEvents.length) {
-    toggleAction = createToggleHandler({
-      target,
-      getActiveTargetNode,
-      getVisible,
-      onHide: hideAction,
-      onShow: showAction,
-    });
-
-    registerListeners({
-      events: toggleEvents,
-      action: toggleAction,
-    });
-  }
-
-  let hideOnClickOutsideAction;
-  if (hideOnClickOutside) {
-    hideOnClickOutsideAction = createHideOnClickOutsideAction({
-      getOverlayNode,
-      getActiveTargetNode,
-      onHide: hideAction,
-    });
-    registerListeners({
-      events: ['click'],
-      action: hideOnClickOutsideAction,
-    });
-  }
-
-  let hideOnScrollAction;
-  if (hideOnScroll) {
-    hideOnScrollAction = event => {
-      if (getVisible()) {
-        hideAction(event, { target: null });
-      }
+    getOverlayNode = () => { }, getActiveTargetNode, } = config;
+    // is mutated
+    const timeoutState = {
+        showId: null,
+        hideId: null,
+        targetThatTriggeredEvent: null,
     };
-    registerListeners({
-      events: ['scroll'],
-      action: hideOnScrollAction,
+    // common events must toggle
+    // they must be separated and removed from hideEvent and showEvent
+    const { normalizedShowEvents, normalizedHideEvents, toggleEvents, } = separateEvents({
+        showEvent,
+        hideEvent,
     });
-  }
-
-  let hideOnEscapeAction;
-  if (hideOnEscape) {
-    hideOnEscapeAction = event => {
-      if (getVisible() && event.key === 'Escape') {
-        hideAction(event, { target: null });
-      }
+    const showAction = createShowHandler({
+        timeoutState,
+        target,
+        getActiveTargetNode,
+        action: onShow,
+        getDelay: getShowDelay,
+    });
+    if (normalizedShowEvents && onShow) {
+        // register show
+        registerListeners({
+            events: normalizedShowEvents,
+            action: showAction,
+        });
+    }
+    // register hide
+    const hideAction = createHideHandler({
+        timeoutState,
+        target,
+        getActiveTargetNode,
+        action: onHide,
+        getDelay: getHideDelay,
+    });
+    if (normalizedHideEvents && onHide) {
+        registerListeners({
+            events: normalizedHideEvents,
+            action: hideAction,
+        });
+    }
+    let toggleAction;
+    if (toggleEvents.length) {
+        toggleAction = createToggleHandler({
+            target,
+            getActiveTargetNode,
+            getVisible,
+            onHide: hideAction,
+            onShow: showAction,
+        });
+        registerListeners({
+            events: toggleEvents,
+            action: toggleAction,
+        });
+    }
+    let hideOnClickOutsideAction;
+    if (hideOnClickOutside) {
+        hideOnClickOutsideAction = createHideOnClickOutsideAction({
+            getOverlayNode,
+            getActiveTargetNode,
+            onHide: hideAction,
+        });
+        registerListeners({
+            events: ['click'],
+            action: hideOnClickOutsideAction,
+        });
+    }
+    let hideOnScrollAction;
+    if (hideOnScroll) {
+        hideOnScrollAction = event => {
+            if (getVisible()) {
+                hideAction(event, { target: null });
+            }
+        };
+        registerListeners({
+            events: ['scroll'],
+            action: hideOnScrollAction,
+        });
+    }
+    let hideOnEscapeAction;
+    if (hideOnEscape) {
+        hideOnEscapeAction = event => {
+            if (getVisible() && event.key === 'Escape') {
+                hideAction(event, { target: null });
+            }
+        };
+        registerListeners({
+            events: ['keydown'],
+            action: hideOnEscapeAction,
+        });
+    }
+    /**
+     * If there is a mouseleave registered for hideEvent
+     * will also listen for mouseleave and mouseenter
+     * on tooltip
+     */
+    let handleOverlayShowAction;
+    let handleOverlayHideAction;
+    if (normalizedHideEvents.indexOf('mouseleave') !== -1) {
+        handleOverlayShowAction = event => {
+            if (event.target === getOverlayNode()) {
+                const activeTargetNode = getActiveTargetNode();
+                showAction(event, { target: activeTargetNode });
+            }
+        };
+        registerListeners({
+            events: ['mouseenter'],
+            action: handleOverlayShowAction,
+        });
+        handleOverlayHideAction = event => {
+            if (event.target === getOverlayNode()) {
+                const activeTargetNode = getActiveTargetNode();
+                hideAction(event, { target: activeTargetNode });
+            }
+        };
+        registerListeners({
+            events: ['mouseleave'],
+            action: handleOverlayHideAction,
+        });
+    }
+    // unregister all event listeners
+    return {
+        unregister: () => {
+            if (normalizedShowEvents && showAction) {
+                unregisterListeners({
+                    events: normalizedShowEvents,
+                    action: showAction,
+                });
+            }
+            // unregister hide
+            if (normalizedHideEvents && hideAction) {
+                unregisterListeners({
+                    events: normalizedHideEvents,
+                    action: hideAction,
+                });
+            }
+            // unregister hide
+            if (toggleEvents && toggleAction) {
+                unregisterListeners({
+                    events: toggleEvents,
+                    action: toggleAction,
+                });
+            }
+            // unregister clickoutside
+            if (hideOnClickOutsideAction) {
+                unregisterListeners({
+                    events: ['click'],
+                    action: hideOnClickOutsideAction,
+                });
+            }
+            // unregister hideOnScrollAction
+            if (hideOnScrollAction) {
+                unregisterListeners({
+                    events: ['scroll'],
+                    action: hideOnScrollAction,
+                });
+            }
+            // unregister onSow and onHide listeners on popover
+            if (handleOverlayShowAction) {
+                unregisterListeners({
+                    events: ['mouseenter'],
+                    action: handleOverlayShowAction,
+                });
+            }
+            if (handleOverlayHideAction) {
+                unregisterListeners({
+                    events: ['mouseleave'],
+                    action: handleOverlayHideAction,
+                });
+            }
+            if (hideOnEscapeAction) {
+                unregisterListeners({
+                    events: ['keydown'],
+                    action: hideOnEscapeAction,
+                });
+            }
+        },
     };
-    registerListeners({
-      events: ['keydown'],
-      action: hideOnEscapeAction,
-    });
-  }
-
-  /**
-   * If there is a mouseleave registered for hideEvent
-   * will also listen for mouseleave and mouseenter
-   * on tooltip
-   */
-  let handleOverlayShowAction;
-  let handleOverlayHideAction;
-  if (normalizedHideEvents.indexOf('mouseleave') !== -1) {
-    handleOverlayShowAction = event => {
-      if (event.target === getOverlayNode()) {
-        const activeTargetNode = getActiveTargetNode();
-        showAction(event, { target: activeTargetNode });
-      }
-    };
-
-    registerListeners({
-      events: ['mouseenter'],
-      action: handleOverlayShowAction,
-    });
-
-    handleOverlayHideAction = event => {
-      if (event.target === getOverlayNode()) {
-        const activeTargetNode = getActiveTargetNode();
-        hideAction(event, { target: activeTargetNode });
-      }
-    };
-    registerListeners({
-      events: ['mouseleave'],
-      action: handleOverlayHideAction,
-    });
-  }
-
-  // unregister all event listeners
-  return {
-    unregister: () => {
-      if (normalizedShowEvents && showAction) {
-        unregisterListeners({
-          events: normalizedShowEvents,
-          action: showAction,
-        });
-      }
-
-      // unregister hide
-      if (normalizedHideEvents && hideAction) {
-        unregisterListeners({
-          events: normalizedHideEvents,
-          action: hideAction,
-        });
-      }
-
-      // unregister hide
-      if (toggleEvents && toggleAction) {
-        unregisterListeners({
-          events: toggleEvents,
-          action: toggleAction,
-        });
-      }
-
-      // unregister clickoutside
-      if (hideOnClickOutsideAction) {
-        unregisterListeners({
-          events: ['click'],
-          action: hideOnClickOutsideAction,
-        });
-      }
-
-      // unregister hideOnScrollAction
-      if (hideOnScrollAction) {
-        unregisterListeners({
-          events: ['scroll'],
-          action: hideOnScrollAction,
-        });
-      }
-
-      // unregister onSow and onHide listeners on popover
-      if (handleOverlayShowAction) {
-        unregisterListeners({
-          events: ['mouseenter'],
-          action: handleOverlayShowAction,
-        });
-      }
-      if (handleOverlayHideAction) {
-        unregisterListeners({
-          events: ['mouseleave'],
-          action: handleOverlayHideAction,
-        });
-      }
-      if (hideOnEscapeAction) {
-        unregisterListeners({
-          events: ['keydown'],
-          action: hideOnEscapeAction,
-        });
-      }
-    },
-  };
 }
-
 export default eventManager;

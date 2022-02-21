@@ -7,10 +7,10 @@
 
 'use strict';
 
-var curry = require('./curry');
+import curry from './curry';
 var matches;
 
-module.exports = curry(function(selector, node) {
+export default curry(function(selector, node) {
   matches = matches || require('../matches');
 
   while ((node = node.parentElement)) {
