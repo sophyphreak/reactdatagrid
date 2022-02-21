@@ -10,7 +10,7 @@ import React from 'react';
 const emptyObject = {};
 const SIZE = 20;
 
-const getIcons = ({ size, ...props } = emptyObject) => {
+const getIcons = ({ size, ...props }: { size?: number } = emptyObject) => {
   size = size || SIZE;
 
   const FIRST_PAGE = (
