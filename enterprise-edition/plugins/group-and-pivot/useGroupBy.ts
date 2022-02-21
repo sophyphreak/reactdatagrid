@@ -92,9 +92,12 @@ const useGroupBy = (
     onChange: () => {},
   });
 
+  const defaultExpandedGorups =
+    computedProps && computedProps.defaultCollapsedGroups === true ? {} : true;
+
   const [computedExpandedGroups, setExpandedGroups] = useProperty<
     TypeExpandedGroups
-  >(props, 'expandedGroups', true, {
+  >(props, 'expandedGroups', defaultExpandedGorups, {
     onChange: () => {},
   });
 

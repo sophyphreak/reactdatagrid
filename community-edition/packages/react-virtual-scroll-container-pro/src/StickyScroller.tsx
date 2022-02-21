@@ -24,6 +24,9 @@ import getScrollbarWidth from '../../getScrollbarWidth';
 import join from '../../join';
 import isSafari from '../../isSafari';
 import NotifyResize from '../../react-notify-resize/src';
+import { getGlobal } from '../../../getGlobal';
+
+const globalObject = getGlobal();
 
 const STICKY_STYLE = {
   position: sticky,
@@ -41,7 +44,7 @@ const WRAPPER_STYLE = {
   bottom: 0,
 };
 
-const ua = global.navigator ? global.navigator.userAgent : '';
+const ua = globalObject.navigator ? globalObject.navigator.userAgent : '';
 const IS_EDGE = ua.indexOf('Edge/') !== -1;
 
 class StickyVirtualScrollContainer extends React.Component {

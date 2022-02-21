@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { useRef } from 'react';
-const useClipboard = (props, computedProps, computedPropsRef) => {
+const useClipboard = (_props, _computedProps, computedPropsRef) => {
     const clipboard = useRef(false);
     const preventBlurOnContextMenuOpen = useRef(false);
     const copyActiveRowToClipboard = () => {
@@ -20,13 +20,30 @@ const useClipboard = (props, computedProps, computedPropsRef) => {
         if (computedProps.onCopyActiveRowChange) {
             computedProps.onCopyActiveRowChange(activeRow);
         }
+        const idProperty = computedProps.idProperty;
+        const compoundIdProperty = idProperty.includes(computedProps.idPropertySeparator);
         if (activeRow && navigator.clipboard) {
-            delete activeRow[computedProps.idProperty];
-            const parsedActiveRow = JSON.stringify(activeRow);
+            const clonedActiveRow = Object.assign({}, activeRow);
+            if (compoundIdProperty) {
+                const activeRowId = computedProps.getItemId(clonedActiveRow);
+                const parts = idProperty.split(computedProps.idPropertySeparator);
+                parts.reduce((itemObj, id) => {
+                    if (activeRowId === itemObj[id]) {
+                        if (itemObj) {
+                            delete itemObj[id];
+                        }
+                    }
+                    return itemObj[id];
+                }, clonedActiveRow);
+            }
+            else {
+                delete clonedActiveRow[idProperty];
+            }
+            const parsedActiveRow = JSON.stringify(clonedActiveRow);
             navigator.clipboard
                 .writeText(parsedActiveRow)
                 .then(() => {
-                if (Object.keys(activeRow).length > 0) {
+                if (Object.keys(clonedActiveRow).length > 0) {
                     clipboard.current = true;
                 }
             })
@@ -51,6 +68,7 @@ const useClipboard = (props, computedProps, computedPropsRef) => {
                 if (activeIndex != null) {
                     computedProps.setItemAt(activeIndex, parsedData, {
                         replace: false,
+                        deepCloning: true,
                     });
                 }
             });

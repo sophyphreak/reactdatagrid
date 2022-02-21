@@ -39,6 +39,7 @@ import useHeader from './hooks/useHeader';
 import useEditable from './hooks/useEditable';
 import useDataSource from './hooks/useDataSource';
 import useScrollProps from './hooks/useScrollProps';
+import useColumnsSizing from './hooks/useColumnsSizing';
 
 import useGroups from './hooks/useGroups';
 import useSelection from './hooks/useSelection';
@@ -71,11 +72,15 @@ import { TypeBuildColumnsProps } from './types/TypeDataGridProps';
 import { TypeColumns } from './types/TypeColumn';
 import InovuaDataGridLayout from './Layout';
 import { StickyRowsContainerClassName } from './packages/react-virtual-list-pro/src/StickyRowsContainer';
+import { getGlobal } from './getGlobal';
+import useColumnHover from './hooks/useColumnHover';
 
 let GRID_ID = 0;
 export type Props = {
   plugins?: Array<TypePlugin>;
 };
+
+const globalObject = getGlobal();
 
 const DEFAULT_I18N = {
   // pagination toolbar
@@ -101,6 +106,9 @@ const DEFAULT_I18N = {
   lockEnd: 'Lock end',
   unlock: 'Unlock',
   columns: 'Columns',
+  autoresizeThisColumn: 'Autoresize this column',
+  autoresizeAllColumns: 'Autoresize all columns',
+  autoSizeToFit: 'Autosize to fit',
 
   // operators,
   contains: 'Contains',
@@ -252,6 +260,14 @@ const GridFactory = (
     const getColumnLayout = () =>
       bodyRef.current != null ? bodyRef.current.columnLayout : null;
 
+    const getDefaultSize = () => {
+      if (props.viewportSize) {
+        return props.viewportSize;
+      }
+
+      return defaultSize;
+    };
+
     const [computedLoading, doSetLoading] = useProperty<boolean>(
       props,
       'loading'
@@ -311,10 +327,16 @@ const GridFactory = (
     const [reservedViewportWidth, setReservedViewportWidth] = useProperty<
       number
     >(props, 'reservedViewportWidth', 0);
-    const [size, setSize] = useSize(defaultSize);
+    const [size, setSize] = useSize(getDefaultSize());
     const [viewportAvailableWidth, setViewportAvailableWidth] = useState<
       number
     >(0);
+
+    useEffect(() => {
+      if (props.viewportSize) {
+        setSize(props.viewportSize);
+      }
+    }, [props.viewportSize]);
 
     const onResize = (size: { width: number; height: number }) => {
       batchUpdate().commit(() => {
@@ -361,7 +383,7 @@ const GridFactory = (
       horizontal: boolean;
     }) => {
       const onChange = () => {
-        const computedStyle = (global as any).getComputedStyle(
+        const computedStyle = globalObject.getComputedStyle(
           getVirtualList().getDOMNode()
         );
         const virtualListBorderLeft = parseInt(
@@ -418,9 +440,9 @@ const GridFactory = (
       callback: (...args: any[]) => void
     ) => {
       if (value) {
-        global.addEventListener('mouseup', callback);
+        globalObject.addEventListener('mouseup', callback);
       } else {
-        global.removeEventListener('mouseup', callback);
+        globalObject.removeEventListener('mouseup', callback);
       }
 
       updateListenOnCellEnter(value);
@@ -499,6 +521,7 @@ const GridFactory = (
       showVerticalCellBorders,
       shareSpaceOnResize: props.shareSpaceOnResize || false,
       onNextRender,
+      computedEnableColumnHover: props.enableColumnHover || undefined,
     };
 
     cProps.i18n = (key, defaultLabel) => {
@@ -542,8 +565,14 @@ const GridFactory = (
 
     cProps.maybeAddColumns = maybeAddColumns;
     const columnInfo = useColumns(props, cProps, computedPropsRef);
-
     Object.assign(cProps, columnInfo);
+
+    if (edition === 'enterprise') {
+      const columnsSizing = useColumnsSizing(props, cProps, computedPropsRef);
+      Object.assign(cProps, columnsSizing);
+    }
+
+    Object.assign(cProps, useColumnHover(props, cProps, computedPropsRef));
 
     cProps.wasMountedRef = useRef(false);
     cProps.wasUnmountedRef = useRef(false);
@@ -578,7 +607,24 @@ const GridFactory = (
       if (item.__group && Array.isArray(item.keyPath)) {
         return item.keyPath.join(props.groupPathSeparator);
       }
+      const itemId = computeIdProperty()
+        ? compoundItemId(item)
+        : simpleItemId(item);
+
+      return itemId;
+    }, []);
+
+    const simpleItemId = useCallback((item: any) => {
       return item[props.idProperty];
+    }, []);
+
+    const compoundItemId = useCallback((item: any) => {
+      const parts = props.idProperty.split(props.idPropertySeparator);
+      return parts.reduce((itemObj, id) => {
+        if (itemObj) {
+          return itemObj[id] ? itemObj[id] : itemObj;
+        }
+      }, item);
     }, []);
 
     const getItemIndexBy = (fn: (...args: any[]) => boolean): number => {
@@ -604,7 +650,12 @@ const GridFactory = (
       if (!computedPropsRef.current) {
         return undefined;
       }
-      return getItemWithCache(computedPropsRef.current.data[index]);
+      const item = computedPropsRef.current.data[index];
+      if (!item) {
+        return;
+      }
+
+      return getItemWithCache(item);
     };
     const getItemWithCache = (item: any) => {
       if (
@@ -623,6 +674,28 @@ const GridFactory = (
 
       return item;
     };
+
+    const getItemIndex = (item: any): number => {
+      const { current: computedProps } = computedPropsRef;
+      if (!computedProps) {
+        return -1;
+      }
+
+      const data = computedProps.data;
+      const itemId = getItemId(item);
+
+      for (let i = 0; i < data.length; i++) {
+        const dataItem = data[i];
+        const dataItemId = getItemId(dataItem);
+
+        if (dataItemId === itemId) {
+          return i;
+        }
+      }
+
+      return -1;
+    };
+
     const getItemIdAt = (index: number) => {
       return getItemId(getItemAt(index));
     };
@@ -722,6 +795,19 @@ const GridFactory = (
       if (virtualList) {
         virtualList.scrollLeft += increment;
       }
+    };
+
+    const getRows = () => {
+      const vl = getVirtualList();
+      return vl.getRows();
+    };
+
+    const getHeader = () => {
+      const body = bodyRef.current;
+      const columnLayout = body && body.getColumnLayout();
+      const header = columnLayout.getHeader();
+
+      return header;
     };
 
     const scrollToId = (
@@ -1074,6 +1160,14 @@ const GridFactory = (
       scrollContainer.blur();
     };
 
+    const computeIdProperty = useCallback(() => {
+      const idProperty = props.idProperty;
+      if (idProperty.includes(props.idPropertySeparator)) {
+        return true;
+      }
+      return false;
+    }, []);
+
     const computedProps: TypeComputedProps = {
       ...cProps,
       gridId: useMemo(() => ++GRID_ID, []),
@@ -1093,6 +1187,7 @@ const GridFactory = (
       getScrollTop,
       getScrollLeft,
       getScrollLeftMax,
+      getHeader,
       isCellVisible,
       naturalRowHeight: typeof props.rowHeight !== 'number',
 
@@ -1111,9 +1206,11 @@ const GridFactory = (
       getItemId,
       getRowId: getItemIdAt,
       getItemIndexBy,
+      getItemIndex,
 
       getItemAt,
       getItemIdAt,
+      getRows,
       focus,
       blur,
       computedShowHeaderBorderRight:
@@ -1124,6 +1221,7 @@ const GridFactory = (
       totalComputedWidth: columnInfo.totalComputedWidth,
       minRowWidth: columnInfo.totalComputedWidth,
       columnResizeHandleWidth: clamp(props.columnResizeHandleWidth, 2, 25),
+      compoundIdProperty: computeIdProperty(),
     };
 
     computedProps.rtlOffset = props.rtl
@@ -1309,7 +1407,7 @@ const GridFactory = (
       }
       if (scrollTop && eventTarget) {
         eventTarget.scrollTop = 0;
-        global.requestAnimationFrame(() => {
+        globalObject.requestAnimationFrame(() => {
           if (computedProps.wasUnmountedRef.current) {
             return;
           }
@@ -1622,6 +1720,7 @@ const GridFactory = (
     defaultCollapsedGroups: {},
     groupPathSeparator: '/',
     nodePathSeparator: '/',
+    idPropertySeparator: '.',
     groupNestingSize: 22,
     treeNestingSize: 22,
     columnMinWidth: 40,
@@ -1723,6 +1822,9 @@ const GridFactory = (
     isBinaryOperator: operator => {
       return operator === 'inrange' || operator === 'notinrange';
     },
+
+    skipHeaderOnAutoSize: false,
+    enableColumnAutosize: true,
   };
 
   const maybeAddCols: any[] = [];

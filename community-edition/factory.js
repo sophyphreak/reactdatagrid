@@ -22,6 +22,7 @@ import useHeader from './hooks/useHeader';
 import useEditable from './hooks/useEditable';
 import useDataSource from './hooks/useDataSource';
 import useScrollProps from './hooks/useScrollProps';
+import useColumnsSizing from './hooks/useColumnsSizing';
 import useGroups from './hooks/useGroups';
 import useSelection from './hooks/useSelection';
 import useRow from './hooks/useRow';
@@ -36,7 +37,10 @@ import emptyPlugins from './plugins/empty';
 import ActiveRowIndicator from './ActiveRowIndicator';
 import { communityFeatureWarn } from './warn';
 import { StickyRowsContainerClassName } from './packages/react-virtual-list-pro/src/StickyRowsContainer';
+import { getGlobal } from './getGlobal';
+import useColumnHover from './hooks/useColumnHover';
 let GRID_ID = 0;
+const globalObject = getGlobal();
 const DEFAULT_I18N = {
     // pagination toolbar
     pageText: 'Page ',
@@ -58,6 +62,9 @@ const DEFAULT_I18N = {
     lockEnd: 'Lock end',
     unlock: 'Unlock',
     columns: 'Columns',
+    autoresizeThisColumn: 'Autoresize this column',
+    autoresizeAllColumns: 'Autoresize all columns',
+    autoSizeToFit: 'Autosize to fit',
     // operators,
     contains: 'Contains',
     startsWith: 'Starts with',
@@ -160,6 +167,12 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         };
         const getVirtualList = () => bodyRef.current != null ? bodyRef.current.getVirtualList() : null;
         const getColumnLayout = () => bodyRef.current != null ? bodyRef.current.columnLayout : null;
+        const getDefaultSize = () => {
+            if (props.viewportSize) {
+                return props.viewportSize;
+            }
+            return defaultSize;
+        };
         const [computedLoading, doSetLoading] = useProperty(props, 'loading');
         const loadingTimeoutIdRef = useRef();
         const setLoading = (loading) => {
@@ -192,8 +205,13 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         const [lockedColumnsState, setLockedColumnsState] = useState({});
         const [scrollbars, setScrollbars] = useState({ vertical: false, horizontal: false });
         const [reservedViewportWidth, setReservedViewportWidth] = useProperty(props, 'reservedViewportWidth', 0);
-        const [size, setSize] = useSize(defaultSize);
+        const [size, setSize] = useSize(getDefaultSize());
         const [viewportAvailableWidth, setViewportAvailableWidth] = useState(0);
+        useEffect(() => {
+            if (props.viewportSize) {
+                setSize(props.viewportSize);
+            }
+        }, [props.viewportSize]);
         const onResize = (size) => {
             batchUpdate().commit(() => {
                 if (IS_MS_BROWSER || IS_FF) {
@@ -221,7 +239,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         });
         const onScrollbarsChange = (scrollbars) => {
             const onChange = () => {
-                const computedStyle = global.getComputedStyle(getVirtualList().getDOMNode());
+                const computedStyle = globalObject.getComputedStyle(getVirtualList().getDOMNode());
                 const virtualListBorderLeft = parseInt(computedStyle.borderLeftWidth, 10);
                 const virtualListBorderRight = parseInt(computedStyle.borderRightWidth, 10);
                 const virtualListExtraWidth = virtualListBorderLeft + virtualListBorderRight;
@@ -253,10 +271,10 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         const [selectionFixedCell, setSelectionFixedCell] = useState(null);
         const setListenOnCellEnter = (value, callback) => {
             if (value) {
-                global.addEventListener('mouseup', callback);
+                globalObject.addEventListener('mouseup', callback);
             }
             else {
-                global.removeEventListener('mouseup', callback);
+                globalObject.removeEventListener('mouseup', callback);
             }
             updateListenOnCellEnter(value);
         };
@@ -318,6 +336,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             showVerticalCellBorders,
             shareSpaceOnResize: props.shareSpaceOnResize || false,
             onNextRender,
+            computedEnableColumnHover: props.enableColumnHover || undefined,
         };
         cProps.i18n = (key, defaultLabel) => {
             return props.i18n[key] || DEFAULT_I18N[key] || defaultLabel;
@@ -338,6 +357,11 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         cProps.maybeAddColumns = maybeAddColumns;
         const columnInfo = useColumns(props, cProps, computedPropsRef);
         Object.assign(cProps, columnInfo);
+        if (edition === 'enterprise') {
+            const columnsSizing = useColumnsSizing(props, cProps, computedPropsRef);
+            Object.assign(cProps, columnsSizing);
+        }
+        Object.assign(cProps, useColumnHover(props, cProps, computedPropsRef));
         cProps.wasMountedRef = useRef(false);
         cProps.wasUnmountedRef = useRef(false);
         const dataInfo = useDataSource(props, cProps, computedPropsRef);
@@ -358,7 +382,21 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             if (item.__group && Array.isArray(item.keyPath)) {
                 return item.keyPath.join(props.groupPathSeparator);
             }
+            const itemId = computeIdProperty()
+                ? compoundItemId(item)
+                : simpleItemId(item);
+            return itemId;
+        }, []);
+        const simpleItemId = useCallback((item) => {
             return item[props.idProperty];
+        }, []);
+        const compoundItemId = useCallback((item) => {
+            const parts = props.idProperty.split(props.idPropertySeparator);
+            return parts.reduce((itemObj, id) => {
+                if (itemObj) {
+                    return itemObj[id] ? itemObj[id] : itemObj;
+                }
+            }, item);
         }, []);
         const getItemIndexBy = (fn) => {
             const data = computedProps.data;
@@ -379,7 +417,11 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             if (!computedPropsRef.current) {
                 return undefined;
             }
-            return getItemWithCache(computedPropsRef.current.data[index]);
+            const item = computedPropsRef.current.data[index];
+            if (!item) {
+                return;
+            }
+            return getItemWithCache(item);
         };
         const getItemWithCache = (item) => {
             if (item &&
@@ -392,6 +434,22 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
                 }
             }
             return item;
+        };
+        const getItemIndex = (item) => {
+            const { current: computedProps } = computedPropsRef;
+            if (!computedProps) {
+                return -1;
+            }
+            const data = computedProps.data;
+            const itemId = getItemId(item);
+            for (let i = 0; i < data.length; i++) {
+                const dataItem = data[i];
+                const dataItemId = getItemId(dataItem);
+                if (dataItemId === itemId) {
+                    return i;
+                }
+            }
+            return -1;
         };
         const getItemIdAt = (index) => {
             return getItemId(getItemAt(index));
@@ -468,6 +526,16 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             if (virtualList) {
                 virtualList.scrollLeft += increment;
             }
+        };
+        const getRows = () => {
+            const vl = getVirtualList();
+            return vl.getRows();
+        };
+        const getHeader = () => {
+            const body = bodyRef.current;
+            const columnLayout = body && body.getColumnLayout();
+            const header = columnLayout.getHeader();
+            return header;
         };
         const scrollToId = (id, config, callback) => {
             const index = computedProps.getRowIndexById(id);
@@ -698,6 +766,13 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             }
             scrollContainer.blur();
         };
+        const computeIdProperty = useCallback(() => {
+            const idProperty = props.idProperty;
+            if (idProperty.includes(props.idPropertySeparator)) {
+                return true;
+            }
+            return false;
+        }, []);
         const computedProps = {
             ...cProps,
             gridId: useMemo(() => ++GRID_ID, []),
@@ -717,6 +792,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             getScrollTop,
             getScrollLeft,
             getScrollLeftMax,
+            getHeader,
             isCellVisible,
             naturalRowHeight: typeof props.rowHeight !== 'number',
             isRowRendered,
@@ -733,8 +809,10 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             getItemId,
             getRowId: getItemIdAt,
             getItemIndexBy,
+            getItemIndex,
             getItemAt,
             getItemIdAt,
+            getRows,
             focus,
             blur,
             computedShowHeaderBorderRight: columnInfo.totalComputedWidth < viewportAvailableWidth ||
@@ -744,6 +822,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             totalComputedWidth: columnInfo.totalComputedWidth,
             minRowWidth: columnInfo.totalComputedWidth,
             columnResizeHandleWidth: clamp(props.columnResizeHandleWidth, 2, 25),
+            compoundIdProperty: computeIdProperty(),
         };
         computedProps.rtlOffset = props.rtl
             ? Math.min(computedProps.size.width - computedProps.totalComputedWidth, 0)
@@ -858,7 +937,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
             }
             if (scrollTop && eventTarget) {
                 eventTarget.scrollTop = 0;
-                global.requestAnimationFrame(() => {
+                globalObject.requestAnimationFrame(() => {
                     if (computedProps.wasUnmountedRef.current) {
                         return;
                     }
@@ -1056,6 +1135,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         defaultCollapsedGroups: {},
         groupPathSeparator: '/',
         nodePathSeparator: '/',
+        idPropertySeparator: '.',
         groupNestingSize: 22,
         treeNestingSize: 22,
         columnMinWidth: 40,
@@ -1148,6 +1228,8 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         isBinaryOperator: operator => {
             return operator === 'inrange' || operator === 'notinrange';
         },
+        skipHeaderOnAutoSize: false,
+        enableColumnAutosize: true,
     };
     const maybeAddCols = [];
     plugins.forEach((plugin) => {

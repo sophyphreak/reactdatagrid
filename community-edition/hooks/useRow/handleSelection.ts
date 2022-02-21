@@ -14,8 +14,11 @@ import {
 } from '../../types';
 import isControlledProperty from '../../utils/isControlledProperty';
 import batchUpdate from '../../utils/batchUpdate';
+import { getGlobal } from '../../getGlobal';
 
-const ua = global.navigator ? global.navigator.userAgent : '';
+const globalObject = getGlobal();
+
+const ua = globalObject.navigator ? globalObject.navigator.userAgent : '';
 // see usage of isSafari const
 // needed in order to fix tickets/128
 const isSafari: boolean =

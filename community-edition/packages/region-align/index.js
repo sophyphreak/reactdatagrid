@@ -4,13 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import Region from '../region';
 import './Region.static';
 import './Region.proto';
-
 import COMPUTE_ALIGN_REGION from './computeAlignRegion';
-
 /**
  * region-align module exposes methods for aligning {@link Element} and {@link Region} instances
  *
@@ -28,7 +25,6 @@ import COMPUTE_ALIGN_REGION from './computeAlignRegion';
  *  * {@link #alignRegions} - aligns a given source region to a target region
  *  * {@link #COMPUTE_ALIGN_REGION} - given a source region and a target region, and alignment positions, returns a clone of the source region, but aligned to satisfy the given alignments
  */
-
 /**
  * Aligns sourceRegion to targetRegion. It modifies the sourceRegion in order to perform the correct alignment.
  * See #COMPUTE_ALIGN_REGION for details and examples.
@@ -39,22 +35,14 @@ import COMPUTE_ALIGN_REGION from './computeAlignRegion';
  * @inheritdoc #COMPUTE_ALIGN_REGION
  * @return {String} the position used for alignment
  */
-Region.alignRegions = function(sourceRegion, targetRegion, positions, config) {
-  var result = COMPUTE_ALIGN_REGION(
-    sourceRegion,
-    targetRegion,
-    positions,
-    config
-  );
-  var alignedRegion = result.region;
-
-  if (!alignedRegion.equals(sourceRegion)) {
-    sourceRegion.setRegion(alignedRegion);
-  }
-
-  return result.position;
+Region.alignRegions = function (sourceRegion, targetRegion, positions, config) {
+    var result = COMPUTE_ALIGN_REGION(sourceRegion, targetRegion, positions, config);
+    var alignedRegion = result.region;
+    if (!alignedRegion.equals(sourceRegion)) {
+        sourceRegion.setRegion(alignedRegion);
+    }
+    return result.position;
 };
-
 /**
  *
  * The #alignTo method aligns this to the given target region, using the specified alignment position(s).
@@ -164,30 +152,20 @@ Region.alignRegions = function(sourceRegion, targetRegion, positions, config) {
  * @return {String}
  *
  */
-Region.prototype.alignTo = function(target, positions, config) {
-  config = config || {};
-
-  var sourceRegion = this;
-  var targetRegion = Region.from(target);
-
-  var result = COMPUTE_ALIGN_REGION(
-    sourceRegion,
-    targetRegion,
-    positions,
-    config
-  );
-  var resultRegion = result.region;
-
-  if (!resultRegion.equalsSize(sourceRegion)) {
-    this.setSize(resultRegion.getSize());
-  }
-  if (!resultRegion.equalsPosition(sourceRegion)) {
-    this.setPosition(resultRegion.getPosition(), {
-      absolute: !!config.absolute,
-    });
-  }
-
-  return result.position;
+Region.prototype.alignTo = function (target, positions, config) {
+    config = config || {};
+    var sourceRegion = this;
+    var targetRegion = Region.from(target);
+    var result = COMPUTE_ALIGN_REGION(sourceRegion, targetRegion, positions, config);
+    var resultRegion = result.region;
+    if (!resultRegion.equalsSize(sourceRegion)) {
+        this.setSize(resultRegion.getSize());
+    }
+    if (!resultRegion.equalsPosition(sourceRegion)) {
+        this.setPosition(resultRegion.getPosition(), {
+            absolute: !!config.absolute,
+        });
+    }
+    return result.position;
 };
-
 export default Region;

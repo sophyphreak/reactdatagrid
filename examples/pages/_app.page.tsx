@@ -10,6 +10,18 @@ import '../../community-edition/style/base.scss';
 import '../../community-edition/style/theme/default-light/index.scss';
 import '../../community-edition/style/theme/default-dark/index.scss';
 
+import '../../community-edition/style/theme/amber-light/index.scss';
+import '../../community-edition/style/theme/amber-dark/index.scss';
+
+import '../../community-edition/style/theme/blue-light/index.scss';
+import '../../community-edition/style/theme/blue-dark/index.scss';
+
+import '../../community-edition/style/theme/green-light/index.scss';
+import '../../community-edition/style/theme/green-dark/index.scss';
+
+import '../../community-edition/style/theme/pink-light/index.scss';
+import '../../community-edition/style/theme/pink-dark/index.scss';
+
 import '../pages/prop-checkboxColumn/prop-checkboxColumns.scss';
 
 import './index.scss';

@@ -205,6 +205,9 @@ const computeData = (
           dataSourceCache: computedProps.computedDataSourceCache,
           generateIdFromPath: computedProps.generateIdFromPath,
           collapsingNodes: computedProps.collapsingNodesRef.current,
+          idProperty: !computedProps.compoundIdProperty
+            ? computedProps.idProperty
+            : 'id',
         });
       }
 

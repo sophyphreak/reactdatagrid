@@ -14,9 +14,11 @@ import minified from '../../../../packages/uglified';
 import join from '../../../../packages/join';
 import isSafari from '../../../../packages/isSafari';
 import getScrollbarWidth from '../../../../packages/getScrollbarWidth';
-const raf = global.requestAnimationFrame;
+import { getGlobal } from '../../../../getGlobal';
+const globalObject = getGlobal();
+const raf = globalObject.requestAnimationFrame;
 let HAS_NEGATIVE_SCROLL;
-const ua = global.navigator ? global.navigator.userAgent : '';
+const ua = globalObject.navigator ? globalObject.navigator.userAgent : '';
 const IS_EDGE = ua.indexOf('Edge/') !== -1;
 const IS_MS_BROWSER = IS_EDGE || ua.indexOf('Trident') !== -1;
 const IS_IE = IS_MS_BROWSER && !IS_EDGE;
@@ -65,7 +67,7 @@ export default (displayName, CONFIG) => {
                 return style;
             }
             if (domNode) {
-                position = global.getComputedStyle(domNode).position;
+                position = globalObject.getComputedStyle(domNode).position;
                 nonStatic = position === 'relative' || position === 'absolute';
                 if (!nonStatic) {
                     return Object.assign({}, style, { position: 'relative' });
@@ -409,7 +411,7 @@ export default (displayName, CONFIG) => {
             }
         };
         onWheelEvent = event => {
-            if (isSafari() && global.WheelEvent) {
+            if (isSafari() && globalObject.WheelEvent) {
                 this.scrollerNode.dispatchEvent(new WheelEvent('wheel', event.nativeEvent));
                 event.stopPropagation();
                 event.preventDefault();

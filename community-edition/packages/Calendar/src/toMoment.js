@@ -4,9 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import moment from 'moment';
-
 /**
  * This function will be used to convert a date to a moment.
  *
@@ -27,21 +25,16 @@ import moment from 'moment';
  * @return {Moment}
  */
 export default (value, dateFormat, config) => {
-  if (typeof dateFormat === 'object') {
-    config = dateFormat;
-    dateFormat = null;
-  }
-
-  const strict = !!(config && config.strict);
-  const locale = config && config.locale;
-
-  dateFormat = dateFormat || (config && config.dateFormat) || 'YYYY-MM-DD';
-
-  if (typeof value == 'string') {
-    return moment(value, dateFormat, locale, strict);
-  }
-
-  value = value == null ? new Date() : value;
-
-  return moment(value, undefined, locale, strict);
+    if (typeof dateFormat === 'object') {
+        config = dateFormat;
+        dateFormat = null;
+    }
+    const strict = !!(config && config.strict);
+    const locale = config && config.locale;
+    dateFormat = dateFormat || (config && config.dateFormat) || 'YYYY-MM-DD';
+    if (typeof value == 'string') {
+        return moment(value, dateFormat, locale, strict);
+    }
+    value = value == null ? new Date() : value;
+    return moment(value, undefined, locale, strict);
 };

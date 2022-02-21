@@ -9,6 +9,9 @@ import React, { useState } from 'react';
 
 import DataGrid from '@inovua/reactdatagrid-enterprise';
 import { TypeColumn } from '@inovua/reactdatagrid-community/types';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
+
+const globalObject = getGlobal();
 
 const columns: TypeColumn[] = [
   {
@@ -53,7 +56,7 @@ const App = () => {
         dataSource={people}
         style={{ minHeight: '90vh' }}
         onReady={api => {
-          (global as any).api = api;
+          (globalObject as any).api = api;
         }}
       />
     </div>

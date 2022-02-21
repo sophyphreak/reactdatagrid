@@ -124,6 +124,10 @@ export default ({ generatedColumnsLength = 0, columns, columnMinWidth, columnMax
         if (col.id === rowExpandColumnId) {
             rowExpandColumn = col;
         }
+        if (col.enableColumnHover != null) {
+            col.computedEnableColumnHover = col.enableColumnHover;
+            delete col.enableColumnHover;
+        }
         return col;
     });
     if (hasLockedStart) {

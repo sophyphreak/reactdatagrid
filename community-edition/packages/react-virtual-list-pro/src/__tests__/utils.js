@@ -6,8 +6,11 @@
  */
 
 import ReactDOM from 'react-dom';
+import { getGlobal } from '../../../../getGlobal';
 
-const document = global.document;
+const globalObject = getGlobal();
+
+const document = globalObject.document;
 
 const render = cmp => {
   const targetNode = document.createElement('div');

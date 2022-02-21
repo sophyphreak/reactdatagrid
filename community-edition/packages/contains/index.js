@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Copyright © INOVUA TRADING.
  *
@@ -6,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const DOCUMENT_POSITION_CONTAINED_BY = 16;
-module.exports = contains;
+export default contains;
 function contains(container, elem) {
     if (container.contains) {
         return container.contains(elem);

@@ -6,9 +6,12 @@
  */
 
 import hasTouch from '../../packages/hasTouch';
+import { getGlobal } from '../../getGlobal';
+
+const globalObject = getGlobal();
 
 const mobileTest = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-  global.navigator ? global.navigator.userAgent : ''
+  globalObject.navigator ? globalObject.navigator.userAgent : ''
 );
 
 export default hasTouch && mobileTest;

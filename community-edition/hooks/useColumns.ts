@@ -526,6 +526,7 @@ export default (
     computedColumnOrder: columnOrder,
     setColumnOrder,
     setColumnVisible,
+    computeColumnSizes: setColumnSizes,
 
     computedPivot: props.pivot,
     totalFlexColumnCount,

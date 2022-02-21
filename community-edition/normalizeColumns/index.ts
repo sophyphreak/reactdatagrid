@@ -248,6 +248,11 @@ export default ({
         rowExpandColumn = col;
       }
 
+      if (col.enableColumnHover != null) {
+        col.computedEnableColumnHover = col.enableColumnHover;
+        delete col.enableColumnHover;
+      }
+
       return col;
     });
 

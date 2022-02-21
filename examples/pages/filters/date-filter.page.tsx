@@ -7,8 +7,11 @@ import DateFilter from '@inovua/reactdatagrid-community/DateFilter';
 import people from '../people';
 import flags from '../flags';
 import moment from 'moment';
+import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
 
-let window = global || globalThis;
+const globalObject = getGlobal();
+
+let window = globalObject || globalThis;
 
 if (window.moment == null) {
   window.moment = moment;

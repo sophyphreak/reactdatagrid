@@ -238,7 +238,7 @@ export default class InovuaDataGridCell extends React.Component {
         return style;
     }
     prepareClassName(props) {
-        const { groupCell: isGroupCell, groupTitleCell, groupExpandCell, headerCell: isHeaderCell, headerCellDefaultClassName, cellDefaultClassName, computedGroupBy, depth, computedVisibleIndex, headerCell, headerEllipsis, groupProps, hidden, showBorderRight, showBorderTop, showBorderBottom, showBorderLeft, firstInSection, lastInSection, noBackground, computedLocked, computedWidth, inTransition, rowSelected, computedRowspan, cellSelected, cellActive, groupSpacerColumn, computedPivot, computedResizable, groupColumnVisible, lockable, computedFilterable, rtl, inEdit, } = props;
+        const { groupCell: isGroupCell, groupTitleCell, groupExpandCell, headerCell: isHeaderCell, headerCellDefaultClassName, cellDefaultClassName, computedGroupBy, depth, computedVisibleIndex, headerCell, headerEllipsis, groupProps, hidden, showBorderRight, showBorderTop, showBorderBottom, showBorderLeft, firstInSection, lastInSection, noBackground, computedLocked, computedWidth, inTransition, rowSelected, computedRowspan, cellSelected, cellActive, groupSpacerColumn, computedPivot, computedResizable, groupColumnVisible, computedFilterable, rtl, inEdit, columnIndex, columnIndexHovered, columnHoverClassName, } = props;
         let { userSelect, headerUserSelect } = props;
         if (typeof userSelect === 'boolean') {
             userSelect = userSelect ? 'text' : 'none';
@@ -271,7 +271,11 @@ export default class InovuaDataGridCell extends React.Component {
             `${baseClassName}--show-border-${rtl ? 'right' : 'left'}`, firstInSection && `${baseClassName}--first-in-section`, lastInSection && `${baseClassName}--last-in-section`, showBorderRight &&
             computedWidth !== 0 &&
             (!isHeaderCell || !(computedResizable || computedFilterable)) &&
-            `${baseClassName}--show-border-${rtl ? 'left' : 'right'}`, showBorderTop && `${baseClassName}--show-border-top`, showBorderBottom && `${baseClassName}--show-border-bottom`, noBackground && `${baseClassName}--no-background`);
+            `${baseClassName}--show-border-${rtl ? 'left' : 'right'}`, showBorderTop && `${baseClassName}--show-border-top`, showBorderBottom && `${baseClassName}--show-border-bottom`, noBackground && `${baseClassName}--no-background`, columnIndex === columnIndexHovered
+            ? columnHoverClassName
+                ? join(`${baseClassName}--over`, columnHoverClassName)
+                : `${baseClassName}--over`
+            : '');
         if (cellSelected) {
             className = join(className, props.hasTopSelectedSibling &&
                 `${baseClassName}--cell-has-top-selected-sibling`, props.hasBottomSelectedSibling &&
@@ -493,7 +497,8 @@ export default class InovuaDataGridCell extends React.Component {
             onDoubleClick: cellProps.onDoubleClick || initialDOMProps.onDoubleClick,
             onMouseDown: cellProps.onMouseDown || initialDOMProps.onMouseDown,
             onTouchStart: cellProps.onTouchStart || initialDOMProps.onTouchStart,
-            onMouseEnter: cellProps.onMouseEnter || initialDOMProps.onMouseEnter,
+            onMouseEnter: this.onMouseEnter,
+            onMouseLeave: this.onMouseLeave,
             style: initialDOMProps.style
                 ? Object.assign({}, initialDOMProps.style, cellProps.style)
                 : cellProps.style,
@@ -502,6 +507,40 @@ export default class InovuaDataGridCell extends React.Component {
         domProps.ref = this.domRef;
         return headerCell ? (RENDER_HEADER(cellProps, domProps, this, this.state)) : (React.createElement("div", { ...domProps, children: cellProps.children, id: null, name: null, value: null, title: null, data: null }));
     }
+    onMouseEnter = (_event) => {
+        const props = this.getProps();
+        const initialDOMProps = this.getInitialDOMProps();
+        if (!props.computedEnableColumnHover ||
+            props.groupProps ||
+            props.groupSpacerColumn ||
+            props.isRowDetailsCell ||
+            props.isCheckboxColumn) {
+            return;
+        }
+        if (props.onColumnMouseEnter) {
+            props.onColumnMouseEnter(props);
+        }
+        else if (initialDOMProps.onMouseEnter) {
+            initialDOMProps.onMouseEnter();
+        }
+    };
+    onMouseLeave = (_event) => {
+        const props = this.getProps();
+        const initialDOMProps = this.getInitialDOMProps();
+        if (!props.computedEnableColumnHover ||
+            props.groupProps ||
+            props.groupSpacerColumn ||
+            props.isRowDetailsCell ||
+            props.isCheckboxColumn) {
+            return;
+        }
+        if (props.onColumnMouseLeave) {
+            props.onColumnMouseLeave(props);
+        }
+        else if (initialDOMProps.onMouseLeave) {
+            initialDOMProps.onMouseLeave();
+        }
+    };
     renderNodeTool(props) {
         const { data, renderTreeCollapseTool, renderTreeExpandTool, renderTreeLoadingTool, } = props;
         const nodeProps = data.__nodeProps || emptyObject;
@@ -1240,4 +1279,5 @@ InovuaDataGridCell.propTypes = {
     editStartEvent: PropTypes.string,
     setActiveIndex: PropTypes.func,
     renderColumnReorderProxy: PropTypes.func,
+    columnHoverClassName: PropTypes.string,
 };

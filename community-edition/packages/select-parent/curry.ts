@@ -34,4 +34,4 @@ function curry(fn, n) {
   return getCurryClosure([]);
 }
 
-module.exports = curry;
+export default curry;

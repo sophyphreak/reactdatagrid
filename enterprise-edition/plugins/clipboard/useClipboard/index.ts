@@ -9,8 +9,8 @@ import { MutableRefObject, useRef } from 'react';
 import { TypeDataGridProps, TypeComputedProps } from '../../../types';
 
 const useClipboard = (
-  props: TypeDataGridProps,
-  computedProps: TypeComputedProps,
+  _props: TypeDataGridProps,
+  _computedProps: TypeComputedProps,
   computedPropsRef: MutableRefObject<TypeComputedProps | null>
 ): {
   copyActiveRowToClipboard: () => void;
@@ -39,14 +39,33 @@ const useClipboard = (
       computedProps.onCopyActiveRowChange(activeRow);
     }
 
+    const idProperty = computedProps.idProperty;
+    const compoundIdProperty = idProperty.includes(
+      computedProps.idPropertySeparator
+    );
+
     if (activeRow && navigator.clipboard) {
-      delete activeRow[computedProps.idProperty];
-      const parsedActiveRow = JSON.stringify(activeRow);
+      const clonedActiveRow = Object.assign({}, activeRow);
+      if (compoundIdProperty) {
+        const activeRowId = computedProps.getItemId(clonedActiveRow);
+        const parts = idProperty.split(computedProps.idPropertySeparator);
+        parts.reduce((itemObj: any, id: string) => {
+          if (activeRowId === itemObj[id]) {
+            if (itemObj) {
+              delete itemObj[id];
+            }
+          }
+          return itemObj[id];
+        }, clonedActiveRow);
+      } else {
+        delete clonedActiveRow[idProperty];
+      }
+      const parsedActiveRow = JSON.stringify(clonedActiveRow);
 
       navigator.clipboard
         .writeText(parsedActiveRow)
         .then(() => {
-          if (Object.keys(activeRow).length > 0) {
+          if (Object.keys(clonedActiveRow).length > 0) {
             clipboard.current = true;
           }
         })
@@ -76,6 +95,7 @@ const useClipboard = (
         if (activeIndex != null) {
           computedProps.setItemAt(activeIndex, parsedData, {
             replace: false,
+            deepCloning: true,
           });
         }
       });

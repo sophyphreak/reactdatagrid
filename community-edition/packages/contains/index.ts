@@ -7,7 +7,7 @@
 
 const DOCUMENT_POSITION_CONTAINED_BY = 16;
 
-module.exports = contains;
+export default contains;
 
 function contains(container: Element, elem: Element) {
   if (container.contains) {

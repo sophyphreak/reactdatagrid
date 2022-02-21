@@ -1036,6 +1036,12 @@ export default class DataGridRow extends React.Component<RowProps> {
       renderTreeCollapseTool,
       renderTreeExpandTool,
       renderTreeLoadingTool,
+      enableColumnAutosize,
+      onColumnMouseEnter,
+      onColumnMouseLeave,
+      columnIndexHovered,
+      columnHoverClassName,
+      computedEnableColumnHover,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -1125,6 +1131,13 @@ export default class DataGridRow extends React.Component<RowProps> {
       const groupExpandCell =
         !groupColumn && groupProps && groupProps.depth == computedVisibleIndex;
 
+      const isColumnHover =
+        column.computedEnableColumnHover != null
+          ? column.computedEnableColumnHover
+          : computedEnableColumnHover
+          ? computedEnableColumnHover
+          : undefined;
+
       let hidden = groupProps
         ? expandGroupTitle && !groupColumn
           ? computedVisibleIndex > groupProps.depth + 1
@@ -1210,6 +1223,11 @@ export default class DataGridRow extends React.Component<RowProps> {
         renderTreeCollapseTool,
         renderTreeExpandTool,
         renderTreeLoadingTool,
+        onColumnMouseEnter,
+        onColumnMouseLeave,
+        columnIndexHovered,
+        columnHoverClassName,
+        computedEnableColumnHover: isColumnHover,
       };
 
       if (computedCellSelection && getCellSelectionKey) {
@@ -1271,6 +1289,7 @@ export default class DataGridRow extends React.Component<RowProps> {
 
       if (
         (virtualizeColumns && !cellProps.computedLocked) ||
+        enableColumnAutosize ||
         this.props.editable ||
         cellProps.computedEditable
       ) {
@@ -2199,4 +2218,10 @@ DataGridRow.propTypes = {
   renderTreeExpandTool: PropTypes.func,
   renderTreeLoadingTool: PropTypes.func,
   currentEditCompletePromise: PropTypes.any,
+  enableColumnAutosize: PropTypes.bool,
+  columnHoverClassName: PropTypes.string,
+  computedEnableColumnHover: PropTypes.bool,
+  onColumnMouseEnter: PropTypes.func,
+  onColumnMouseLeave: PropTypes.func,
+  columnIndexHovered: PropTypes.number,
 };

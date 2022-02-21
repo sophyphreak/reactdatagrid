@@ -10,18 +10,18 @@ import { TypeLockedRow, TypeComputedProps, TypeFooterRow } from '.';
 import { FC, Component, ReactNode } from 'react';
 import { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 
-export type TypeSummaryReducer = {
-  initialValue: any;
+export type TypeSummaryReducer<T = any> = {
+  initialValue: T;
   name?: string;
   complete?: (
-    value: any,
+    accumulator: T,
     data: any[],
     computedProps?: TypeComputedProps
-  ) => any;
-  reducer: (accumulator: any, value: any, data: any | TypeComputedProps) => any;
+  ) => T;
+  reducer: (accumulator: T, value: any, data: any | TypeComputedProps) => T;
 
   //also allow as reduce instead of reducer
-  reduce?: (accumulator: any, value: any, data: any | TypeComputedProps) => any;
+  reduce?: (accumulator: T, value: any, data: any | TypeComputedProps) => T;
 };
 export interface IColumn {
   name?: string;
@@ -108,6 +108,8 @@ export interface IColumn {
   readonly render?: (...args: any[]) => ReactNode;
   readonly renderSummary?: (...args: any[]) => ReactNode;
   readonly groupSummaryReducer?: TypeSummaryReducer;
+  readonly isRowDetailsCell?: boolean;
+  readonly isCheckboxColumn?: boolean;
 }
 
 export interface TypeColWithNameProperty extends IColumn {
@@ -151,6 +153,8 @@ export type TypeComputedColumn = TypeColumn &
     computedHeader?: any;
     prevBorderRight?: boolean;
     nextBorderLeft?: boolean;
+    enableColumnHover?: boolean;
+    computedEnableColumnHover?: boolean;
   };
 export type TypeColumns = TypeColumn[];
 
