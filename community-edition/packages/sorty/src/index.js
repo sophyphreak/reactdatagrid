@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 import deepGet from '../../deep-get';
-var curry = require('./curry');
-var TYPES = require('./types');
+import curry from './curry';
+import TYPES from './types';
 function isFn(fn) {
     return typeof fn === 'function';
 }

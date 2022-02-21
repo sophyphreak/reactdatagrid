@@ -4,9 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import Region from '../region';
-
 /**
  * @static
  * Aligns the source region to the target region, so as to correspond to the given alignment.
@@ -60,27 +58,16 @@ import Region from '../region';
  *
  * @return {RegionClass} The Region class
  */
-Region.align = function(sourceRegion, targetRegion, align) {
-  targetRegion = Region.from(targetRegion);
-
-  align = (align || 'c-c').split('-');
-
-  //<debug>
-  if (align.length != 2) {
-    console.warn(
-      "Incorrect region alignment! The align parameter need to be in the form 'br-c', that is, a - separated string!",
-      align
-    );
-  }
-  //</debug>
-
-  return Region.alignToPoint(
-    sourceRegion,
-    targetRegion.getPoint(align[1]),
-    align[0]
-  );
+Region.align = function (sourceRegion, targetRegion, align) {
+    targetRegion = Region.from(targetRegion);
+    align = (align || 'c-c').split('-');
+    //<debug>
+    if (align.length != 2) {
+        console.warn("Incorrect region alignment! The align parameter need to be in the form 'br-c', that is, a - separated string!", align);
+    }
+    //</debug>
+    return Region.alignToPoint(sourceRegion, targetRegion.getPoint(align[1]), align[0]);
 };
-
 /**
  * Modifies the given region to be aligned to the point, as specified by anchor
  *
@@ -92,26 +79,21 @@ Region.align = function(sourceRegion, targetRegion, align) {
  *
  * @return {Region} the given region
  */
-Region.alignToPoint = function(region, point, anchor) {
-  region = Region.from(region);
-
-  var sourcePoint = region.getPoint(anchor);
-  var count = 0;
-  var shiftObj = {};
-
-  if (sourcePoint.x != null && point.x != null) {
-    count++;
-    shiftObj.left = point.x - sourcePoint.x;
-  }
-
-  if (sourcePoint.y != null && point.y != null) {
-    count++;
-    shiftObj.top = point.y - sourcePoint.y;
-  }
-
-  if (count) {
-    region.shift(shiftObj);
-  }
-
-  return region;
+Region.alignToPoint = function (region, point, anchor) {
+    region = Region.from(region);
+    var sourcePoint = region.getPoint(anchor);
+    var count = 0;
+    var shiftObj = {};
+    if (sourcePoint.x != null && point.x != null) {
+        count++;
+        shiftObj.left = point.x - sourcePoint.x;
+    }
+    if (sourcePoint.y != null && point.y != null) {
+        count++;
+        shiftObj.top = point.y - sourcePoint.y;
+    }
+    if (count) {
+        region.shift(shiftObj);
+    }
+    return region;
 };

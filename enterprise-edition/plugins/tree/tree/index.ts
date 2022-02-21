@@ -32,6 +32,11 @@ const augmentNode = (
     return;
   }
 
+  if (!n[idProperty]) {
+    console.error(`Set the correct "idProperty".`);
+    return;
+  }
+
   const parentNodeId = parentNode ? parentNode[idProperty] : undefined;
   const path = parentNode
     ? `${parentNodeId}${pathSeparator}${n[idProperty]}`

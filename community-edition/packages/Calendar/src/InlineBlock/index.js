@@ -4,25 +4,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React, { Component } from 'react';
-
 class InovuaInlineBlock extends Component {
-  render() {
-    const { props } = this;
-    const domProps = {
-      ...props,
-      style: {
-        display: 'inline-block',
-        ...props.style,
-      },
-    };
-    return <div {...props} />;
-  }
+    render() {
+        const { props } = this;
+        const domProps = {
+            ...props,
+            style: {
+                display: 'inline-block',
+                ...props.style,
+            },
+        };
+        return React.createElement("div", { ...props });
+    }
 }
-
 InovuaInlineBlock.defaultProps = {
-  style: {},
+    style: {},
 };
-
 export default InovuaInlineBlock;

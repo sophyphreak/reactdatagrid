@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import getScrollbarWidth from '../packages/getScrollbarWidth';
+import { id as checkboxColumnId } from '../normalizeColumns/defaultCheckColumnId';
+import { id as rowReorderColumnId } from '../normalizeColumns/defaultRowReorderColumnId';
+import { id as rowIndexColumnId } from '../normalizeColumns/defaultRowIndexColumnId';
+import { id as rowExapandColumnId } from '../normalizeColumns/defaultRowExpandColumnId';
 const EMPTY_OBJECT = {};
 const removeItemFromArray = (array, obj) => {
     const index = array.indexOf(obj);
@@ -16,6 +20,18 @@ const getColumnsWidths = (columns) => {
     return columns.reduce((width, column) => {
         return width + column.computedWidth;
     }, 0);
+};
+const checkForSpecialColumns = (id) => {
+    const specialColumns = [
+        checkboxColumnId,
+        rowReorderColumnId,
+        rowIndexColumnId,
+        rowExapandColumnId,
+    ];
+    if (specialColumns.indexOf(id) === -1) {
+        return false;
+    }
+    return true;
 };
 const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
     const computeColumnSizesToFit = (gridWidth) => {
@@ -115,7 +131,12 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
             return;
         }
         columns.forEach((column) => {
-            callback(column);
+            if (column.resizable === false || checkForSpecialColumns(column.id)) {
+                // do nothing
+            }
+            else {
+                callback(column);
+            }
         });
     };
     const getCellForColumn = (column, row) => {
@@ -124,15 +145,14 @@ const useColumnsSizing = (_props, _computedProps, computedPropsRef) => {
             return;
         }
         let result;
-        const idProperty = computedProps.idProperty;
-        const columnId = column[idProperty];
+        const columnId = column.id;
         const cells = row.getCells();
         if (!cells.length) {
             return;
         }
         cells.forEach((cell) => {
             const cellProps = cell.props;
-            const cellId = cellProps[idProperty];
+            const cellId = cellProps.id;
             if (columnId === cellId) {
                 result = cell.domRef.current;
             }

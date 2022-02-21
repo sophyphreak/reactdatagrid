@@ -4,9 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import Region from '../region';
-
 /**
  *
  * This method is trying to align the sourceRegion to the targetRegion, given the alignment positions
@@ -40,132 +38,97 @@ import Region from '../region';
  * @return {String/Undefined} the chosen position for the alignment, or undefined if no position found
  */
 function ALIGN_TO_NORMALIZED(sourceRegion, targetRegion, positions, config) {
-  targetRegion = Region.from(targetRegion);
-
-  config = config || {};
-
-  var constrainTo = config.constrain,
-    syncOption = config.sync,
-    offsets = config.offset || [],
-    syncWidth = false,
-    syncHeight = false,
-    sourceClone = sourceRegion.clone();
-
-  /*
-   * Prepare the method arguments: positions, offsets, constrain and sync options
-   */
-  if (!Array.isArray(positions)) {
-    positions = positions ? [positions] : [];
-  }
-
-  if (!Array.isArray(offsets)) {
-    offsets = offsets ? [offsets] : [];
-  }
-
-  if (constrainTo) {
-    constrainTo =
-      constrainTo === true ? Region.getDocRegion() : constrainTo.getRegion();
-  }
-
-  if (syncOption) {
-    if (syncOption.size) {
-      syncWidth = true;
-      syncHeight = true;
-    } else {
-      syncWidth = syncOption === true ? true : syncOption.width || false;
-
-      syncHeight = syncOption === true ? true : syncOption.height || false;
+    targetRegion = Region.from(targetRegion);
+    config = config || {};
+    var constrainTo = config.constrain, syncOption = config.sync, offsets = config.offset || [], syncWidth = false, syncHeight = false, sourceClone = sourceRegion.clone();
+    /*
+     * Prepare the method arguments: positions, offsets, constrain and sync options
+     */
+    if (!Array.isArray(positions)) {
+        positions = positions ? [positions] : [];
     }
-  }
-
-  if (syncWidth) {
-    sourceClone.setWidth(targetRegion.getWidth());
-  }
-  if (syncHeight) {
-    sourceClone.setHeight(targetRegion.getHeight());
-  }
-
-  var offset,
-    i = 0,
-    len = positions.length,
-    pos,
-    intersection,
-    itArea,
-    maxArea = -1,
-    maxAreaIndex = -1;
-
-  for (; i < len; i++) {
-    pos = positions[i];
-    offset = offsets[i];
-
-    sourceClone.alignToRegion(targetRegion, pos);
-
-    if (offset) {
-      if (!Array.isArray(offset)) {
-        offset = offsets[i] = [offset.x || offset.left, offset.y || offset.top];
-      }
-
-      sourceClone.shift({
-        left: offset[0],
-        top: offset[1],
-      });
+    if (!Array.isArray(offsets)) {
+        offsets = offsets ? [offsets] : [];
     }
-
-    //the source region is already aligned in the correct position
-
     if (constrainTo) {
-      //if we have a constrain region, test for the constrain
-      intersection = sourceClone.getIntersection(constrainTo);
-
-      if (intersection && intersection.equals(sourceClone)) {
-        //constrain respected, so return (the aligned position)
-
+        constrainTo =
+            constrainTo === true ? Region.getDocRegion() : constrainTo.getRegion();
+    }
+    if (syncOption) {
+        if (syncOption.size) {
+            syncWidth = true;
+            syncHeight = true;
+        }
+        else {
+            syncWidth = syncOption === true ? true : syncOption.width || false;
+            syncHeight = syncOption === true ? true : syncOption.height || false;
+        }
+    }
+    if (syncWidth) {
+        sourceClone.setWidth(targetRegion.getWidth());
+    }
+    if (syncHeight) {
+        sourceClone.setHeight(targetRegion.getHeight());
+    }
+    var offset, i = 0, len = positions.length, pos, intersection, itArea, maxArea = -1, maxAreaIndex = -1;
+    for (; i < len; i++) {
+        pos = positions[i];
+        offset = offsets[i];
+        sourceClone.alignToRegion(targetRegion, pos);
+        if (offset) {
+            if (!Array.isArray(offset)) {
+                offset = offsets[i] = [offset.x || offset.left, offset.y || offset.top];
+            }
+            sourceClone.shift({
+                left: offset[0],
+                top: offset[1],
+            });
+        }
+        //the source region is already aligned in the correct position
+        if (constrainTo) {
+            //if we have a constrain region, test for the constrain
+            intersection = sourceClone.getIntersection(constrainTo);
+            if (intersection && intersection.equals(sourceClone)) {
+                //constrain respected, so return (the aligned position)
+                sourceRegion.set(sourceClone);
+                return pos;
+            }
+            else {
+                //the constrain was not respected, so continue trying
+                if (intersection && (itArea = intersection.getArea()) > maxArea) {
+                    maxArea = itArea;
+                    maxAreaIndex = i;
+                }
+            }
+        }
+        else {
+            sourceRegion.set(sourceClone);
+            return pos;
+        }
+    }
+    //no alignment respected the constraints
+    if (~maxAreaIndex) {
+        pos = positions[maxAreaIndex];
+        offset = offsets[maxAreaIndex];
+        sourceClone.alignToRegion(targetRegion, pos);
+        if (offset) {
+            sourceClone.shift({
+                left: offset[0],
+                top: offset[1],
+            });
+        }
+        //we are sure an intersection exists, because of the way the maxAreaIndex was computed
+        intersection = sourceClone.getIntersection(constrainTo);
+        sourceClone.setRegion(intersection);
+        sourceClone.alignToRegion(targetRegion, pos);
+        if (offset) {
+            sourceClone.shift({
+                left: offset[0],
+                top: offset[1],
+            });
+        }
         sourceRegion.set(sourceClone);
         return pos;
-      } else {
-        //the constrain was not respected, so continue trying
-        if (intersection && (itArea = intersection.getArea()) > maxArea) {
-          maxArea = itArea;
-          maxAreaIndex = i;
-        }
-      }
-    } else {
-      sourceRegion.set(sourceClone);
-      return pos;
     }
-  }
-
-  //no alignment respected the constraints
-  if (~maxAreaIndex) {
-    pos = positions[maxAreaIndex];
-    offset = offsets[maxAreaIndex];
-
-    sourceClone.alignToRegion(targetRegion, pos);
-
-    if (offset) {
-      sourceClone.shift({
-        left: offset[0],
-        top: offset[1],
-      });
-    }
-
-    //we are sure an intersection exists, because of the way the maxAreaIndex was computed
-    intersection = sourceClone.getIntersection(constrainTo);
-
-    sourceClone.setRegion(intersection);
-    sourceClone.alignToRegion(targetRegion, pos);
-
-    if (offset) {
-      sourceClone.shift({
-        left: offset[0],
-        top: offset[1],
-      });
-    }
-
-    sourceRegion.set(sourceClone);
-
-    return pos;
-  }
 }
-
 export default ALIGN_TO_NORMALIZED;

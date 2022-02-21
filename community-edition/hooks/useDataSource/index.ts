@@ -654,7 +654,12 @@ export default (
   const setItemAt = (
     index: number,
     item: any,
-    config?: { replace?: boolean; property?: string; value?: any }
+    config?: {
+      replace?: boolean;
+      property?: string;
+      value?: any;
+      deepCloning?: boolean;
+    }
   ) => {
     const replace = config && config.replace;
     const { current: computedProps } = computedPropsRef;
@@ -673,7 +678,22 @@ export default (
       if (config && config.property) {
         newItem = { ...newItem, [config.property]: config.value };
       } else {
-        newItem = { ...newItem, ...item };
+        if (config && config.deepCloning) {
+          if (computedProps.compoundIdProperty) {
+            let parts = computedProps.idProperty.split(
+              computedProps.idPropertySeparator
+            );
+
+            for (let i = 0; i < parts.length; i++) {
+              const part = parts[i];
+              if (newItem[part]) {
+                Object.assign(newItem[part], { ...item[part] });
+              }
+            }
+          }
+        } else {
+          newItem = { ...newItem, ...item };
+        }
       }
     }
 
@@ -701,15 +721,17 @@ export default (
 
     const newIds: any = {};
     for (let i = 0; i < items.length; i++) {
-      const oldId = computedProps.getItemId(items[i]);
-      let newItem = computedProps.getItemAt(oldId);
+      const item = items[i];
+      const oldId = computedProps.getItemId(item);
+      const index = computedProps.getItemIndex(item);
+      let newItem = computedProps.getItemAt(index);
       if (!newItem) {
         continue;
       }
       if (replace) {
-        newItem = items[i];
+        newItem = item;
       } else {
-        newItem = { ...newItem, ...items[i] };
+        newItem = { ...newItem, ...item };
       }
 
       const newId = computedProps.getItemId(newItem);
@@ -1145,7 +1167,13 @@ export default (
 
       data = data || computedProps.data;
 
-      return getIndexBy(data, computedProps.idProperty, rowId);
+      return getIndexBy(
+        data,
+        computedProps.idProperty,
+        rowId,
+        computedProps.getItemId,
+        computedProps.compoundIdProperty
+      );
     },
     []
   );

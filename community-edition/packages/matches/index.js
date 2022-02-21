@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 'use strict';
-const getGlobal = require('../../getGlobal');
+import { getGlobal } from '../../getGlobal';
 const globalObject = getGlobal();
 var proto = globalObject.Element ? globalObject.Element.prototype : {};
 var nativeMatches = proto.matches ||
@@ -13,4 +13,4 @@ var nativeMatches = proto.matches ||
     proto.msMatchesSelector ||
     proto.oMatchesSelector ||
     proto.webkitMatchesSelector;
-module.exports = nativeMatches;
+export default nativeMatches;
