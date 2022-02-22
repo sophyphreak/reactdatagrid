@@ -26,7 +26,9 @@ export class MenuTool extends React.Component {
     onClick(event) {
         event.stopPropagation();
     }
-    onMouseDown() {
+    onMouseDown(event) {
+        // prevent default, in order to avoid blurring the grid
+        event.preventDefault();
         this.props.showContextMenu &&
             this.props.showContextMenu(this, this.props.showOnHover ? this.onHide : null);
         if (this._unmounted) {

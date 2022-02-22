@@ -55,7 +55,9 @@ export class MenuTool extends React.Component<TypeProps, TypeState> {
     event.stopPropagation();
   }
 
-  onMouseDown() {
+  onMouseDown(event: any) {
+    // prevent default, in order to avoid blurring the grid
+    event.preventDefault();
     this.props.showContextMenu &&
       this.props.showContextMenu(
         this,

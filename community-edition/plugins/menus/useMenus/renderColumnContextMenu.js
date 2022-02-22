@@ -404,6 +404,7 @@ export default (computedProps, computedPropsRef) => {
     const constrainTo = true;
     const menuProps = {
         updatePositionOnScroll: computedProps.updateMenuPositionOnScroll,
+        stopBlurPropagation: false,
         maxHeight: constrainToComputedProps.initialProps
             .columnContextMenuConstrainTo
             ? null

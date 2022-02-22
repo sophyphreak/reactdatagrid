@@ -68,9 +68,6 @@ export default (props, computedProps, computedPropsRef) => {
             if (typeof columnContextMenuOnHide == 'function') {
                 columnContextMenuOnHide();
             }
-            if (computedProps.computedFocused) {
-                computedProps.forceBlur();
-            }
             computedProps.setColumnContextMenuProps(null);
         }
     }, []);

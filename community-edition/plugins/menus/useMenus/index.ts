@@ -120,9 +120,6 @@ export default (
         columnContextMenuOnHide();
       }
 
-      if (computedProps.computedFocused) {
-        computedProps.forceBlur();
-      }
       computedProps.setColumnContextMenuProps(null);
     }
   }, []);

@@ -28,6 +28,7 @@ const App = () => {
 
   const onBlur = useCallback(event => {
     setFocused(false);
+    console.log('blurring');
   }, []);
 
   const renderRowContextMenu = (menuProps, { rowProps, cellProps }) => {
@@ -51,6 +52,7 @@ const App = () => {
     <div>
       <p>Click on the grid and outside it.</p>
       <p>The grid is {focused ? 'focused' : 'blurred'}.</p>
+      <input />
       <ReactDataGrid
         style={gridStyle}
         idProperty="id"

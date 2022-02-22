@@ -19,6 +19,7 @@ import batchUpdate from '../../utils/batchUpdate';
 import { handleSelection } from './handleSelection';
 import handleRowNavigation from './handleRowNavigation';
 import handleCellNavigation from './handleCellNavigation';
+import containsNode from '../../common/containsNode';
 
 export default (
   props: TypeDataGridProps,
@@ -44,7 +45,6 @@ export default (
   rowProps: any;
   computedActiveItem: any;
   isGroup: (item: any) => boolean;
-  forceBlur: (event?: FocusEvent) => void;
   preventBlur: MutableRefObject<boolean>;
 } => {
   const preventBlur: MutableRefObject<boolean> = useRef(false);
@@ -237,21 +237,6 @@ export default (
 
   const onFullBlur = useCallback((_event: FocusEvent) => {}, []);
 
-  const forceBlur = useCallback((event: FocusEvent) => {
-    const { current: computedProps } = computedPropsRef;
-    if (!computedProps) {
-      return;
-    }
-
-    if (computedProps.computedFocused) {
-      computedProps.computedSetFocused(false);
-    }
-
-    if (props.onBlur) {
-      props.onBlur(event);
-    }
-  }, []);
-
   const isGroup = useCallback((item: any): boolean => {
     return !!item && !!item.__group;
   }, []);
@@ -307,8 +292,11 @@ export default (
     ) {
       return;
     }
+    const domNode = computedProps.getDOMNode();
 
-    if (computedProps.preventBlur && computedProps.preventBlur.current) {
+    if (event.relatedTarget && containsNode(domNode, event.relatedTarget)) {
+      // we're most likely just focusing a context menu right now
+      // so no need to trigger onBlur
       return;
     }
 
@@ -647,7 +635,6 @@ export default (
     computedOnKeyDown,
     computedOnFocus,
     computedOnBlur,
-    forceBlur,
     preventBlur,
     computedOnRowClick,
     computedOnCellMouseDown,

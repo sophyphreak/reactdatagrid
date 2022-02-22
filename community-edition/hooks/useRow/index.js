@@ -9,6 +9,7 @@ import batchUpdate from '../../utils/batchUpdate';
 import { handleSelection } from './handleSelection';
 import handleRowNavigation from './handleRowNavigation';
 import handleCellNavigation from './handleCellNavigation';
+import containsNode from '../../common/containsNode';
 export default (props, computedProps, computedPropsRef) => {
     const preventBlur = useRef(false);
     const computedOnKeyDown = (event) => {
@@ -173,18 +174,6 @@ export default (props, computedProps, computedPropsRef) => {
         }
     };
     const onFullBlur = useCallback((_event) => { }, []);
-    const forceBlur = useCallback((event) => {
-        const { current: computedProps } = computedPropsRef;
-        if (!computedProps) {
-            return;
-        }
-        if (computedProps.computedFocused) {
-            computedProps.computedSetFocused(false);
-        }
-        if (props.onBlur) {
-            props.onBlur(event);
-        }
-    }, []);
     const isGroup = useCallback((item) => {
         return !!item && !!item.__group;
     }, []);
@@ -227,7 +216,10 @@ export default (props, computedProps, computedPropsRef) => {
             computedProps.preventBlurOnContextMenuOpen.current) {
             return;
         }
-        if (computedProps.preventBlur && computedProps.preventBlur.current) {
+        const domNode = computedProps.getDOMNode();
+        if (event.relatedTarget && containsNode(domNode, event.relatedTarget)) {
+            // we're most likely just focusing a context menu right now
+            // so no need to trigger onBlur
             return;
         }
         if (props.onBlur) {
@@ -454,7 +446,6 @@ export default (props, computedProps, computedPropsRef) => {
         computedOnKeyDown,
         computedOnFocus,
         computedOnBlur,
-        forceBlur,
         preventBlur,
         computedOnRowClick,
         computedOnCellMouseDown,

@@ -831,7 +831,9 @@ class InovuaMenu extends Component {
     if (typeof this.props.onBlur === 'function') {
       this.props.onBlur(event);
     }
-    event.stopPropagation();
+    if (this.props.stopBlurPropagation) {
+      event.stopPropagation();
+    }
 
     /**
      * is prevented when it is closed by mouse
@@ -1670,6 +1672,7 @@ InovuaMenu.defaultProps = {
   cellStyle: {},
 
   stopClickPropagation: true,
+  stopBlurPropagation: true,
 
   scrollProps: {},
 
@@ -1856,6 +1859,7 @@ InovuaMenu.propTypes = {
   separatorIndexes: PropTypes.string,
   tableClassName: PropTypes.string,
   shadow: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  stopBlurPropagation: PropTypes.bool,
 
   submenuProps: PropTypes.object,
   menuHasSubmenu: PropTypes.bool,
