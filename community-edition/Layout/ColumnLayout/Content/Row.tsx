@@ -578,6 +578,11 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       renderTreeCollapseTool,
       renderTreeExpandTool,
       renderTreeLoadingTool,
+      onColumnMouseEnter,
+      onColumnMouseLeave,
+      columnIndexHovered,
+      computedEnableColumnHover,
+      columnHoverClassName,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -752,6 +757,11 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         renderTreeCollapseTool,
         renderTreeExpandTool,
         renderTreeLoadingTool,
+        onColumnMouseEnter,
+        onColumnMouseLeave,
+        columnIndexHovered,
+        computedEnableColumnHover,
+        columnHoverClassName,
       };
 
       if (computedCellSelection && getCellSelectionKey) {

@@ -32,7 +32,7 @@ const renderRows = (
     scrollLeft,
     columnRenderCount,
     columnRenderStartIndex,
-  },
+  }: any,
   {
     // the full data array
     availableWidth,
@@ -180,7 +180,7 @@ const renderRows = (
     enableColumnAutosize,
     columnHoverClassName,
     computedEnableColumnHover,
-  }
+  }: any
 ) => {
   const remoteOffset = computedLivePagination ? 0 : computedSkip || 0;
 
