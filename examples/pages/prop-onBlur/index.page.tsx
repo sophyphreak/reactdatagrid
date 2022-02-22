@@ -28,7 +28,6 @@ const App = () => {
 
   const onBlur = useCallback(event => {
     setFocused(false);
-    console.log('blurring');
   }, []);
 
   const renderRowContextMenu = (menuProps, { rowProps, cellProps }) => {
