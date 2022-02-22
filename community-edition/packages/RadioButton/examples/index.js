@@ -4,9 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { render } from 'react-dom';
 import '../style/index.scss';
+import RadioButton from '../src/';
 import '../style/index.scss';
 import './index.scss';
 class App extends Component {
@@ -14,37 +15,10 @@ class App extends Component {
         super(props);
     }
     render() {
-        return browserNative;
-        iconSize = { 16:  };
-        iconStyle = {};
-        {
-            paddingRight: 3;
-        }
+        return (React.createElement("div", null,
+            React.createElement(RadioButton, { browserNative: true, iconSize: 16, iconStyle: { paddingRight: 3 }, children: "First" }),
+            React.createElement(RadioButton, { iconSize: 16, iconStyle: { paddingRight: 3 }, children: "Locked", readOnly: true }),
+            React.createElement(RadioButton, { iconSize: 16, iconStyle: { paddingRight: 3 }, children: "Last" })));
     }
-    children = "First"
-        /  >
-        iconSize;
 }
-{
-    16;
-}
-iconStyle = {};
-{
-    paddingRight: 3;
-}
-children = "Locked";
-readOnly
-    /  >
-    iconSize;
-{
-    16;
-}
-iconStyle = {};
-{
-    paddingRight: 3;
-}
-children = "Last"
-    /  >
-    /div>;
-;
-render(/>, document.getElementById('content')););
+render(React.createElement(App, null), document.getElementById('content'));
