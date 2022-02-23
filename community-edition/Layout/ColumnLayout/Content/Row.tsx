@@ -583,6 +583,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       columnIndexHovered,
       computedEnableColumnHover,
       columnHoverClassName,
+      enableColumnAutosize,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -819,6 +820,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
       if (
         (virtualizeColumns && !cellProps.computedLocked) ||
+        enableColumnAutosize ||
         props.editable ||
         cellProps.computedEditable
       ) {

@@ -233,7 +233,11 @@ const useColumnsSizing = (
   };
 
   const cloneIntoDummyContainer = (cell: any, dummyContainer: any) => {
-    const cellClone = cell.cloneNode(true);
+    const cellClone = cell && cell.cloneNode(true);
+
+    if (!cellClone) {
+      return;
+    }
 
     cellClone.style.width = '';
     cellClone.style.minWidth = '';
