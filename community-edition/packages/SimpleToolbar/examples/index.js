@@ -7,31 +7,23 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import 'typeface-roboto';
+import ToolBar from '../src';
 import '../style/index.scss';
 import { getGlobal } from '../../../getGlobal';
 const globalObject = getGlobal();
 globalObject.React = React;
 class App extends Component {
     render() {
-        return style = {};
-        {
-            xbackground: '#5e9a2c',
-                fontSize;
-            14,
-                fontFamily;
-            'Roboto',
-                border;
-            '1px solid magenta',
-                boxSizing;
-            'border-box',
-            ;
-        }
+        return (React.createElement("div", { style: {
+                xbackground: '#5e9a2c',
+                fontSize: 14,
+                fontFamily: 'Roboto',
+                border: '1px solid magenta',
+                boxSizing: 'border-box',
+            } },
+            React.createElement(ToolBar, null,
+                React.createElement("div", null, "xxx"),
+                React.createElement("div", null, "yyy"))));
     }
 }
-    >
-        xxx < /div>
-    < div > yyy < /div>
-    < /ToolBar>
-    < /div>;
-;
-render(/>, document.getElementById('content')););
+render(React.createElement(App, null), document.getElementById('content'));

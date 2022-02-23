@@ -4,10 +4,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { render } from 'react-dom';
 import Checkbox from '../src';
-import style from './index.scss';
 var checked = true;
 function nextValue(value, oldValue, info) {
     if (oldValue === 1) {
@@ -38,45 +37,15 @@ class App extends Component {
             console.log('focused');
         }
         const { checked } = this.state;
-        return className = "App";
-        style = {};
-        {
-            padding: 20;
-        }
+        return (React.createElement("form", { className: "App", style: { padding: 20 } },
+            React.createElement(Checkbox, { supportIndeterminate: true, checked: this.state.checked, browserNative: true, onFocus: focus, onChange: checked => {
+                    this.setState({
+                        checked,
+                    });
+                } }, "test"),
+            React.createElement(Checkbox, { supportIndeterminate: true, onFocus: focus, focusable: false }, "test"),
+            React.createElement(Checkbox, { supportIndeterminate: true, onFocus: focus, checked: true }, "test"),
+            React.createElement(Checkbox, { supportIndeterminate: true, onFocus: focus, checked: null }, "test")));
     }
 }
- >
-    supportIndeterminate;
-checked = { this: .state.checked };
-browserNative;
-onFocus = { focus };
-onChange = { checked };
-{
-    this.setState({
-        checked,
-    });
-}
-    >
-        test
-    < /Checkbox>
-    < Checkbox;
-supportIndeterminate;
-onFocus = { focus };
-focusable = { false:  } >
-    test
-    < /Checkbox>
-    < Checkbox;
-supportIndeterminate;
-onFocus = { focus };
-checked = { true:  } >
-    test
-    < /Checkbox>
-    < Checkbox;
-supportIndeterminate;
-onFocus = { focus };
-checked = { null:  } >
-    test
-    < /Checkbox>
-    < /form>;
-;
-render(/>, document.getElementById('content')););
+render(React.createElement(App, null), document.getElementById('content'));
