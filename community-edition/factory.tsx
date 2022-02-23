@@ -1303,11 +1303,8 @@ const GridFactory = (
       computedOnKeyDown: onKeyDown,
       computedOnFocus: onFocus,
       computedOnBlur: onBlur,
-      preventBlur,
       ...useRowProps
     } = useRow(props, computedProps, computedPropsRef);
-
-    computedProps.preventBlur = preventBlur;
 
     if (pluginsMap['locked-rows'] && pluginsMap['locked-rows'].hook) {
       Object.assign(

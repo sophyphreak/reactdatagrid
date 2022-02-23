@@ -1350,8 +1350,6 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
     columnId: number | string;
     dir: number;
   }) => void;
-  forceBlur: (event?: FocusEvent) => void;
-  preventBlur?: MutableRefObject<boolean>;
   compoundIdProperty?: boolean;
 };
 

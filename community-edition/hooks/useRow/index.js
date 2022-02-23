@@ -11,7 +11,6 @@ import handleRowNavigation from './handleRowNavigation';
 import handleCellNavigation from './handleCellNavigation';
 import containsNode from '../../common/containsNode';
 export default (props, computedProps, computedPropsRef) => {
-    const preventBlur = useRef(false);
     const computedOnKeyDown = (event) => {
         if (props.onKeyDown) {
             props.onKeyDown(event);
@@ -446,7 +445,6 @@ export default (props, computedProps, computedPropsRef) => {
         computedOnKeyDown,
         computedOnFocus,
         computedOnBlur,
-        preventBlur,
         computedOnRowClick,
         computedOnCellMouseDown,
         isGroup,

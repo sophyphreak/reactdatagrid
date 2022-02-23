@@ -872,8 +872,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         computedProps.setShowEmptyRows = setShowEmptyRows;
         computedProps.maxVisibleRows = maxVisibleRows;
         const className = prepareClassName(computedProps);
-        const { computedOnKeyDown: onKeyDown, computedOnFocus: onFocus, computedOnBlur: onBlur, preventBlur, ...useRowProps } = useRow(props, computedProps, computedPropsRef);
-        computedProps.preventBlur = preventBlur;
+        const { computedOnKeyDown: onKeyDown, computedOnFocus: onFocus, computedOnBlur: onBlur, ...useRowProps } = useRow(props, computedProps, computedPropsRef);
         if (pluginsMap['locked-rows'] && pluginsMap['locked-rows'].hook) {
             Object.assign(computedProps, pluginsMap['locked-rows'].hook(props, computedProps, computedPropsRef));
         }

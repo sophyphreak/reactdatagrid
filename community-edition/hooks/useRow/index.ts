@@ -45,10 +45,7 @@ export default (
   rowProps: any;
   computedActiveItem: any;
   isGroup: (item: any) => boolean;
-  preventBlur: MutableRefObject<boolean>;
 } => {
-  const preventBlur: MutableRefObject<boolean> = useRef(false);
-
   const computedOnKeyDown = (event: KeyboardEvent) => {
     if (props.onKeyDown) {
       props.onKeyDown(event);
@@ -635,7 +632,6 @@ export default (
     computedOnKeyDown,
     computedOnFocus,
     computedOnBlur,
-    preventBlur,
     computedOnRowClick,
     computedOnCellMouseDown,
     isGroup,
