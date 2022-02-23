@@ -169,6 +169,8 @@ export type TypeCellProps = {
           contextMenu: any;
         }
       ) => ReactNode);
+  groupProps?: any;
+  cellSelectable?: boolean;
 };
 export type TypeShowCellBorders = true | false | 'vertical' | 'horizontal';
 

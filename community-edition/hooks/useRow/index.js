@@ -9,6 +9,7 @@ import batchUpdate from '../../utils/batchUpdate';
 import { handleSelection } from './handleSelection';
 import handleRowNavigation from './handleRowNavigation';
 import handleCellNavigation from './handleCellNavigation';
+import containsNode from '../../common/containsNode';
 export default (props, computedProps, computedPropsRef) => {
     const computedOnKeyDown = (event) => {
         if (props.onKeyDown) {
@@ -18,7 +19,8 @@ export default (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
-        if (event.nativeEvent && event.nativeEvent.__handled_in_details) {
+        if (event.nativeEvent &&
+            event.nativeEvent.__handled_in_details) {
             return;
         }
         const sameElement = event.target === computedProps.getScrollingElement();
@@ -112,11 +114,13 @@ export default (props, computedProps, computedPropsRef) => {
         if (editKeyPressed) {
             handled = true;
             if (computedProps.visibleColumns && computedProps.visibleColumns.length) {
-                computedProps.tryStartEdit({
-                    rowIndex: activeItem ? activeIndex : 0,
-                    columnId: computedProps.visibleColumns[0].id,
-                    dir: 1,
-                });
+                if (computedProps.tryStartEdit) {
+                    computedProps.tryStartEdit({
+                        rowIndex: activeItem ? activeIndex : 0,
+                        columnId: computedProps.visibleColumns[0].id,
+                        dir: 1,
+                    });
+                }
             }
         }
         if (activeItem && event.key === 'Enter') {
@@ -168,7 +172,7 @@ export default (props, computedProps, computedPropsRef) => {
             }
         }
     };
-    const onFullBlur = useCallback((event) => { }, []);
+    const onFullBlur = useCallback((_event) => { }, []);
     const isGroup = useCallback((item) => {
         return !!item && !!item.__group;
     }, []);
@@ -209,6 +213,12 @@ export default (props, computedProps, computedPropsRef) => {
         event.preventDefault();
         if (computedProps.preventBlurOnContextMenuOpen &&
             computedProps.preventBlurOnContextMenuOpen.current) {
+            return;
+        }
+        const domNode = computedProps.getDOMNode();
+        if (event.relatedTarget && containsNode(domNode, event.relatedTarget)) {
+            // we're most likely just focusing a context menu right now
+            // so no need to trigger onBlur
             return;
         }
         if (props.onBlur) {

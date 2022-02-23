@@ -158,6 +158,7 @@ export default (
       if (!computedProps) {
         return;
       }
+
       if (computedProps.columnContextMenuProps) {
         computedProps.hideColumnContextMenu();
         return;

@@ -53,6 +53,7 @@ export default (computedProps, computedPropsRef) => {
     const items = [];
     const menuProps = {
         updatePositionOnScroll: computedProps.updateMenuPositionOnScroll,
+        stopBlurPropagation: false,
         maxHeight: constrainToComputedProps.initialProps
             .columnContextMenuConstrainTo
             ? null
