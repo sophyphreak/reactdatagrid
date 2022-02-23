@@ -523,7 +523,6 @@ export default (
         ? COLUMN_MENU_ALIGN_POSITIONS_RTL
         : COLUMN_MENU_ALIGN_POSITIONS,
     alignTo: computedProps.columnContextMenuInfoRef.current.menuAlignTo,
-    displayInModal: true,
   };
 
   let result;

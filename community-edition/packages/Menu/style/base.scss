@@ -23,18 +23,6 @@
   position: relative;
 }
 
-// modal
-
-.#{$INOVUA_MENU_ROOT_CLASS}--modal {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: transparent;
-  user-select: none;
-}
-
 // scroll
 
 .#{$INOVUA_MENU_ROOT_CLASS}__arrow {

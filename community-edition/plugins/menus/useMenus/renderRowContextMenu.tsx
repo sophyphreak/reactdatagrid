@@ -101,7 +101,6 @@ export default (
         ? ROW_MENU_ALIGN_POSITIONS_RTL
         : ROW_MENU_ALIGN_POSITIONS,
     alignTo: computedProps.rowContextMenuInfoRef.current.menuAlignTo,
-    displayInModal: true,
   };
 
   let result;

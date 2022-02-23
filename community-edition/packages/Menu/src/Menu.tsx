@@ -1748,7 +1748,6 @@ InovuaMenu.propTypes = {
       width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     }),
   ]),
-  displayInModal: PropTypes.bool,
 
   // events
   onClick: PropTypes.func,
