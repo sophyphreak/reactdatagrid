@@ -125,7 +125,7 @@ class GenericFilter extends React.Component {
             render: (node) => {
                 return (React.createElement("div", { className: className },
                     node,
-                    settings));
+                    props.enableColumnFilterContextMenu && settings));
             },
         };
         const FilterEditor = props.filterEditor;

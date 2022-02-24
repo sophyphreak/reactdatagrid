@@ -16,6 +16,7 @@ type TypeGenericFilterProps = {
   cellInstance?: any;
   props?: any;
   rtl?: boolean;
+  enableColumnFilterContextMenu?: boolean;
 };
 
 type TypeGenericFilterState = {};
@@ -192,7 +193,7 @@ class GenericFilter extends React.Component<
         return (
           <div className={className}>
             {node}
-            {settings}
+            {props.enableColumnFilterContextMenu && settings}
           </div>
         );
       },

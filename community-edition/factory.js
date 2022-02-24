@@ -1123,6 +1123,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         columnResizeProxyWidth: 5,
         virtualizeColumnsThreshold: 15,
         shareSpaceOnResize: false,
+        enableColumnFilterContextMenu: true,
         resizable: true,
         virtualized: true,
         allowUnsort: true,

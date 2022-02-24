@@ -1708,6 +1708,8 @@ const GridFactory = (
     virtualizeColumnsThreshold: 15,
     shareSpaceOnResize: false,
 
+    enableColumnFilterContextMenu: true,
+
     resizable: true,
     virtualized: true,
     allowUnsort: true,

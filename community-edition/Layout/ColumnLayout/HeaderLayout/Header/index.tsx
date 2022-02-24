@@ -135,6 +135,7 @@ const propTypes = {
   onColumnMouseEnter: PropTypes.func,
   onColumnMouseLeave: PropTypes.func,
   columnIndexHovered: PropTypes.number,
+  enableColumnFilterContextMenu: PropTypes.bool,
 };
 
 type TypeHeaderProps = {} | any;
@@ -570,8 +571,8 @@ export default class InovuaDataGridHeader extends React.Component<
       return;
     }
     const OFFSET = 15;
-    const headerRegion = Region.from(body);
-    const targetRegion = Region.from(event.target);
+    const headerRegion = (Region as any).from(body);
+    const targetRegion = (Region as any).from(event.target);
 
     const scrollLeft = this.scrollLeft || this.props.scrollLeft || 0;
 
@@ -628,6 +629,7 @@ export default class InovuaDataGridHeader extends React.Component<
       onColumnMouseLeave,
       columnIndexHovered,
       columnHoverClassName,
+      enableColumnFilterContextMenu,
     } = props;
 
     let columns = props.columns;
@@ -675,6 +677,11 @@ export default class InovuaDataGridHeader extends React.Component<
         (defaults as any).headerUserSelect = columnHeaderUserSelect;
       }
 
+      let displayColumnFilterContextMenu = enableColumnFilterContextMenu;
+      if (column.enableColumnFilterContextMenu != null) {
+        displayColumnFilterContextMenu = column.enableColumnFilterContextMenu;
+      }
+
       const cellProps = Object.assign(defaults, column, {
         headerCell: true,
         headerHeight: props.headerHeight,
@@ -715,6 +722,7 @@ export default class InovuaDataGridHeader extends React.Component<
         columnIndex: i,
         columnIndexHovered,
         columnHoverClassName,
+        enableColumnFilterContextMenu: displayColumnFilterContextMenu,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);

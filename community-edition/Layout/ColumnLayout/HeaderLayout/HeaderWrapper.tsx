@@ -21,7 +21,7 @@ const fixScrollLeft = event => {
   });
 };
 
-export default class HeaderWrapper extends React.Component {
+export default class HeaderWrapper extends React.Component<any> {
   getSortedColumnsInfo = ({ computedSortInfo, columnsMap }) => {
     if (!computedSortInfo) {
       return;
@@ -79,6 +79,7 @@ export default class HeaderWrapper extends React.Component {
       onColumnMouseEnter,
       onColumnMouseLeave,
       columnHoverClassName,
+      enableColumnFilterContextMenu,
     } = props;
 
     let scrollbarWidth = 0;
@@ -189,6 +190,7 @@ export default class HeaderWrapper extends React.Component {
           onColumnMouseEnter={onColumnMouseEnter}
           onColumnMouseLeave={onColumnMouseLeave}
           columnHoverClassName={columnHoverClassName}
+          enableColumnFilterContextMenu={enableColumnFilterContextMenu}
         />
         <div className="InovuaReactDataGrid__header-wrapper__fill">
           {props.computedFilterable && (

@@ -722,6 +722,7 @@ export type TypePivotUniqueValuesDescriptor = {
   values: { [key: string]: TypePivotUniqueValuesDescriptor } | null;
 };
 export type TypeComputedProps = TypeDataGridPropsNoI18n & {
+  enableColumnFilterContextMenu?: boolean;
   filteredRowsCount?: (filteredRows: number) => number;
   dataCountAfterFilter?: number;
   computedLastActiveIndex: number | null;
