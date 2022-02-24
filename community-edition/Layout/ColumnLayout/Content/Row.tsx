@@ -1589,6 +1589,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       getCurrentGaps,
       rowProps,
       domRef: domRef,
+      props,
     };
   });
 
