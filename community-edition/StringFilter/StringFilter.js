@@ -51,12 +51,13 @@ class StringFilter extends React.Component {
             React.createElement("path", { fill: "none", fillRule: "evenodd", strokeLinecap: "round", strokeWidth: "1.33", d: "M1 1l8 8m0-8L1 9" })));
     };
     render() {
-        let { filterValue, readOnly, disabled, style, rtl, theme } = this.props;
+        let { filterValue, readOnly, disabled, style, rtl, theme, placeholder, } = this.props;
         const inputProps = {
             readOnly,
             disabled,
             theme,
             rtl,
+            placeholder,
             style: {
                 minWidth: 0,
                 ...style,

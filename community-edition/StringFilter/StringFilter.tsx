@@ -28,6 +28,7 @@ type StringFilterProps = {
   theme?: string;
   onChange?: Function;
   render?: Function;
+  placeholder?: string;
 };
 
 type StringFilterState = {
@@ -41,6 +42,7 @@ type InputProps = {
   rtl?: boolean;
   style?: CSSProperties;
   value?: string | null;
+  placeholder?: string;
 };
 
 class StringFilter extends React.Component<
@@ -113,13 +115,22 @@ class StringFilter extends React.Component<
   };
 
   render() {
-    let { filterValue, readOnly, disabled, style, rtl, theme } = this.props;
+    let {
+      filterValue,
+      readOnly,
+      disabled,
+      style,
+      rtl,
+      theme,
+      placeholder,
+    } = this.props;
 
     const inputProps: InputProps = {
       readOnly,
       disabled,
       theme,
       rtl,
+      placeholder,
       style: {
         minWidth: 0,
         ...style,
