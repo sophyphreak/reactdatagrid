@@ -2029,7 +2029,7 @@ DataGridRow.propTypes = {
   renderRow: PropTypes.func,
   onRenderRow: PropTypes.func,
   rowHeight: PropTypes.number,
-  rowExpandHeight: PropTypes.number,
+  rowExpandHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   initialRowHeight: PropTypes.number,
   defaultRowHeight: PropTypes.number,
   emptyScrollOffset: PropTypes.number,

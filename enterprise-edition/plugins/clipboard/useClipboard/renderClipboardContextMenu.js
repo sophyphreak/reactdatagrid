@@ -38,7 +38,7 @@ const renderClipboardContextMenu = (menuProps, { computedProps }) => {
         return;
     }
     if (!computedProps.enableClipboard) {
-        return;
+        return null;
     }
     menuProps.autoDismiss = true;
     menuProps.items = [

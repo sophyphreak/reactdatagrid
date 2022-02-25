@@ -678,17 +678,15 @@ export default (
       if (config && config.property) {
         newItem = { ...newItem, [config.property]: config.value };
       } else {
-        if (config && config.deepCloning) {
-          if (computedProps.compoundIdProperty) {
-            let parts = computedProps.idProperty.split(
-              computedProps.idPropertySeparator
-            );
+        if (config && config.deepCloning && computedProps.compoundIdProperty) {
+          let parts = computedProps.idProperty.split(
+            computedProps.idPropertySeparator
+          );
 
-            for (let i = 0; i < parts.length; i++) {
-              const part = parts[i];
-              if (newItem[part]) {
-                Object.assign(newItem[part], { ...item[part] });
-              }
+          for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            if (newItem[part]) {
+              Object.assign(newItem[part], { ...item[part] });
             }
           }
         } else {

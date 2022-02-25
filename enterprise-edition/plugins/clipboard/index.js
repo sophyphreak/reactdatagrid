@@ -5,14 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { useClipboard } from './useClipboard';
-import renderClipboardContextMenu from './useClipboard/renderClipboardContextMenu';
 const clipboard = {
     name: 'clipboard',
     hook: useClipboard,
     defaultProps: () => {
-        return {
-            renderRowContextMenu: renderClipboardContextMenu,
-        };
+        return {};
     },
 };
 export default clipboard;

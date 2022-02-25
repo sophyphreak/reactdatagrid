@@ -1558,16 +1558,10 @@ const GridFactory = (
       );
     }
 
-    if (
-      computedProps.enableClipboard &&
-      pluginsMap['clipboard'] &&
-      pluginsMap['clipboard'].hook
-    ) {
-      Object.assign(
-        computedProps,
-        pluginsMap['clipboard'].hook!(props, computedProps, computedPropsRef)
-      );
-    }
+    Object.assign(
+      computedProps,
+      pluginsMap['clipboard'].hook!(props, computedProps, computedPropsRef)
+    );
 
     if (edition !== 'enterprise') {
       if (props.rowIndexColumn) {

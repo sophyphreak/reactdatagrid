@@ -1022,11 +1022,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
         if (pluginsMap.license && pluginsMap.license.hook) {
             Object.assign(computedProps, pluginsMap.license.hook(props, computedProps, computedPropsRef));
         }
-        if (computedProps.enableClipboard &&
-            pluginsMap['clipboard'] &&
-            pluginsMap['clipboard'].hook) {
-            Object.assign(computedProps, pluginsMap['clipboard'].hook(props, computedProps, computedPropsRef));
-        }
+        Object.assign(computedProps, pluginsMap['clipboard'].hook(props, computedProps, computedPropsRef));
         if (edition !== 'enterprise') {
             if (props.rowIndexColumn) {
                 communityFeatureWarn('Row resize (row index column)', warnRef);

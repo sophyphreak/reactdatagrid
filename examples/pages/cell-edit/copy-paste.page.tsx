@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 import ReactDataGrid from '../../../enterprise-edition';
+import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 import people from '../people';
 
 const gridStyle = { minHeight: 550 };
@@ -47,6 +48,7 @@ const App = () => {
     '3,city': true,
     '3,age': true,
   });
+  const [enableClipboard, setEnableClipboard] = useState(false);
 
   const onEditComplete = useCallback(
     ({ value, columnId, rowIndex }) => {
@@ -80,9 +82,30 @@ const App = () => {
     console.log('paste active row', row);
   };
 
+  const renderRowContextMenu = useCallback((menuProps, { rowProps }) => {
+    menuProps.autoDismiss = true;
+    menuProps.items = [
+      {
+        label: 'Row ' + rowProps.rowIndex,
+      },
+      {
+        label: 'Want to visit ' + rowProps.data.country + '?',
+      },
+    ];
+  }, []);
+
+  const checkboxProps = {
+    checked: enableClipboard,
+    onChange: setEnableClipboard,
+  };
+
   return (
     <div>
       <h3>Grid with inline edit</h3>
+
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox {...checkboxProps}>Enable clipboard</CheckBox>
+      </div>
       <input className="cell-edit__copy-paste__input" type="text" />
       <p>
         Selected cells:{' '}
@@ -94,13 +117,11 @@ const App = () => {
 
       <ReactDataGrid
         idProperty="id"
-        theme="default-dark"
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         // cellSelection={cellSelection}
         // onCellSelectionChange={onCellSelectionChange}
-        enableClipboard
-        // onCopyActiveRowChange={onCopyActiveRowChange}
-        // onPasteActiveRowChange={onPasteActiveRowChange}
+        enableClipboard={enableClipboard}
+        onCopyActiveRowChange={onCopyActiveRowChange}
+        onPasteActiveRowChange={onPasteActiveRowChange}
         // onCopySelectedCellsChange={onCopySelectedCellsChange}
         // onPasteSelectedCellsChange={onPasteSelectedCellsChange}
         // defaultGroupBy={[]}
@@ -110,6 +131,7 @@ const App = () => {
         columns={columns}
         dataSource={dataSource}
         // renderRowContextMenu={renderClipboardContextMenu}
+        // renderRowContextMenu={renderRowContextMenu}
       />
       <input
         className="cell-edit__copy-paste__input"

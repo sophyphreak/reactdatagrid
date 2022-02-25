@@ -47,7 +47,7 @@ const renderClipboardContextMenu = (
   }
 
   if (!computedProps.enableClipboard) {
-    return;
+    return null;
   }
 
   menuProps.autoDismiss = true;

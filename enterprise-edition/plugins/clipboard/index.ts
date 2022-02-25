@@ -6,15 +6,12 @@
  */
 
 import { useClipboard } from './useClipboard';
-import renderClipboardContextMenu from './useClipboard/renderClipboardContextMenu';
 
 const clipboard = {
   name: 'clipboard',
   hook: useClipboard,
   defaultProps: () => {
-    return {
-      renderRowContextMenu: renderClipboardContextMenu,
-    };
+    return {};
   },
 };
 

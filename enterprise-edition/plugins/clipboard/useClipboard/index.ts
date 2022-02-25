@@ -7,10 +7,11 @@
 
 import { MutableRefObject, useRef } from 'react';
 import { TypeDataGridProps, TypeComputedProps } from '../../../types';
+import renderClipboardContextMenu from './renderClipboardContextMenu';
 
 const useClipboard = (
   _props: TypeDataGridProps,
-  _computedProps: TypeComputedProps,
+  computedProps: TypeComputedProps,
   computedPropsRef: MutableRefObject<TypeComputedProps | null>
 ): {
   copyActiveRowToClipboard: () => void;
@@ -19,18 +20,22 @@ const useClipboard = (
   pasteSelectedCellsFromClipboard: () => void;
   clipboard: MutableRefObject<boolean>;
   preventBlurOnContextMenuOpen: MutableRefObject<boolean>;
-} => {
+} | null => {
   const clipboard: MutableRefObject<boolean> = useRef(false);
   const preventBlurOnContextMenuOpen: MutableRefObject<boolean> = useRef(false);
+
+  if (!computedProps.enableClipboard) {
+    return null;
+  }
 
   const copyActiveRowToClipboard = () => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
-      return;
+      return null;
     }
 
     if (computedProps.computedCellSelection) {
-      return;
+      return null;
     }
 
     const activeRow = computedProps.getActiveItem();
@@ -76,11 +81,11 @@ const useClipboard = (
   const pasteActiveRowFromClipboard = () => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
-      return;
+      return null;
     }
 
     if (computedProps.computedCellSelection) {
-      return;
+      return null;
     }
 
     if (navigator.clipboard) {
@@ -105,11 +110,11 @@ const useClipboard = (
   const copySelectedCellsToClipboard = () => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
-      return;
+      return null;
     }
 
     if (!computedProps.computedCellSelection) {
-      return;
+      return null;
     }
 
     const selectedCells = computedProps.computedCellSelection;
@@ -149,11 +154,11 @@ const useClipboard = (
   const pasteSelectedCellsFromClipboard = () => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
-      return;
+      return null;
     }
 
     if (!computedProps.computedCellSelection) {
-      return;
+      return null;
     }
 
     if (navigator.clipboard) {
@@ -194,6 +199,20 @@ const useClipboard = (
       });
     }
   };
+
+  const clipboardContextMenu = () => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return null;
+    }
+
+    if (computedProps.renderRowContextMenu) {
+      return;
+    }
+
+    computedProps.initialProps.renderRowContextMenu = renderClipboardContextMenu;
+  };
+  clipboardContextMenu();
 
   return {
     copyActiveRowToClipboard,
