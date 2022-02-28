@@ -9,6 +9,18 @@ import React from 'react';
 
 import { id as ROW_EXPAND_COL_ID } from '@inovua/reactdatagrid-community/normalizeColumns/defaultRowExpandColumnId';
 
+type TypeRender = {
+  isRowExpandable: (rowInfo?: {
+    id: string | number;
+    data: object;
+    rowIndex: number;
+  }) => boolean;
+  rowExpanded: number;
+  toggleRowExpand: () => void;
+  renderRowDetailsExpandIcon?: () => void;
+  renderRowDetailsCollapsedIcon?: () => void;
+};
+
 const ICON_EXPANDED = (
   <svg width="24" height="24" viewBox="0 0 24 24">
     <path d="M19 13H5v-2h14v2z" />
@@ -32,6 +44,67 @@ const ICON_MORE = (
   </svg>
 );
 
+const renderExpandIcon = ({ renderRowDetailsExpandIcon }: any) => {
+  if (renderRowDetailsExpandIcon) {
+    return renderRowDetailsExpandIcon();
+  }
+  return ICON_EXPANDED;
+};
+
+const renderCollapsedIcon = ({
+  renderRowDetailsCollapsedIcon,
+}: {
+  renderRowDetailsCollapsedIcon?: () => void;
+}) => {
+  if (renderRowDetailsCollapsedIcon) {
+    return renderRowDetailsCollapsedIcon();
+  }
+  return ICON_COLLAPSED;
+};
+
+const rowDetailsRowIcons = ({
+  isRowExpandable,
+  rowExpanded,
+  toggleRowExpand,
+  renderRowDetailsExpandIcon,
+  renderRowDetailsCollapsedIcon,
+}: TypeRender) => {
+  if (!isRowExpandable || !isRowExpandable()) {
+    return;
+  }
+
+  const style = {
+    cursor: 'pointer',
+    position: 'relative',
+    top: 1,
+  };
+
+  return React.cloneElement(
+    rowExpanded
+      ? renderExpandIcon({ renderRowDetailsExpandIcon })
+      : renderCollapsedIcon({ renderRowDetailsCollapsedIcon }),
+    {
+      style,
+      key: 'toggle_icon',
+      onClick: (event: MouseEvent) => {
+        event.stopPropagation();
+        toggleRowExpand();
+      },
+    }
+  );
+};
+
+const rowDetailsHeaderIcons = ({
+  renderRowDetailsMoreIcon,
+}: {
+  renderRowDetailsMoreIcon?: () => void;
+}) => {
+  if (renderRowDetailsMoreIcon) {
+    return renderRowDetailsMoreIcon();
+  }
+  return ICON_MORE;
+};
+
 export default {
   id: ROW_EXPAND_COL_ID,
   rowExpandColumn: true,
@@ -42,33 +115,22 @@ export default {
     isRowExpandable,
     rowExpanded,
     toggleRowExpand,
-  }: {
-    isRowExpandable: (rowInfo?: {
-      id: string | number;
-      data: object;
-      rowIndex: number;
-    }) => boolean;
-    rowExpanded: number;
-    toggleRowExpand: () => void;
-  }) => {
-    if (!isRowExpandable || !isRowExpandable()) {
-      return;
-    }
-    const style = {
-      cursor: 'pointer',
-      position: 'relative',
-      top: 1,
-    };
-    return React.cloneElement(rowExpanded ? ICON_EXPANDED : ICON_COLLAPSED, {
-      style,
-      key: 'toggle_icon',
-      onClick: (event: MouseEvent) => {
-        event.stopPropagation();
-        toggleRowExpand();
-      },
+    renderRowDetailsExpandIcon,
+    renderRowDetailsCollapsedIcon,
+  }: TypeRender) => {
+    return rowDetailsRowIcons({
+      isRowExpandable,
+      rowExpanded,
+      toggleRowExpand,
+      renderRowDetailsExpandIcon,
+      renderRowDetailsCollapsedIcon,
     });
   },
-  header: ICON_MORE,
+  header: ({
+    renderRowDetailsMoreIcon,
+  }: {
+    renderRowDetailsMoreIcon?: () => void;
+  }) => rowDetailsHeaderIcons({ renderRowDetailsMoreIcon }),
   showInContextMenu: false,
   showColumnMenuSortOptions: false,
   showColumnMenuGroupOptions: false,

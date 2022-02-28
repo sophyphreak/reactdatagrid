@@ -236,6 +236,8 @@ export type RowProps = {
   columnIndexHovered?: number;
   columnHoverClassName?: string;
   computedEnableColumnHover?: boolean;
+  renderRowDetailsExpandIcon?: () => void;
+  renderRowDetailsCollapsedIcon?: () => void;
 };
 
 export type EnhancedRowProps = RowProps & {

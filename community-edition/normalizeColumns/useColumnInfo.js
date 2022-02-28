@@ -62,7 +62,7 @@ const useGroupByColumns = (args) => {
 };
 const useColumnInfo = (params) => {
     return useMemoWithObject(() => {
-        let { columns, columnMinWidth, columnMaxWidth, columnDefaultWidth, columnWidth, groupNestingSize, columnOrder, onRowReorder, columnVisibilityMap, columnSizes, columnFlexes, lockedColumnsState = {}, groupBy, maybeAddColumns, editable, computedPivotUniqueValuesPerColumn, checkboxColumn, rowIndexColumn, groupColumn, pivot, groupForGroupColumns, inTransition, rtl, hideGroupByColumns, availableWidth, sortInfo, filterValueMap, sortable, filterable, resizable, pivotGrandSummaryColumn, lockable, groups, enableRowExpand, showPivotSummaryColumns, expandedRows, defaultExpandedRows, renderRowDetails, renderDetailsGrid, rowExpandColumn, rowReorderColumn, } = params;
+        let { columns, columnMinWidth, columnMaxWidth, columnDefaultWidth, columnWidth, groupNestingSize, columnOrder, onRowReorder, columnVisibilityMap, columnSizes, columnFlexes, lockedColumnsState = {}, groupBy, maybeAddColumns, editable, computedPivotUniqueValuesPerColumn, checkboxColumn, rowIndexColumn, groupColumn, pivot, groupForGroupColumns, inTransition, rtl, hideGroupByColumns, availableWidth, sortInfo, filterValueMap, sortable, filterable, resizable, pivotGrandSummaryColumn, lockable, groups, enableRowExpand, showPivotSummaryColumns, expandedRows, defaultExpandedRows, renderRowDetails, renderDetailsGrid, rowExpandColumn, rowReorderColumn, renderRowDetailsExpandIcon, renderRowDetailsCollapsedIcon, } = params;
         if (pivot) {
             groupColumn = groupColumn || true;
         }
@@ -81,6 +81,8 @@ const useColumnInfo = (params) => {
             rowExpandColumn,
             onRowReorder,
             rowReorderColumn,
+            renderRowDetailsExpandIcon,
+            renderRowDetailsCollapsedIcon,
         });
         const filter = !hideGroupByColumns || !groupBy || !groupBy.length
             ? null

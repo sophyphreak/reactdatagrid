@@ -59,6 +59,9 @@ const CELL_RENDER_OBJECT: CellRenderObject = sealedObjectFactory({
   cellProps: null,
   totalDataCount: null,
   rendersInlineEditor: null,
+  renderRowDetailsExpandIcon: null,
+  renderRowDetailsCollapsedIcon: null,
+  renderRowDetailsMoreIcon: null,
 });
 
 const CELL_RENDER_SECOND_OBJ = sealedObjectFactory({
@@ -591,6 +594,9 @@ export default class InovuaDataGridCell extends React.Component {
       totalDataCount,
       computedVisibleIndex,
       inEdit,
+      renderRowDetailsMoreIcon,
+      renderRowDetailsExpandIcon,
+      renderRowDetailsCollapsedIcon,
     } = props;
 
     let { value, render: renderCell, renderSummary } = props;
@@ -659,6 +665,8 @@ export default class InovuaDataGridCell extends React.Component {
       CELL_RENDER_OBJECT.loadNodeAsync = loadNodeAsync;
       CELL_RENDER_OBJECT.isRowExpandable = isRowExpandable;
       CELL_RENDER_OBJECT.totalDataCount = totalDataCount;
+      CELL_RENDER_OBJECT.renderRowDetailsExpandIcon = renderRowDetailsExpandIcon;
+      CELL_RENDER_OBJECT.renderRowDetailsCollapsedIcon = renderRowDetailsCollapsedIcon;
     }
 
     let rendersInlineEditor = headerCell
@@ -705,6 +713,10 @@ export default class InovuaDataGridCell extends React.Component {
 
     if (headerCell) {
       cellProps.onFocus = this.onHeaderCellFocus;
+    }
+
+    if (headerCell) {
+      CELL_RENDER_OBJECT.renderRowDetailsMoreIcon = renderRowDetailsMoreIcon;
     }
 
     if (headerCell) {
@@ -1772,4 +1784,6 @@ InovuaDataGridCell.propTypes = {
 
   renderColumnReorderProxy: PropTypes.func,
   columnHoverClassName: PropTypes.string,
+  renderRowDetailsExpandIcon: PropTypes.func,
+  renderRowDetailsCollapsedIcon: PropTypes.func,
 };

@@ -112,6 +112,8 @@ export default (props, { maxAvailableWidthForColumns, lockedColumnsState, comput
         rowExpandColumn: props.rowExpandColumn,
         onRowReorder: props.onRowReorder,
         rowReorderColumn: props.rowReorderColumn,
+        renderRowDetailsExpandIcon: props.renderRowDetailsExpandIcon,
+        renderRowDetailsCollapsedIcon: props.renderRowDetailsCollapsedIcon,
     });
     let virtualizeColumns = props.virtualizeColumns !== undefined
         ? props.virtualizeColumns

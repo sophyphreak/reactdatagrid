@@ -137,6 +137,7 @@ const propTypes = {
   columnIndexHovered: PropTypes.number,
   enableColumnFilterContextMenu: PropTypes.bool,
   computedEnableColumnHover: PropTypes.bool,
+  renderRowDetailsMoreIcon: PropTypes.func,
 };
 
 type TypeHeaderProps = {} | any;
@@ -632,6 +633,7 @@ export default class InovuaDataGridHeader extends React.Component<
       columnHoverClassName,
       enableColumnFilterContextMenu,
       computedEnableColumnHover,
+      renderRowDetailsMoreIcon,
     } = props;
 
     let columns = props.columns;
@@ -726,6 +728,7 @@ export default class InovuaDataGridHeader extends React.Component<
         columnHoverClassName,
         enableColumnFilterContextMenu: displayColumnFilterContextMenu,
         computedEnableColumnHover,
+        renderRowDetailsMoreIcon,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);

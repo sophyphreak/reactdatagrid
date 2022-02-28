@@ -45,6 +45,8 @@ type TypeParamObject = TypeParam & {
   rowIndexColumn?: IColumn | boolean;
   onRowReorder?: TypeRowReorder;
   rowReorderColumn?: IColumn;
+  renderRowDetailsExpandIcon?: () => void;
+  renderRowDetailsCollapsedIcon?: () => void;
 };
 
 type TypeUseGroupByColumns = {
@@ -188,6 +190,8 @@ const useColumnInfo = (params: TypeParamObject) => {
         renderDetailsGrid,
         rowExpandColumn,
         rowReorderColumn,
+        renderRowDetailsExpandIcon,
+        renderRowDetailsCollapsedIcon,
       } = params;
       if (pivot) {
         groupColumn = groupColumn || true;
@@ -207,6 +211,8 @@ const useColumnInfo = (params: TypeParamObject) => {
         rowExpandColumn,
         onRowReorder,
         rowReorderColumn,
+        renderRowDetailsExpandIcon,
+        renderRowDetailsCollapsedIcon,
       });
 
       const filter =

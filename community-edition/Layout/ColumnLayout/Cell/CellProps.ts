@@ -232,6 +232,9 @@ export type CellProps = {
   renderColumnReorderProxy?: (props: any) => void;
   columnHoverClassName?: string;
   computedEnableColumnHover?: boolean;
+  renderRowDetailsMoreIcon?: () => void;
+  renderRowDetailsExpandIcon?: () => void;
+  renderRowDetailsCollapsedIcon?: () => void;
 };
 
 export type EnhancedCellProps = CellProps & {
@@ -272,4 +275,7 @@ export type CellRenderObject = {
   }) => boolean;
   totalDataCount: number;
   rendersInlineEditor: boolean;
+  renderRowDetailsExpandIcon: () => void;
+  renderRowDetailsCollapsedIcon: () => void;
+  renderRowDetailsMoreIcon: () => void;
 };

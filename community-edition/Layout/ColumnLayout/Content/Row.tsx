@@ -584,6 +584,8 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       computedEnableColumnHover,
       columnHoverClassName,
       enableColumnAutosize,
+      renderRowDetailsExpandIcon,
+      renderRowDetailsCollapsedIcon,
     } = props;
 
     const expandColumnId: string | undefined = expandColumnFn
@@ -763,6 +765,8 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         columnIndexHovered,
         computedEnableColumnHover,
         columnHoverClassName,
+        renderRowDetailsExpandIcon,
+        renderRowDetailsCollapsedIcon,
       };
 
       if (computedCellSelection && getCellSelectionKey) {
@@ -2143,6 +2147,8 @@ DataGridRow.propTypes = {
   onColumnMouseEnter: PropTypes.func,
   onColumnMouseLeave: PropTypes.func,
   columnIndexHovered: PropTypes.number,
+  renderRowDetailsExpandIcon: PropTypes.func,
+  renderRowDetailsCollapsedIcon: PropTypes.func,
 } as any;
 
 export default React.memo(

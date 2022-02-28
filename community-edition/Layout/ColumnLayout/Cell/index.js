@@ -46,6 +46,9 @@ const CELL_RENDER_OBJECT = sealedObjectFactory({
     cellProps: null,
     totalDataCount: null,
     rendersInlineEditor: null,
+    renderRowDetailsExpandIcon: null,
+    renderRowDetailsCollapsedIcon: null,
+    renderRowDetailsMoreIcon: null,
 });
 const CELL_RENDER_SECOND_OBJ = sealedObjectFactory({
     cellProps: null,
@@ -353,7 +356,7 @@ export default class InovuaDataGridCell extends React.Component {
     }
     render() {
         const props = this.getProps();
-        const { cellActive, cellSelected, data, empty, groupProps, headerCell, hidden, name, onCellEnter, onRender, treeColumn, groupSpacerColumn, groupColumn, loadNodeAsync, groupColumnVisible, rowIndex, remoteRowIndex, rowSelected, rowExpanded, setRowSelected, setRowExpanded, isRowExpandable, toggleRowExpand, toggleNodeExpand, totalDataCount, computedVisibleIndex, inEdit, } = props;
+        const { cellActive, cellSelected, data, empty, groupProps, headerCell, hidden, name, onCellEnter, onRender, treeColumn, groupSpacerColumn, groupColumn, loadNodeAsync, groupColumnVisible, rowIndex, remoteRowIndex, rowSelected, rowExpanded, setRowSelected, setRowExpanded, isRowExpandable, toggleRowExpand, toggleNodeExpand, totalDataCount, computedVisibleIndex, inEdit, renderRowDetailsMoreIcon, renderRowDetailsExpandIcon, renderRowDetailsCollapsedIcon, } = props;
         let { value, render: renderCell, renderSummary } = props;
         const className = this.prepareClassName(props);
         const style = this.prepareStyle(props);
@@ -407,6 +410,8 @@ export default class InovuaDataGridCell extends React.Component {
             CELL_RENDER_OBJECT.loadNodeAsync = loadNodeAsync;
             CELL_RENDER_OBJECT.isRowExpandable = isRowExpandable;
             CELL_RENDER_OBJECT.totalDataCount = totalDataCount;
+            CELL_RENDER_OBJECT.renderRowDetailsExpandIcon = renderRowDetailsExpandIcon;
+            CELL_RENDER_OBJECT.renderRowDetailsCollapsedIcon = renderRowDetailsCollapsedIcon;
         }
         let rendersInlineEditor = headerCell
             ? false
@@ -444,6 +449,9 @@ export default class InovuaDataGridCell extends React.Component {
         }
         if (headerCell) {
             cellProps.onFocus = this.onHeaderCellFocus;
+        }
+        if (headerCell) {
+            CELL_RENDER_OBJECT.renderRowDetailsMoreIcon = renderRowDetailsMoreIcon;
         }
         if (headerCell) {
             cellProps = this.prepareHeaderCellProps(cellProps);
@@ -1282,4 +1290,6 @@ InovuaDataGridCell.propTypes = {
     setActiveIndex: PropTypes.func,
     renderColumnReorderProxy: PropTypes.func,
     columnHoverClassName: PropTypes.string,
+    renderRowDetailsExpandIcon: PropTypes.func,
+    renderRowDetailsCollapsedIcon: PropTypes.func,
 };

@@ -82,6 +82,8 @@ export type TypeBuildColumnsProps = {
   rowExpandColumn: any;
   onRowReorder?: TypeRowReorder;
   rowReorderColumn?: IColumn;
+  renderRowDetailsExpandIcon?: () => void;
+  renderRowDetailsCollapsedIcon?: () => void;
 };
 type TypeI18n = { [key: string]: string | ReactNode };
 
@@ -709,6 +711,8 @@ type TypeDataGridPropsNoI18n = {
   viewportSize?: TypeSize;
   columnHoverClassName?: string;
   idPropertySeparator: string;
+  renderRowDetailsExpandIcon?: () => void;
+  renderRowDetailsCollapsedIcon?: () => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
