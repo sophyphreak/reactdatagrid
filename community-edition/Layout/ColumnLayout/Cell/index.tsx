@@ -166,6 +166,8 @@ export default class InovuaDataGridCell extends React.Component {
       onFocus: 1,
       onSortClick: 1,
       onTouchStart: 1,
+      onColumnMouseEnter: 1,
+      onColumnMouseLeave: 1,
     });
 
     const equalProps = areEqual.result;
@@ -175,7 +177,7 @@ export default class InovuaDataGridCell extends React.Component {
       //   areEqual.key,
       //   // this.props[areEqual.key!],
       //   // nextProps[areEqual.key!],
-      //   diff(nextProps, this.props)
+      //   // diff(nextProps, this.props)
       // );
       return true;
     }

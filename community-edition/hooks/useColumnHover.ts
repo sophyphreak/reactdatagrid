@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { MutableRefObject, useState } from 'react';
+import { MutableRefObject, useState, useCallback } from 'react';
 import { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 import { TypeComputedProps, TypeDataGridProps } from '../types';
 
@@ -16,7 +16,7 @@ const useColumnHover = (
 ) => {
   const [columnIndexHovered, setColumnIndexHovered] = useState<number>(-1);
 
-  const onColumnMouseEnter = (cellProps: CellProps) => {
+  const onColumnMouseEnter = useCallback((cellProps: CellProps) => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
       return;
@@ -31,9 +31,9 @@ const useColumnHover = (
         setColumnIndexHovered(columnIndex);
       }
     }
-  };
+  }, []);
 
-  const onColumnMouseLeave = (cellProps: CellProps) => {
+  const onColumnMouseLeave = useCallback((cellProps: CellProps) => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
       return;
@@ -45,7 +45,7 @@ const useColumnHover = (
     ) {
       setColumnIndexHovered(-1);
     }
-  };
+  }, []);
 
   return {
     columnIndexHovered,

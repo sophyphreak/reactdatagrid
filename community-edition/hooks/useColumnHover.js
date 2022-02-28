@@ -4,10 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 const useColumnHover = (_props, _computedProps, computedPropsRef) => {
     const [columnIndexHovered, setColumnIndexHovered] = useState(-1);
-    const onColumnMouseEnter = (cellProps) => {
+    const onColumnMouseEnter = useCallback((cellProps) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
@@ -19,8 +19,8 @@ const useColumnHover = (_props, _computedProps, computedPropsRef) => {
                 setColumnIndexHovered(columnIndex);
             }
         }
-    };
-    const onColumnMouseLeave = (cellProps) => {
+    }, []);
+    const onColumnMouseLeave = useCallback((cellProps) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
@@ -29,7 +29,7 @@ const useColumnHover = (_props, _computedProps, computedPropsRef) => {
             cellProps.computedEnableColumnHover) {
             setColumnIndexHovered(-1);
         }
-    };
+    }, []);
     return {
         columnIndexHovered,
         onColumnMouseEnter,
