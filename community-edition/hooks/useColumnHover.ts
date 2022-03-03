@@ -8,6 +8,7 @@
 import { MutableRefObject, useState, useCallback } from 'react';
 import { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 import { TypeComputedProps, TypeDataGridProps } from '../types';
+import join from '../packages/join';
 
 const useColumnHover = (
   _props: TypeDataGridProps,
@@ -15,6 +16,24 @@ const useColumnHover = (
   computedPropsRef: MutableRefObject<TypeComputedProps>
 ) => {
   const [columnIndexHovered, setColumnIndexHovered] = useState<number>(-1);
+
+  const computedColumnHoverClassName = (
+    className: string,
+    columnIndex: number
+  ) => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    const { computedEnableColumnHover, columnHoverClassName } = computedProps;
+
+    computedEnableColumnHover && columnIndex === columnIndexHovered
+      ? columnHoverClassName
+        ? join(`${className}--over`, columnHoverClassName)
+        : `${className}--over`
+      : '';
+  };
 
   const onColumnMouseEnter = useCallback((cellProps: CellProps) => {
     const { current: computedProps } = computedPropsRef;
@@ -51,6 +70,7 @@ const useColumnHover = (
     columnIndexHovered,
     onColumnMouseEnter,
     onColumnMouseLeave,
+    computedColumnHoverClassName,
   };
 };
 

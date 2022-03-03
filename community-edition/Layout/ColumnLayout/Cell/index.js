@@ -243,7 +243,7 @@ export default class InovuaDataGridCell extends React.Component {
         return style;
     }
     prepareClassName(props) {
-        const { groupCell: isGroupCell, groupTitleCell, groupExpandCell, headerCell: isHeaderCell, headerCellDefaultClassName, cellDefaultClassName, computedGroupBy, depth, computedVisibleIndex, headerCell, headerEllipsis, groupProps, hidden, showBorderRight, showBorderTop, showBorderBottom, showBorderLeft, firstInSection, lastInSection, noBackground, computedLocked, computedWidth, inTransition, rowSelected, computedRowspan, cellSelected, cellActive, groupSpacerColumn, computedPivot, computedResizable, groupColumnVisible, computedFilterable, rtl, inEdit, columnIndex, columnIndexHovered, columnHoverClassName, } = props;
+        const { groupCell: isGroupCell, groupTitleCell, groupExpandCell, headerCell: isHeaderCell, headerCellDefaultClassName, cellDefaultClassName, computedGroupBy, depth, computedVisibleIndex, headerCell, headerEllipsis, groupProps, hidden, showBorderRight, showBorderTop, showBorderBottom, showBorderLeft, firstInSection, lastInSection, noBackground, computedLocked, computedWidth, inTransition, rowSelected, computedRowspan, cellSelected, cellActive, groupSpacerColumn, computedPivot, computedResizable, groupColumnVisible, computedFilterable, rtl, inEdit, columnIndex, columnIndexHovered, columnHoverClassName, computedEnableColumnHover, } = props;
         let { userSelect, headerUserSelect } = props;
         if (typeof userSelect === 'boolean') {
             userSelect = userSelect ? 'text' : 'none';
@@ -276,7 +276,9 @@ export default class InovuaDataGridCell extends React.Component {
             `${baseClassName}--show-border-${rtl ? 'right' : 'left'}`, firstInSection && `${baseClassName}--first-in-section`, lastInSection && `${baseClassName}--last-in-section`, showBorderRight &&
             computedWidth !== 0 &&
             (!isHeaderCell || !(computedResizable || computedFilterable)) &&
-            `${baseClassName}--show-border-${rtl ? 'left' : 'right'}`, showBorderTop && `${baseClassName}--show-border-top`, showBorderBottom && `${baseClassName}--show-border-bottom`, noBackground && `${baseClassName}--no-background`, columnIndex === columnIndexHovered
+            `${baseClassName}--show-border-${rtl ? 'left' : 'right'}`, showBorderTop && `${baseClassName}--show-border-top`, showBorderBottom && `${baseClassName}--show-border-bottom`, noBackground && `${baseClassName}--no-background`, !headerCell &&
+            computedEnableColumnHover &&
+            columnIndex === columnIndexHovered
             ? columnHoverClassName
                 ? join(`${baseClassName}--over`, columnHoverClassName)
                 : `${baseClassName}--over`

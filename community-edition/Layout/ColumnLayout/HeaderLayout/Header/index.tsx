@@ -992,6 +992,10 @@ export default class InovuaDataGridHeader extends React.Component<
       lastUnlockedIndex,
       resizeProxyStyle,
       rtl,
+      columnIndexHovered,
+      onColumnMouseEnter,
+      onColumnMouseLeave,
+      columnHoverClassName,
     } = this.props;
     const group = groups[groupName];
     const parentGroups = getParentGroups(groupName, groups);

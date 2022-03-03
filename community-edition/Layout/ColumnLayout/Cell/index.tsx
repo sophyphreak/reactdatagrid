@@ -358,6 +358,7 @@ export default class InovuaDataGridCell extends React.Component {
       columnIndex,
       columnIndexHovered,
       columnHoverClassName,
+      computedEnableColumnHover,
     } = props;
 
     let { userSelect, headerUserSelect } = props;
@@ -443,7 +444,9 @@ export default class InovuaDataGridCell extends React.Component {
       showBorderTop && `${baseClassName}--show-border-top`,
       showBorderBottom && `${baseClassName}--show-border-bottom`,
       noBackground && `${baseClassName}--no-background`,
-      columnIndex === columnIndexHovered
+      !headerCell &&
+        computedEnableColumnHover &&
+        columnIndex === columnIndexHovered
         ? columnHoverClassName
           ? join(`${baseClassName}--over`, columnHoverClassName)
           : `${baseClassName}--over`

@@ -79,6 +79,17 @@ $base: 'InovuaReactDataGrid__cell';
   }
 
   .InovuaReactDataGrid__header {
+    .InovuaReactDataGrid__column-header__resize-wrapper {
+      &--over {
+        background: $INOVUA_DATAGRID_ROW_EVEN_HOVER_BG_COLOR;
+        color: $INOVUA_DATAGRID_ROW_ACTIVE_COLOR;
+
+        .InovuaReactDataGrid__column-header__filter-wrapper {
+          background: $INOVUA_DATAGRID_ROW_EVEN_HOVER_BG_COLOR;
+        }
+      }
+    }
+
     .InovuaReactDataGrid__column-header {
       &--over {
         background: $INOVUA_DATAGRID_ROW_EVEN_HOVER_BG_COLOR;

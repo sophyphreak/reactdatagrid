@@ -231,16 +231,20 @@ const columns = [
     header: 'Id',
     defaultWidth: 60,
     type: 'number',
-    // resizable: false,
   },
-  { name: 'name', header: 'Name', defaultWidth: 100 },
+  {
+    name: 'name',
+    header: 'Name',
+    defaultWidth: 100,
+    // group: 'personalinfo',
+  },
   {
     name: 'country',
     header: 'Country',
     defaultWidth: 100,
-    // resizable: false,
     render: ({ value }: { value: string }) =>
       flags[value] ? flags[value] : value,
+    group: 'location',
   },
   {
     name: 'city',
@@ -248,19 +252,33 @@ const columns = [
     defaultWidth: 120,
     resizable: false,
     enableColumnHover: false,
+    group: 'location',
   },
   {
     name: 'age',
     header: 'Age',
     defaultWidth: 100,
     type: 'number',
+    // group: 'personalinfo',
   },
+];
+
+const filterValue = [
+  { name: 'name', operator: 'startsWith', type: 'string', value: '' },
+  { name: 'city', operator: 'startsWith', type: 'string', value: '' },
+];
+
+const groups = [
+  // { name: 'personalinfo', header: 'Personal info' },
+  { name: 'location', header: 'Location' },
 ];
 
 const App = () => {
   const [enableColumnHover, setEnableColumnHover] = useState(true);
   const [virtualizeColumns, setVirtualizeColumns] = useState(true);
   const [theme, setTheme] = useState('default-dark');
+  const [filter, setFilter] = useState(false);
+  const [stackColumns, setStackColumns] = useState(true);
 
   return (
     <div>
@@ -288,15 +306,30 @@ const App = () => {
         ></ComboBox>
       </div>
 
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox checked={filter} onChange={setFilter}>
+          Enable filter
+        </CheckBox>
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox checked={stackColumns} onChange={setStackColumns}>
+          Enable stack columns
+        </CheckBox>
+      </div>
+
       <ReactDataGrid
         idProperty="id"
+        key={`filter__${filter}`}
         theme={theme}
         style={gridStyle}
         columns={columns}
         dataSource={people}
         enableColumnHover={enableColumnHover}
         virtualizeColumn={virtualizeColumns}
-        columnHoverClassName="custom-column-hover-class-name"
+        // columnHoverClassName="custom-column-hover-class-name"
+        defaultFilterValue={filter ? filterValue : undefined}
+        groups={stackColumns ? groups : undefined}
       />
     </div>
   );

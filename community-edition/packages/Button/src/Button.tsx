@@ -16,7 +16,7 @@ import { getGlobal } from '../../../getGlobal';
 
 const globalObject = getGlobal();
 
-class InovuaButton extends Component {
+class InovuaButton extends Component<any> {
   constructor(props) {
     super(props);
 

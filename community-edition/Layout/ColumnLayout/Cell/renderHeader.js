@@ -31,6 +31,14 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
     let content = (React.createElement("div", { key: "content", style: style, className: `${HEADER_CONTENT_CLASS_NAME} ${props.headerEllipsis !== false
             ? 'InovuaReactDataGrid__box--ellipsis'
             : ''}`, children: renderContent(props) }));
+    const getHoverClassName = (props) => {
+        const { computedEnableColumnHover, columnIndex, columnIndexHovered, columnHoverClassName, } = props;
+        return computedEnableColumnHover && columnIndex === columnIndexHovered
+            ? columnHoverClassName
+                ? join(`${RESIZE_WRAPPER_CLASS_NAME}--over`, columnHoverClassName)
+                : `${RESIZE_WRAPPER_CLASS_NAME}--over`
+            : '';
+    };
     const menuTool = renderMenuTool(props, cellInstance);
     const headerAlign = props.headerAlign != null ? props.headerAlign : props.textAlign;
     content = [
@@ -122,13 +130,18 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
                 theStyle.top = state.top || 0;
             }
         }
-        return (React.createElement("div", { ref: domProps.ref, style: theStyle, onFocus: domProps.onFocus, className: join(RESIZE_WRAPPER_CLASS_NAME, dragging && `${RESIZE_WRAPPER_CLASS_NAME}--dragging`, group
+        const hoverClassName = getHoverClassName(props);
+        const onMouseEnter = domProps.onMouseEnter;
+        const onMouseLeave = domProps.onMouseLeave;
+        delete domProps.onMouseEnter;
+        delete domProps.onMouseLeave;
+        return (React.createElement("div", { ref: domProps.ref, style: theStyle, onFocus: domProps.onFocus, onMouseEnter: onMouseEnter, onMouseLeave: onMouseLeave, className: join(RESIZE_WRAPPER_CLASS_NAME, dragging && `${RESIZE_WRAPPER_CLASS_NAME}--dragging`, group
                 ? `${RESIZE_WRAPPER_CLASS_NAME}--has-group`
                 : `${RESIZE_WRAPPER_CLASS_NAME}--has-no-group`, showBorderLeft &&
                 `${RESIZE_WRAPPER_CLASS_NAME}--show-border-${rtl ? 'right' : 'left'}`, (showBorderRight ||
                 (props.computedShowHeaderBorderRight && last && !firstInSection)) &&
                 `${RESIZE_WRAPPER_CLASS_NAME}--show-border-${rtl ? 'left' : 'right'}`, `${RESIZE_WRAPPER_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`, computedLocked && `${RESIZE_WRAPPER_CLASS_NAME}--locked`, computedLocked &&
-                `${RESIZE_WRAPPER_CLASS_NAME}--locked-${computedLocked}`, firstInSection && `${RESIZE_WRAPPER_CLASS_NAME}--first-in-section`, lastInSection && `${RESIZE_WRAPPER_CLASS_NAME}--last-in-section`, last && `${RESIZE_WRAPPER_CLASS_NAME}--last`, props.headerWrapperClassName) },
+                `${RESIZE_WRAPPER_CLASS_NAME}--locked-${computedLocked}`, firstInSection && `${RESIZE_WRAPPER_CLASS_NAME}--first-in-section`, lastInSection && `${RESIZE_WRAPPER_CLASS_NAME}--last-in-section`, last && `${RESIZE_WRAPPER_CLASS_NAME}--last`, props.headerWrapperClassName, hoverClassName) },
             React.createElement("div", { ...cleanup(domProps), style: innerStyle, children: content }),
             resizeHandle,
             props.computedFilterable && !dragging
@@ -136,7 +149,8 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
                 : null));
     }
     const ref = domProps.ref;
-    return (React.createElement("div", { ...cleanup(domProps), ref: ref, id: null, name: null, title: null, type: null, value: null, children: content }));
+    const className = getHoverClassName(props);
+    return (React.createElement("div", { ...cleanup(domProps), className: className, ref: ref, id: null, name: null, title: null, type: null, value: null, children: content }));
 };
 const cleanup = (domProps) => {
     delete domProps.ref;

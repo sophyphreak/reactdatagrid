@@ -182,6 +182,7 @@ const renderRows = (
     computedEnableColumnHover,
     renderRowDetailsExpandIcon,
     renderRowDetailsCollapsedIcon,
+    computedColumnHoverClassName,
   }: any
 ) => {
   const remoteOffset = computedLivePagination ? 0 : computedSkip || 0;
@@ -386,6 +387,7 @@ const renderRows = (
       computedEnableColumnHover,
       renderRowDetailsExpandIcon,
       renderRowDetailsCollapsedIcon,
+      computedColumnHoverClassName,
     };
 
     if (rowProps.rowIndex === editRowIndex) {

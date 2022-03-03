@@ -674,7 +674,7 @@ export default class InovuaDataGridHeader extends React.Component {
         return;
     };
     renderHeaderGroup = (groupName, groupItems, _) => {
-        const { computedGroupsMap: groups, columnsMap, hasLockedEnd, lockedStartColumns, lockedEndColumns, firstLockedEndIndex, lastLockedStartIndex, lastLockedEndIndex, firstUnlockedIndex, lastUnlockedIndex, resizeProxyStyle, rtl, } = this.props;
+        const { computedGroupsMap: groups, columnsMap, hasLockedEnd, lockedStartColumns, lockedEndColumns, firstLockedEndIndex, lastLockedStartIndex, lastLockedEndIndex, firstUnlockedIndex, lastUnlockedIndex, resizeProxyStyle, rtl, columnIndexHovered, onColumnMouseEnter, onColumnMouseLeave, columnHoverClassName, } = this.props;
         const group = groups[groupName];
         const parentGroups = getParentGroups(groupName, groups);
         const depth = group ? group.computedDepth : 0;

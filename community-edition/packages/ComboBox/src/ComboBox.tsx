@@ -50,7 +50,7 @@ const REMAINING_ITEMS = 'REMAINING_ITEMS';
 
 const emptyObject = {};
 
-class InovuaComboBox extends Component {
+class InovuaComboBox extends Component<any> {
   constructor(props) {
     super(props);
 

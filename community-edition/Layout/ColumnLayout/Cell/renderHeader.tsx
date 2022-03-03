@@ -73,6 +73,21 @@ const renderHeader = (
     />
   );
 
+  const getHoverClassName = (props: any) => {
+    const {
+      computedEnableColumnHover,
+      columnIndex,
+      columnIndexHovered,
+      columnHoverClassName,
+    } = props;
+
+    return computedEnableColumnHover && columnIndex === columnIndexHovered
+      ? columnHoverClassName
+        ? join(`${RESIZE_WRAPPER_CLASS_NAME}--over`, columnHoverClassName)
+        : `${RESIZE_WRAPPER_CLASS_NAME}--over`
+      : '';
+  };
+
   const menuTool = renderMenuTool(props, cellInstance);
   const headerAlign =
     props.headerAlign != null ? props.headerAlign : props.textAlign;
@@ -196,11 +211,21 @@ const renderHeader = (
       }
     }
 
+    const hoverClassName = getHoverClassName(props);
+
+    const onMouseEnter = domProps.onMouseEnter;
+    const onMouseLeave = domProps.onMouseLeave;
+
+    delete domProps.onMouseEnter;
+    delete domProps.onMouseLeave;
+
     return (
       <div
         ref={domProps.ref}
         style={theStyle}
         onFocus={domProps.onFocus}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         className={join(
           RESIZE_WRAPPER_CLASS_NAME,
           dragging && `${RESIZE_WRAPPER_CLASS_NAME}--dragging`,
@@ -223,7 +248,8 @@ const renderHeader = (
           firstInSection && `${RESIZE_WRAPPER_CLASS_NAME}--first-in-section`,
           lastInSection && `${RESIZE_WRAPPER_CLASS_NAME}--last-in-section`,
           last && `${RESIZE_WRAPPER_CLASS_NAME}--last`,
-          props.headerWrapperClassName
+          props.headerWrapperClassName,
+          hoverClassName
         )}
       >
         <div {...cleanup(domProps)} style={innerStyle} children={content} />
@@ -236,9 +262,12 @@ const renderHeader = (
   }
 
   const ref = domProps.ref;
+  const className = getHoverClassName(props);
+
   return (
     <div
       {...cleanup(domProps)}
+      className={className}
       ref={ref}
       id={null}
       name={null}
