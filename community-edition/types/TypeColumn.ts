@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { CSSProperties } from 'react';
 import { TypeSortInfo } from './TypeSortInfo';
 import { TypeLockedRow, TypeComputedProps, TypeFooterRow } from '.';
 import { FC, Component, ReactNode } from 'react';
@@ -23,6 +24,12 @@ export type TypeSummaryReducer<T = any> = {
   //also allow as reduce instead of reducer
   reduce?: (accumulator: T, value: any, data: any | TypeComputedProps) => T;
 };
+
+export type TypeHeaderProps = {
+  style?: CSSProperties;
+  className?: string;
+};
+
 export interface IColumn {
   name?: string;
   id?: string;
@@ -110,6 +117,9 @@ export interface IColumn {
   readonly groupSummaryReducer?: TypeSummaryReducer;
   readonly isRowDetailsCell?: boolean;
   readonly isCheckboxColumn?: boolean;
+  readonly headerProps?: TypeHeaderProps;
+  readonly renderEditor?: (editorProps: any) => ReactNode;
+  readonly editor?: ReactNode;
 }
 
 export interface TypeColWithNameProperty extends IColumn {

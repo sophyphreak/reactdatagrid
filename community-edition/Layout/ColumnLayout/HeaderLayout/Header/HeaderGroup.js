@@ -88,8 +88,13 @@ export default class HeaderGroup extends React.Component {
     prepareStyle = () => {
         const { state, props } = this;
         let style = props.style;
+        const { group } = props;
+        const headerProps = group.headerProps;
         if (props.group.style) {
             style = { ...style, ...props.group.style };
+        }
+        if (headerProps.style) {
+            style = { ...style, ...headerProps.style };
         }
         if (state.dragging) {
             style = Object.assign({}, style, { zIndex: TOP_Z_INDEX });
@@ -134,7 +139,8 @@ export default class HeaderGroup extends React.Component {
                 [rtl ? 'right' : 'left']: 'unset',
                 zIndex: depth * 10000 + (100 - this.props.firstIndex || 0),
             }, resizeHandleStyle: resizeHandleStyle, resizeHandleClassName: "InovuaReactDataGrid__header-group-resize-handle" })) : null;
-        return (React.createElement("div", { onMouseDown: this.onMouseDown, style: style, ref: this.domRef, className: join(props.className, 'InovuaReactDataGrid__header-group', group.className, props.inTransition && 'InovuaReactDataGrid__header-group--transition', this.state.dragging && 'InovuaReactDataGrid__header-group--dragging') },
+        const headerProps = group.headerProps;
+        return (React.createElement("div", { onMouseDown: this.onMouseDown, style: style, ref: this.domRef, className: join(props.className, 'InovuaReactDataGrid__header-group', group.className, props.inTransition && 'InovuaReactDataGrid__header-group--transition', this.state.dragging && 'InovuaReactDataGrid__header-group--dragging', headerProps && headerProps.className ? headerProps.className : '') },
             resizer,
             groupHeader,
             React.createElement("div", { className: "InovuaReactDataGrid__header-group-cells" }, children.map(this.renderChild))));

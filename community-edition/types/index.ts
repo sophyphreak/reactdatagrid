@@ -11,7 +11,12 @@ import TypeDataGridProps, {
   TypeBuildColumnsProps,
 } from './TypeDataGridProps';
 
-import { TypeComputedColumn, TypeColumn, TypeColumns } from './TypeColumn';
+import {
+  TypeComputedColumn,
+  TypeColumn,
+  TypeColumns,
+  TypeHeaderProps,
+} from './TypeColumn';
 import { MutableRefObject, ReactNode, CSSProperties } from 'react';
 export { TypeSortInfo, TypeSingleSortInfo } from './TypeSortInfo';
 export { TypeGroupBy } from './TypeGroupBy';
@@ -45,6 +50,7 @@ export {
   TypeColumnWithId,
   IColumn,
   TypeSummaryReducer,
+  TypeHeaderProps,
 } from './TypeColumn';
 
 export { TypeRowReorderFn };
@@ -59,6 +65,7 @@ export type TypeGroup = {
   name: string;
   header?: ReactNode;
   headerAlign: 'start' | 'end' | 'center' | 'left' | 'right';
+  headerProps?: TypeHeaderProps;
 };
 export type TypePivotItem =
   | {

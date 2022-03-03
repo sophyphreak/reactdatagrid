@@ -157,9 +157,15 @@ export default class HeaderGroup extends React.Component<
   prepareStyle = () => {
     const { state, props } = this;
     let style = props.style;
+    const { group } = props;
+    const headerProps = group.headerProps;
 
     if (props.group.style) {
       style = { ...style, ...props.group.style };
+    }
+
+    if (headerProps.style) {
+      style = { ...style, ...headerProps.style };
     }
 
     if (state.dragging) {
@@ -271,6 +277,8 @@ export default class HeaderGroup extends React.Component<
       />
     ) : null;
 
+    const headerProps = group.headerProps;
+
     return (
       <div
         onMouseDown={this.onMouseDown}
@@ -281,7 +289,8 @@ export default class HeaderGroup extends React.Component<
           'InovuaReactDataGrid__header-group',
           group.className,
           props.inTransition && 'InovuaReactDataGrid__header-group--transition',
-          this.state.dragging && 'InovuaReactDataGrid__header-group--dragging'
+          this.state.dragging && 'InovuaReactDataGrid__header-group--dragging',
+          headerProps && headerProps.className ? headerProps.className : ''
         )}
       >
         {resizer}
