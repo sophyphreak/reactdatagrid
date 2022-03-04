@@ -164,7 +164,7 @@ export default class HeaderGroup extends React.Component<
       style = { ...style, ...props.group.style };
     }
 
-    if (headerProps.style) {
+    if (headerProps && headerProps.style) {
       style = { ...style, ...headerProps.style };
     }
 

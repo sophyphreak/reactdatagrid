@@ -93,7 +93,7 @@ export default class HeaderGroup extends React.Component {
         if (props.group.style) {
             style = { ...style, ...props.group.style };
         }
-        if (headerProps.style) {
+        if (headerProps && headerProps.style) {
             style = { ...style, ...headerProps.style };
         }
         if (state.dragging) {
