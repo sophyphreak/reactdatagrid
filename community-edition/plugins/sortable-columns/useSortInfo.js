@@ -128,7 +128,9 @@ const useSortInfo = (props, _, computedPropsRef) => {
         if (!computedColumn) {
             return;
         }
-        const sortInfo = computedProps.computedSortInfo;
+        const sortInfo = computedProps.computedSortInfo === undefined
+            ? null
+            : computedProps.computedSortInfo;
         const computedIsMultiSort = computedProps.computedIsMultiSort;
         const nextSortInfo = computedIsMultiSort
             ? getNextMultipleSortInfo(computedColumn, sortInfo, {
