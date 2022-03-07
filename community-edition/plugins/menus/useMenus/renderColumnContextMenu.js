@@ -73,6 +73,23 @@ export default (computedProps, computedPropsRef) => {
         }
         return acc;
     }, {});
+    const updateMenuPosition = selection => {
+        console.log('selection', selection);
+        const menuTools = Array.prototype.slice.call(computedProps.domRef.current.querySelectorAll('.InovuaReactDataGrid__column-header__menu-tool'));
+        const mainMenu = computedProps.domRef.current.querySelector('.InovuaReactDataGrid > .inovua-react-toolkit-menu');
+        const cellInstance = computedProps.columnContextMenuInstanceProps;
+        const columnIndex = cellInstance.props.computedVisibleIndex;
+        const alignTo = getAlignTo(selection, menuTools, columnIndex);
+        if (alignTo) {
+            computedProps.updateMainMenuPosition(alignTo);
+            if (mainMenu) {
+                mainMenu.style.transition = 'transform 200ms';
+                setTimeout(() => {
+                    mainMenu.style.transition = '';
+                }, 200);
+            }
+        }
+    };
     const onSelectionChange = (selection) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -92,20 +109,7 @@ export default (computedProps, computedPropsRef) => {
             }
         });
         if (computedProps.updateMenuPositionOnColumnsChange) {
-            const menuTools = Array.prototype.slice.call(computedProps.domRef.current.querySelectorAll('.InovuaReactDataGrid__column-header__menu-tool'));
-            const mainMenu = computedProps.domRef.current.querySelector('.InovuaReactDataGrid > .inovua-react-toolkit-menu');
-            const cellInstance = computedProps.columnContextMenuInstanceProps;
-            const columnIndex = cellInstance.props.computedVisibleIndex;
-            const alignTo = getAlignTo(selection, menuTools, columnIndex);
-            if (alignTo) {
-                computedProps.updateMainMenuPosition(alignTo);
-                if (mainMenu) {
-                    mainMenu.style.transition = 'transform 200ms';
-                    setTimeout(() => {
-                        mainMenu.style.transition = '';
-                    }, 200);
-                }
-            }
+            updateMenuPosition(selection);
         }
     };
     const currentColumn = computedProps.getColumnBy(cellProps.id);

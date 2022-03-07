@@ -1034,6 +1034,11 @@ export default class InovuaDataGridCell extends React.Component {
             this.props.showColumnFilterContextMenu(node, this.getProps());
         }
     }
+    hideFilterContextMenu() {
+        if (this.props.hideColumnFilterContextMenu) {
+            this.props.hideColumnFilterContextMenu();
+        }
+    }
     showContextMenu(menuTool, onHide) {
         if (this.props.showColumnContextMenu) {
             this.props.showColumnContextMenu(menuTool ? (menuTool.domRef ? menuTool.domRef.current : null) : null, this.getProps(), this, onHide);

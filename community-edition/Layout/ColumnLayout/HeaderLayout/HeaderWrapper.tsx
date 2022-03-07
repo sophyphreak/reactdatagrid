@@ -142,6 +142,7 @@ export default class HeaderWrapper extends React.Component<any> {
           filterable={filterable}
           showColumnContextMenu={props.showColumnContextMenu}
           showColumnFilterContextMenu={props.showColumnFilterContextMenu}
+          hideColumnFilterContextMenu={props.hideColumnFilterContextMenu}
           computedShowHeaderBorderRight={computedShowHeaderBorderRight}
           hasLockedEnd={props.hasLockedEnd}
           hasLockedStart={props.hasLockedStart}
