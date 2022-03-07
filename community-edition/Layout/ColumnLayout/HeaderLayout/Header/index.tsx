@@ -481,14 +481,13 @@ export default class InovuaDataGridHeader extends React.Component<
     }
   };
 
-  setScrollLeft = (scrollLeft: number) => {
+  setScrollLeft = (scrollLeft: number, scrollLeftMax?: number) => {
     this.scrollLeft = scrollLeft;
     const node = this.props.hasLocked
       ? this.getDOMNode().querySelector(
           '.InovuaReactDataGrid__unlocked-wrapper'
         )
       : this.getDOMNode();
-
     if (node) {
       const transformPos = this.props.rtl
         ? this.props.getScrollLeftMax() - scrollLeft
@@ -509,6 +508,10 @@ export default class InovuaDataGridHeader extends React.Component<
 
     if (this.props.virtualizeColumns) {
       this.maybeUpdateColumns();
+
+      if (scrollLeft === 0 || scrollLeft === scrollLeftMax) {
+        requestAnimationFrame(() => this.maybeUpdateColumns());
+      }
     }
   };
 

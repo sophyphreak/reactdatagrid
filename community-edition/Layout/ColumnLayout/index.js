@@ -130,10 +130,10 @@ export default class InovuaDataGridColumnLayout extends React.Component {
     updateLockedRows(scrollTop) {
         return;
     }
-    onContainerScrollHorizontal = (computedProps, scrollLeft) => {
+    onContainerScrollHorizontal = (computedProps, scrollLeft, scrollLeftMax) => {
         this.scrollLeft = scrollLeft;
         if (this.headerLayout) {
-            this.headerLayout.onContainerScrollHorizontal(scrollLeft);
+            this.headerLayout.onContainerScrollHorizontal(scrollLeft, scrollLeftMax);
         }
         if (computedProps.onScroll) {
             computedProps.onScroll();

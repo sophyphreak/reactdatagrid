@@ -359,7 +359,7 @@ export default class InovuaDataGridHeader extends React.Component {
             // and checking if scrollLeft = scrollLeftMax at that point to make the last unlocked resizer have a greater zindex
         }
     };
-    setScrollLeft = (scrollLeft) => {
+    setScrollLeft = (scrollLeft, scrollLeftMax) => {
         this.scrollLeft = scrollLeft;
         const node = this.props.hasLocked
             ? this.getDOMNode().querySelector('.InovuaReactDataGrid__unlocked-wrapper')
@@ -377,6 +377,9 @@ export default class InovuaDataGridHeader extends React.Component {
         }
         if (this.props.virtualizeColumns) {
             this.maybeUpdateColumns();
+            if (scrollLeft === 0 || scrollLeft === scrollLeftMax) {
+                requestAnimationFrame(() => this.maybeUpdateColumns());
+            }
         }
     };
     maybeUpdateColumns = () => {
