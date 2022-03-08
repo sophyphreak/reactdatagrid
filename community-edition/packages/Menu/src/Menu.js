@@ -1223,6 +1223,12 @@ class InovuaMenu extends Component {
         const newSelected = {
             ...this.getSelected(),
         };
+        const options = {
+            name,
+            value,
+            checked,
+            multiple,
+        };
         // single select
         if (!multiple) {
             newSelected[name] = value;
@@ -1235,18 +1241,18 @@ class InovuaMenu extends Component {
                 delete newSelected[name];
             }
         }
-        this.setSelected(newSelected);
+        this.setSelected(newSelected, options);
     }
-    setSelected(newSelected) {
+    setSelected(newSelected, options) {
         if (!this.isSelectedControlled()) {
             this.setState({
                 selected: newSelected,
             });
         }
-        this.props.onSelectionChange(newSelected);
+        this.props.onSelectionChange(newSelected, options);
     }
-    handleSubmenuSelectionChange(selected) {
-        this.setSelected(selected);
+    handleSubmenuSelectionChange(selected, options) {
+        this.setSelected(selected, options);
     }
     // expanded
     /**

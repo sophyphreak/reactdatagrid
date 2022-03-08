@@ -75,7 +75,7 @@ export default (computedProps, computedPropsRef) => {
         }
         return acc;
     }, {});
-    const updateMenuPosition = (menuTool) => {
+    const updateMenuPosition = (menuTool, options) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
@@ -83,13 +83,16 @@ export default (computedProps, computedPropsRef) => {
         const selection = selectionRef && selectionRef.current;
         const menuTools = Array.prototype.slice.call(computedProps.domRef.current.querySelectorAll('.InovuaReactDataGrid__column-header__menu-tool'));
         const mainMenu = computedProps.domRef.current.querySelector('.InovuaReactDataGrid > .inovua-react-toolkit-menu');
-        const cellInstance = computedProps.columnContextMenuInstanceProps;
-        const columnIndex = cellInstance.props.computedVisibleIndex;
+        const name = options ? (options.name ? options.name : options.value) : '';
+        const column = computedProps.getColumnBy(name);
+        const columnIndex = column.computedAbsoluteIndex;
         const alignTo = menuTool
             ? menuTool
             : getAlignTo(selection, menuTools, columnIndex);
         if (alignTo) {
-            computedProps.updateMainMenuPosition(alignTo);
+            requestAnimationFrame(() => {
+                computedProps.updateMainMenuPosition(alignTo);
+            });
             if (mainMenu) {
                 mainMenu.style.transition = 'transform 200ms';
                 setTimeout(() => {
@@ -98,7 +101,7 @@ export default (computedProps, computedPropsRef) => {
             }
         }
     };
-    const onSelectionChange = (selection) => {
+    const onSelectionChange = (selection, options) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
@@ -118,7 +121,7 @@ export default (computedProps, computedPropsRef) => {
             }
         });
         if (computedProps.updateMenuPositionOnColumnsChange) {
-            updateMenuPosition();
+            updateMenuPosition(undefined, options);
         }
     };
     computedProps.updateMenuPosition = updateMenuPosition;

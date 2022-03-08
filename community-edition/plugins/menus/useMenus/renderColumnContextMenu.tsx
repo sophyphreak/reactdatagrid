@@ -105,7 +105,15 @@ export default (
     return acc;
   }, {} as { [key: string]: any });
 
-  const updateMenuPosition = (menuTool?: any) => {
+  const updateMenuPosition = (
+    menuTool?: any,
+    options?: {
+      name?: string;
+      value?: string;
+      checked?: boolean;
+      multiple?: boolean;
+    }
+  ) => {
     const { current: computedProps } = computedPropsRef;
     if (!computedProps) {
       return;
@@ -122,14 +130,17 @@ export default (
       '.InovuaReactDataGrid > .inovua-react-toolkit-menu'
     );
 
-    const cellInstance = computedProps.columnContextMenuInstanceProps;
-    const columnIndex = cellInstance.props.computedVisibleIndex;
+    const name = options ? (options.name ? options.name : options.value) : '';
+    const column = computedProps.getColumnBy(name);
+    const columnIndex = column.computedAbsoluteIndex;
 
     const alignTo = menuTool
       ? menuTool
       : getAlignTo(selection, menuTools, columnIndex);
     if (alignTo) {
-      computedProps.updateMainMenuPosition(alignTo);
+      requestAnimationFrame(() => {
+        computedProps.updateMainMenuPosition(alignTo);
+      });
 
       if (mainMenu) {
         (mainMenu as any).style.transition = 'transform 200ms';
@@ -140,7 +151,15 @@ export default (
     }
   };
 
-  const onSelectionChange = (selection: any) => {
+  const onSelectionChange = (
+    selection: any,
+    options?: {
+      name?: string;
+      value?: string;
+      checked?: boolean;
+      multiple?: boolean;
+    }
+  ) => {
     const { current: computedProps } = computedPropsRef;
 
     if (!computedProps) {
@@ -167,7 +186,7 @@ export default (
     });
 
     if (computedProps.updateMenuPositionOnColumnsChange) {
-      updateMenuPosition();
+      updateMenuPosition(undefined, options);
     }
   };
 
