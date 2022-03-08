@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { MutableRefObject } from 'react';
+import { MutableRefObject, useRef } from 'react';
 import {
   TypeComputedProps,
   TypeComputedColumn,
@@ -83,6 +83,8 @@ export default (
   computedProps: TypeComputedProps,
   computedPropsRef: MutableRefObject<TypeComputedProps | null>
 ) => {
+  const selectionRef = useRef(null);
+
   const cellProps = computedProps.columnContextMenuProps;
   if (!cellProps) {
     return null;
@@ -103,8 +105,13 @@ export default (
     return acc;
   }, {} as { [key: string]: any });
 
-  const updateMenuPosition = selection => {
-    console.log('selection', selection);
+  const updateMenuPosition = (menuTool?: any) => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    const selection = selectionRef && selectionRef.current;
     const menuTools = Array.prototype.slice.call(
       computedProps.domRef.current.querySelectorAll(
         '.InovuaReactDataGrid__column-header__menu-tool'
@@ -118,7 +125,9 @@ export default (
     const cellInstance = computedProps.columnContextMenuInstanceProps;
     const columnIndex = cellInstance.props.computedVisibleIndex;
 
-    const alignTo = getAlignTo(selection, menuTools, columnIndex);
+    const alignTo = menuTool
+      ? menuTool
+      : getAlignTo(selection, menuTools, columnIndex);
     if (alignTo) {
       computedProps.updateMainMenuPosition(alignTo);
 
@@ -138,6 +147,8 @@ export default (
       return;
     }
 
+    selectionRef.current = selection;
+
     if (IS_IE) {
       computedProps.preventIEMenuCloseRef.current = true;
       setTimeout(() => {
@@ -156,9 +167,11 @@ export default (
     });
 
     if (computedProps.updateMenuPositionOnColumnsChange) {
-      updateMenuPosition(selection);
+      updateMenuPosition();
     }
   };
+
+  computedProps.updateMenuPosition = updateMenuPosition;
 
   const currentColumn = computedProps.getColumnBy(
     cellProps.id
