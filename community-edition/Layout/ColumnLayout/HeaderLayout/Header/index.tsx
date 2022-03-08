@@ -139,6 +139,8 @@ const propTypes = {
   enableColumnFilterContextMenu: PropTypes.bool,
   computedEnableColumnHover: PropTypes.bool,
   renderRowDetailsMoreIcon: PropTypes.func,
+  hideColumnContextMenu: PropTypes.func,
+  updateMenuPosition: PropTypes.func,
 };
 
 type TypeHeaderProps = {} | any;
@@ -636,6 +638,8 @@ export default class InovuaDataGridHeader extends React.Component<
       enableColumnFilterContextMenu,
       computedEnableColumnHover,
       renderRowDetailsMoreIcon,
+      hideColumnContextMenu,
+      updateMenuPosition,
     } = props;
 
     let columns = props.columns;
@@ -732,6 +736,8 @@ export default class InovuaDataGridHeader extends React.Component<
         enableColumnFilterContextMenu: displayColumnFilterContextMenu,
         computedEnableColumnHover,
         renderRowDetailsMoreIcon,
+        hideColumnContextMenu,
+        updateMenuPosition,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);

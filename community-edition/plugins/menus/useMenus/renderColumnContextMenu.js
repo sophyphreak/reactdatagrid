@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import { useRef } from 'react';
 import { IS_IE, IS_MS_BROWSER } from '../../../detect-ua';
 import { getCellHeader } from '../../../Layout/ColumnLayout/HeaderLayout/Header';
 import Menu from '../../../packages/Menu';
@@ -56,6 +57,7 @@ const getAlignTo = (selection, menuTools, index) => {
     return alignTo;
 };
 export default (computedProps, computedPropsRef) => {
+    const selectionRef = useRef(null);
     const cellProps = computedProps.columnContextMenuProps;
     if (!cellProps) {
         return null;
@@ -73,13 +75,19 @@ export default (computedProps, computedPropsRef) => {
         }
         return acc;
     }, {});
-    const updateMenuPosition = selection => {
-        console.log('selection', selection);
+    const updateMenuPosition = (menuTool) => {
+        const { current: computedProps } = computedPropsRef;
+        if (!computedProps) {
+            return;
+        }
+        const selection = selectionRef && selectionRef.current;
         const menuTools = Array.prototype.slice.call(computedProps.domRef.current.querySelectorAll('.InovuaReactDataGrid__column-header__menu-tool'));
         const mainMenu = computedProps.domRef.current.querySelector('.InovuaReactDataGrid > .inovua-react-toolkit-menu');
         const cellInstance = computedProps.columnContextMenuInstanceProps;
         const columnIndex = cellInstance.props.computedVisibleIndex;
-        const alignTo = getAlignTo(selection, menuTools, columnIndex);
+        const alignTo = menuTool
+            ? menuTool
+            : getAlignTo(selection, menuTools, columnIndex);
         if (alignTo) {
             computedProps.updateMainMenuPosition(alignTo);
             if (mainMenu) {
@@ -95,6 +103,7 @@ export default (computedProps, computedPropsRef) => {
         if (!computedProps) {
             return;
         }
+        selectionRef.current = selection;
         if (IS_IE) {
             computedProps.preventIEMenuCloseRef.current = true;
             setTimeout(() => {
@@ -109,9 +118,10 @@ export default (computedProps, computedPropsRef) => {
             }
         });
         if (computedProps.updateMenuPositionOnColumnsChange) {
-            updateMenuPosition(selection);
+            updateMenuPosition();
         }
     };
+    computedProps.updateMenuPosition = updateMenuPosition;
     const currentColumn = computedProps.getColumnBy(cellProps.id);
     const colSortInfo = currentColumn.computedSortInfo;
     const lockLimit = !cellProps.computedLocked && computedProps.unlockedColumns.length <= 1;
