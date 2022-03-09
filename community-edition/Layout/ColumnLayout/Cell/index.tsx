@@ -26,7 +26,7 @@ import renderSortTool from './renderSortTool';
 import { id as REORDER_COLUMN_ID } from '../../../normalizeColumns/defaultRowReorderColumnId';
 import TextEditor from './editors/Text';
 import Renderable from '../../../types/TypeRenderable';
-import { EnhancedCellProps, CellRenderObject } from './CellProps';
+import { EnhancedCellProps, CellRenderObject, CellProps } from './CellProps';
 import { setupResizeObserver } from '../../../utils/setupResizeObserver';
 // import diff from '../../../packages/shallow-changes';
 
@@ -631,6 +631,8 @@ export default class InovuaDataGridCell extends React.Component {
         onContextMenu: this.onContextMenu,
         onMouseDown: this.onMouseDown,
         onTouchStart: this.onTouchStart,
+        onMouseEnter: this.onCellEnter,
+        onMouseLeave: this.onCellLeave,
       }
     );
 
@@ -707,10 +709,6 @@ export default class InovuaDataGridCell extends React.Component {
       };
     }
 
-    if (onCellEnter) {
-      cellProps.onMouseEnter = this.onCellEnter;
-    }
-
     if (headerCell) {
       cellProps.onFocus = this.onHeaderCellFocus;
     }
@@ -785,8 +783,8 @@ export default class InovuaDataGridCell extends React.Component {
       onDoubleClick: cellProps.onDoubleClick || initialDOMProps.onDoubleClick,
       onMouseDown: cellProps.onMouseDown || initialDOMProps.onMouseDown,
       onTouchStart: cellProps.onTouchStart || initialDOMProps.onTouchStart,
-      onMouseEnter: this.onMouseEnter,
-      onMouseLeave: this.onMouseLeave,
+      onMouseEnter: cellProps.onMouseEnter || initialDOMProps.onMouseEnter,
+      onMouseLeave: cellProps.onMouseLeave || initialDOMProps.onMouseLeave,
       style: initialDOMProps.style
         ? Object.assign({}, initialDOMProps.style, cellProps.style)
         : cellProps.style,
@@ -809,48 +807,6 @@ export default class InovuaDataGridCell extends React.Component {
       />
     );
   }
-
-  onMouseEnter = (_event: MouseEvent) => {
-    const props = this.getProps();
-    const initialDOMProps = this.getInitialDOMProps();
-
-    if (
-      !props.computedEnableColumnHover ||
-      props.groupProps ||
-      props.groupSpacerColumn ||
-      props.isRowDetailsCell ||
-      props.isCheckboxColumn
-    ) {
-      return;
-    }
-
-    if (props.onColumnMouseEnter) {
-      props.onColumnMouseEnter(props);
-    } else if (initialDOMProps.onMouseEnter) {
-      initialDOMProps.onMouseEnter();
-    }
-  };
-
-  onMouseLeave = (_event: MouseEvent) => {
-    const props = this.getProps();
-    const initialDOMProps = this.getInitialDOMProps();
-
-    if (
-      !props.computedEnableColumnHover ||
-      props.groupProps ||
-      props.groupSpacerColumn ||
-      props.isRowDetailsCell ||
-      props.isCheckboxColumn
-    ) {
-      return;
-    }
-
-    if (props.onColumnMouseLeave) {
-      props.onColumnMouseLeave(props);
-    } else if (initialDOMProps.onMouseLeave) {
-      initialDOMProps.onMouseLeave();
-    }
-  };
 
   renderNodeTool(props) {
     const {
@@ -1209,17 +1165,65 @@ export default class InovuaDataGridCell extends React.Component {
     }
   }
 
-  onCellEnter(event) {
+  onColumnHoverMouseEnter = (props: CellProps) => {
+    if (
+      props.groupProps ||
+      props.groupSpacerColumn ||
+      props.isRowDetailsCell ||
+      props.isCheckboxColumn
+    ) {
+      return;
+    }
+
+    if (props.onColumnMouseEnter) {
+      props.onColumnMouseEnter(props);
+    }
+  };
+
+  onColumnHoverMouseLeave = (props: CellProps) => {
+    if (
+      props.groupProps ||
+      props.groupSpacerColumn ||
+      props.isRowDetailsCell ||
+      props.isCheckboxColumn
+    ) {
+      return;
+    }
+
+    if (props.onColumnMouseLeave) {
+      props.onColumnMouseLeave(props);
+    }
+  };
+
+  onCellEnter(event: MouseEvent) {
     const props = this.getProps();
+    const initialProps = this.getInitialDOMProps();
 
     if (props.onCellEnter) {
       props.onCellEnter(event, props);
     }
-
-    const initialProps = this.getInitialDOMProps();
+    if (props.computedEnableColumnHover) {
+      this.onColumnHoverMouseEnter(props);
+    }
 
     if (initialProps.onMouseEnter) {
       initialProps.onMouseEnter(event, props);
+    }
+  }
+
+  onCellLeave(event: MouseEvent) {
+    const props = this.getProps();
+    const initialProps = this.getInitialDOMProps();
+
+    if (props.onCellLeave) {
+      props.onCellLeave(event, props);
+    }
+    if (props.computedEnableColumnHover) {
+      this.onColumnHoverMouseLeave(props);
+    }
+
+    if (initialProps.onMouseLeave) {
+      initialProps.onMouseLeave(event, props);
     }
   }
 
