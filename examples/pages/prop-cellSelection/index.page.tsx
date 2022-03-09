@@ -35,19 +35,22 @@ const App = () => {
   const [enableKeyboardNavigation, setEnableKeyboardNavigation] = useState<
     boolean
   >(true);
-  const [enableColumnHover, setEnableColumnHover] = useState(false);
-
-  (globalObject as any).setEnableKeyboardNavigation = setEnableKeyboardNavigation;
-
-  const checkboxProps = {
-    checked: enableColumnHover,
-    onChange: setEnableColumnHover,
-  };
+  const [enableColumnHover, setEnableColumnHover] = useState<boolean>(false);
 
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
-        <CheckBox {...checkboxProps}>Column hover</CheckBox>
+        <CheckBox checked={enableColumnHover} onChange={setEnableColumnHover}>
+          Column hover
+        </CheckBox>
+      </div>
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox
+          checked={enableKeyboardNavigation}
+          onChange={setEnableKeyboardNavigation}
+        >
+          Keyboard navigation
+        </CheckBox>
       </div>
 
       <DataGrid
@@ -60,6 +63,7 @@ const App = () => {
         enableKeyboardNavigation={enableKeyboardNavigation}
         onCellSelectionChange={onCellSelectionChange}
         enableColumnHover={enableColumnHover}
+        multiSelect
       />
     </div>
   );

@@ -260,7 +260,7 @@ const isControlledComponent = props => {
   return props.checked !== undefined;
 };
 
-class InovuaCheckBox extends Component {
+class InovuaCheckBox extends Component<any> {
   constructor(props) {
     super(props);
 
