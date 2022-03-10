@@ -87,7 +87,7 @@ export default class HeaderGroup extends React.Component {
     };
     prepareStyle = () => {
         const { state, props } = this;
-        let style = props.style;
+        let style = props.style || {};
         const { group } = props;
         const headerProps = group.headerProps;
         if (props.group.style) {
