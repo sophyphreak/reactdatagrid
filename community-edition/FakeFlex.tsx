@@ -41,7 +41,7 @@ const nativeFlexCoverStyle = {
   flexFlow: 'column',
 };
 
-class FakeFlex extends Component {
+class FakeFlex extends Component<any> {
   constructor(props) {
     super(props);
 

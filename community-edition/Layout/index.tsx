@@ -5,7 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Component, ReactElement, ReactPortal } from 'react';
+import React, {
+  Component,
+  LegacyRef,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+} from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
@@ -13,22 +19,37 @@ import PaginationToolbar from '../packages/PaginationToolbar';
 
 import shouldComponentUpdate from '../packages/shouldComponentUpdate';
 
+import { TypeComputedProps, RowProps, TypePaginationProps } from '../types';
 import ColumnLayout from './ColumnLayout';
 import FakeFlex from '../FakeFlex';
 import join from '../packages/join';
 import { Consumer } from '../context';
 
-const stopPropagation = e => e.stopPropagation();
+const stopPropagation = (e: MouseEvent) => e.stopPropagation();
 
 type LayoutProps = {
   renderInPortal: (el: ReactElement) => ReactPortal | null;
+  Footer?: any;
+  useNativeFlex?: boolean;
+  constrainTo?: any;
+  onRowMouseEnter?: (event: MouseEvent, rowProps: RowProps) => void;
+  onRowMouseLeave?: (event: MouseEvent, rowProps: RowProps) => void;
 };
 
 class InovuaDataGridLayout extends Component<LayoutProps> {
-  constructor(props) {
+  static defaultProps: any;
+  static propTypes: any;
+
+  ref: LegacyRef<HTMLDivElement>;
+  domNode: HTMLDivElement | null = null;
+  refColumnLayout: LegacyRef<any>;
+  columnLayout: any;
+  dragHeader: any;
+
+  constructor(props: LayoutProps) {
     super(props);
 
-    this.ref = domNode => {
+    this.ref = (domNode: HTMLDivElement) => {
       this.domNode = domNode;
     };
 
@@ -37,7 +58,7 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     };
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: LayoutProps, nextState: any): any {
     return shouldComponentUpdate(this, nextProps, nextState);
   }
 
@@ -49,26 +70,27 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     const Footer = this.props.Footer;
     return (
       <Consumer>
-        {computedProps => {
-          const ColumnLayoutCmp = computedProps.ColumnLayout || ColumnLayout; // can be injected from enterprise edition
+        {(computedProps: TypeComputedProps | null): ReactNode => {
+          const ColumnLayoutCmp =
+            (computedProps && computedProps.ColumnLayout) || ColumnLayout; // can be injected from enterprise edition
           return (
             <div className={'InovuaReactDataGrid__body'} ref={this.ref}>
               <FakeFlex
                 flexIndex={0}
                 getNode={this.getDOMNode}
-                useNativeFlex={computedProps.useNativeFlex}
+                useNativeFlex={computedProps!.useNativeFlex}
               >
                 <ColumnLayoutCmp
                   key="collayout"
                   ref={this.refColumnLayout}
-                  rtl={computedProps.rtl}
-                  coverHandleRef={computedProps.coverHandleRef}
+                  rtl={computedProps!.rtl}
+                  coverHandleRef={computedProps!.coverHandleRef}
                 />
-                {this.renderPaginationToolbar(computedProps)}
-                {computedProps.computedFooterRows && Footer ? (
+                {this.renderPaginationToolbar(computedProps!)}
+                {computedProps!.computedFooterRows && Footer ? (
                   <Footer
                     key="footer"
-                    rows={computedProps.computedFooterRows}
+                    rows={computedProps!.computedFooterRows}
                   />
                 ) : null}
               </FakeFlex>
@@ -79,7 +101,7 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     );
   }
 
-  renderPaginationToolbar(computedProps) {
+  renderPaginationToolbar(computedProps: TypeComputedProps) {
     const {
       pagination,
       paginationProps,
@@ -100,7 +122,7 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
       result = computedProps.renderPaginationToolbar(paginationProps);
     }
 
-    const paginationToolbarProps = {
+    const paginationToolbarProps: TypePaginationProps = {
       perPageText: i18n('perPageText'),
       pageText: i18n('pageText'),
       ofText: i18n('ofText'),
@@ -133,7 +155,7 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     return result;
   }
 
-  renderPageList = list => {
+  renderPageList = (list: any) => {
     if (!createPortal) {
       return list;
     }
@@ -141,23 +163,23 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     return this.props.renderInPortal(list);
   };
 
-  onRowMouseEnter = (event, rowProps) => {
-    this.props.onRowMouseEnter(event, rowProps);
+  onRowMouseEnter = (event: MouseEvent, rowProps: RowProps) => {
+    this.props.onRowMouseEnter && this.props.onRowMouseEnter(event, rowProps);
   };
 
-  onRowMouseLeave = (event, rowProps) => {
-    this.props.onRowMouseLeave(event, rowProps);
+  onRowMouseLeave = (event: MouseEvent, rowProps: RowProps) => {
+    this.props.onRowMouseLeave && this.props.onRowMouseLeave(event, rowProps);
   };
 
   getVirtualList = () => {
-    return this.columnLayout.getVirtualList();
+    return this.columnLayout && this.columnLayout.getVirtualList();
   };
 
   getRenderRange = () => {
     return this.columnLayout.getRenderRange();
   };
 
-  isRowFullyVisible = index => {
+  isRowFullyVisible = (index: number) => {
     return this.columnLayout.isRowFullyVisible(index);
   };
 
@@ -169,7 +191,7 @@ class InovuaDataGridLayout extends Component<LayoutProps> {
     return this.columnLayout;
   };
 
-  setScrollLeft = scrollLeft => {
+  setScrollLeft = (scrollLeft: number) => {
     if (this.columnLayout) {
       this.columnLayout.setScrollLeft(scrollLeft);
       if (this.dragHeader) {
