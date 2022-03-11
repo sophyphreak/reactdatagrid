@@ -56,7 +56,7 @@ const App = () => {
       </div>
       <div style={{ marginBottom: 20 }}>
         <CheckBox checked={enableSelection} onChange={setEnableSelection}>
-          enableSelection
+          Enable row selection
         </CheckBox>
       </div>
 
@@ -74,9 +74,8 @@ const App = () => {
         // activeRowIndicatorClassName="active-row-border"
         groupBy={[]}
         // checkboxColumn
-        cellSelection={cellSelection}
-        onCellSelectionChange={setCellSelection}
-        selectOnDrag
+        cellSelection={!enableSelection ? cellSelection : undefined}
+        onCellSelectionChange={!enableSelection ? setCellSelection : undefined}
       />
       <p>
         Selected rows: {selected == null ? 'none' : JSON.stringify(selected)}.
