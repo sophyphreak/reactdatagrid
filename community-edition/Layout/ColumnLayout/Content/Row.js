@@ -1084,6 +1084,11 @@ const DataGridRow = React.forwardRef((props, ref) => {
             props.passedProps.onClick(event, props);
         }
     };
+    const onMouseDown = (event) => {
+        if (props.onMouseDown) {
+            props.onMouseDown(event, props);
+        }
+    };
     useImperativeHandle(ref, () => {
         return {
             onCellUnmount,
@@ -1123,6 +1128,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
             expandRangeWithColspan,
             renderRow,
             onClick,
+            onMouseDown,
             getCurrentGaps,
             rowProps,
             domRef: domRef,
@@ -1195,6 +1201,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         // passedProps should not overwrite the folowing methods
         // onEvent prop will be called also
         onClick: onClick,
+        onMouseDown: onMouseDown,
         onContextMenu: onContextMenu,
     };
     rowProps.children = [
