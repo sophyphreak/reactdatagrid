@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { useRef } from 'react';
 import { IS_IE, IS_MS_BROWSER } from '../../../detect-ua';
 import { getCellHeader } from '../../../Layout/ColumnLayout/HeaderLayout/Header';
 import Menu from '../../../packages/Menu';
@@ -41,8 +40,22 @@ const getTopComputedProps = (computedProps) => {
     }
     return computedProps;
 };
+const getAlignTo = (selection, menuTools, index) => {
+    const filteredTools = menuTools.filter((_, i) => i !== Object.keys(selection).length);
+    const length = filteredTools.length;
+    let alignTo;
+    if (index > length) {
+        alignTo = filteredTools[length - 1];
+    }
+    else if (index <= length) {
+        alignTo = filteredTools[index - 1];
+    }
+    if (!alignTo) {
+        alignTo = filteredTools[0];
+    }
+    return alignTo;
+};
 export default (computedProps, computedPropsRef) => {
-    const selectionRef = useRef(null);
     const cellProps = computedProps.columnContextMenuProps;
     if (!cellProps) {
         return null;
@@ -60,96 +73,11 @@ export default (computedProps, computedPropsRef) => {
         }
         return acc;
     }, {});
-    const getMenu = () => {
+    const onSelectionChange = (selection) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;
         }
-        return computedProps.domRef.current.querySelector('.InovuaReactDataGrid > .inovua-react-toolkit-menu');
-    };
-    const getMenuTools = () => {
-        const { current: computedProps } = computedPropsRef;
-        if (!computedProps) {
-            return;
-        }
-        return Array.prototype.slice.call(computedProps.domRef.current.querySelectorAll('.InovuaReactDataGrid__column-header__menu-tool'));
-    };
-    const getAlignTo = (selection, options) => {
-        const { current: computedProps } = computedPropsRef;
-        if (!computedProps) {
-            return;
-        }
-        const menuTools = getMenuTools();
-        const length = menuTools.length;
-        const name = options ? (options.name ? options.name : options.value) : '';
-        const column = computedProps.getColumnBy(name);
-        const index = column.computedAbsoluteIndex;
-        const columnContextMenuIndex = computedProps.columnContextMenuIndex
-            ? computedProps.columnContextMenuIndex.current
-            : -1;
-        // const filteredTools = menuTools.filter(
-        //   (_: any, i: number) => i !== Object.keys(selection).length
-        // );
-        const nextIndex = index + 1;
-        const prevIndex = index - 1;
-        const nextCol = computedProps.getColumnBy(nextIndex);
-        const prevCol = computedProps.getColumnBy(prevIndex);
-        let alignTo;
-        if (index > columnContextMenuIndex) {
-            alignTo = menuTools[columnContextMenuIndex];
-        }
-        else if (index === columnContextMenuIndex) {
-            if (nextCol) {
-                alignTo = menuTools[nextIndex];
-                computedProps.columnContextMenuIndex.current = nextIndex;
-            }
-            else {
-                if (prevCol) {
-                    alignTo = menuTools[prevIndex];
-                    computedProps.columnContextMenuIndex.current = prevIndex;
-                }
-            }
-        }
-        else if (index < columnContextMenuIndex) {
-            alignTo = menuTools[columnContextMenuIndex];
-            computedProps.columnContextMenuIndex.current = columnContextMenuIndex - 1;
-        }
-        // if (index > length) {
-        //   alignTo = menuTools[length - 1];
-        // } else if (index <= length) {
-        //   alignTo = menuTools[index - 1];
-        // }
-        if (alignTo === undefined) {
-            alignTo = menuTools[0];
-        }
-        return alignTo;
-    };
-    const updateMenuPosition = (menuTool, options) => {
-        const { current: computedProps } = computedPropsRef;
-        if (!computedProps) {
-            return;
-        }
-        const selection = selectionRef && selectionRef.current;
-        const mainMenu = getMenu();
-        const alignTo = menuTool ? menuTool : getAlignTo(selection, options);
-        if (alignTo) {
-            requestAnimationFrame(() => {
-                computedProps.updateMainMenuPosition(alignTo);
-            });
-            if (mainMenu) {
-                mainMenu.style.transition = 'transform 200ms';
-                setTimeout(() => {
-                    mainMenu.style.transition = '';
-                }, 200);
-            }
-        }
-    };
-    const onSelectionChange = (selection, options) => {
-        const { current: computedProps } = computedPropsRef;
-        if (!computedProps) {
-            return;
-        }
-        selectionRef.current = selection;
         if (IS_IE) {
             computedProps.preventIEMenuCloseRef.current = true;
             setTimeout(() => {
@@ -164,10 +92,22 @@ export default (computedProps, computedPropsRef) => {
             }
         });
         if (computedProps.updateMenuPositionOnColumnsChange) {
-            updateMenuPosition(undefined, options);
+            const menuTools = Array.prototype.slice.call(computedProps.domRef.current.querySelectorAll('.InovuaReactDataGrid__column-header__menu-tool'));
+            const mainMenu = computedProps.domRef.current.querySelector('.InovuaReactDataGrid > .inovua-react-toolkit-menu');
+            const cellInstance = computedProps.columnContextMenuInstanceProps;
+            const columnIndex = cellInstance.props.computedVisibleIndex;
+            const alignTo = getAlignTo(selection, menuTools, columnIndex);
+            if (alignTo) {
+                computedProps.updateMainMenuPosition(alignTo);
+                if (mainMenu) {
+                    mainMenu.style.transition = 'transform 200ms';
+                    setTimeout(() => {
+                        mainMenu.style.transition = '';
+                    }, 200);
+                }
+            }
         }
     };
-    computedProps.updateMenuPosition = updateMenuPosition;
     const currentColumn = computedProps.getColumnBy(cellProps.id);
     const colSortInfo = currentColumn.computedSortInfo;
     const lockLimit = !cellProps.computedLocked && computedProps.unlockedColumns.length <= 1;
