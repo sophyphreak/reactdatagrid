@@ -101,7 +101,7 @@ const renderLoadMask = (props) => {
         visible: props.computedLoading,
         livePagination: props.computedLivePagination,
         loadingText: props.loadingText || 'Loading',
-        zIndex: 10_000,
+        zIndex: 10000,
         theme: props.theme,
     };
     let loadMask;
