@@ -120,6 +120,7 @@ export interface IColumn {
   readonly headerProps?: TypeHeaderProps;
   readonly renderEditor?: (editorProps: any) => ReactNode;
   readonly editor?: ReactNode;
+  readonly renderHeader?: (cellProps: CellProps) => string;
 }
 
 export interface TypeColWithNameProperty extends IColumn {

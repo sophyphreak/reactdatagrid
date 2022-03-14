@@ -166,9 +166,11 @@ const computeData = (config, computedProps, batchUpdateQueue) => {
         batchUpdateQueue(() => {
             computedProps.setUngroupedData(config.data);
         });
+        const { length } = config.data;
         if (Array.isArray(groupBy) &&
             groupBy.length &&
-            computedProps.computeDataStep) {
+            computedProps.computeDataStep &&
+            length) {
             config = computedProps.computeDataStep({
                 groupBy,
                 batchUpdateQueue,
