@@ -73,7 +73,11 @@ const ActiveRowIndicator = (props: TypeActiveRowIndicatorProps) => {
       return setOffset('');
     }
 
-    if (instance && instance.props.rowIndex !== props.activeIndex) {
+    if (
+      instance &&
+      instance.props.rowIndex !== props.activeIndex &&
+      props.activeIndex >= 0
+    ) {
       // try again later,
       // since the row has not been updated yet
       requestAnimationFrame(() => updateLayout({ raf: false }));

@@ -1519,7 +1519,9 @@ const GridFactory = (
         : computedPropsRef.rowHeight;
     computedProps.activeRowHeight = activeRowHeight || computedProps.rowHeight;
 
-    if (computedFocused && computedProps.showActiveRowIndicator) {
+    const emptyData = computedProps.data && computedProps.data.length;
+
+    if (computedFocused && computedProps.showActiveRowIndicator && emptyData) {
       computedProps.renderActiveRowIndicator = (
         handle: (
           handleProps: {
