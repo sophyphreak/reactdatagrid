@@ -98,6 +98,7 @@ export default class ColumnResizer extends Component<
       over: false,
     });
   }
+
   onTouchStart(event: any) {
     event.preventDefault();
 

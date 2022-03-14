@@ -41,6 +41,7 @@ export default (props, computedProps, computedPropsRef) => {
         return (computedProps.initialProps.rowContextMenuConstrainTo ||
             getConstrainRegion(computedProps));
     }, []);
+    const columnContextMenuIndex = useRef(-1);
     const preventIEMenuCloseRef = useRef(false);
     const columnContextMenuInfoRef = useRef({
         menuAlignTo: null,
@@ -97,6 +98,7 @@ export default (props, computedProps, computedPropsRef) => {
             computedProps.hideColumnContextMenu();
             return;
         }
+        columnContextMenuIndex.current = cellProps.columnIndex;
         columnContextMenuInfoRef.current = {
             menuAlignTo: alignTo,
             getMenuConstrainTo: getColumnMenuConstrainTo,
@@ -190,5 +192,6 @@ export default (props, computedProps, computedPropsRef) => {
         setColumnContextMenuInstanceProps,
         setRowContextMenuProps,
         preventIEMenuCloseRef,
+        columnContextMenuIndex,
     };
 };

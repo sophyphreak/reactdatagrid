@@ -76,6 +76,7 @@ export default (
     );
   }, []);
 
+  const columnContextMenuIndex = useRef<number>(-1);
   const preventIEMenuCloseRef = useRef<boolean>(false);
 
   const columnContextMenuInfoRef = useRef<{
@@ -163,6 +164,8 @@ export default (
         computedProps.hideColumnContextMenu();
         return;
       }
+
+      columnContextMenuIndex.current = cellProps.columnIndex;
 
       columnContextMenuInfoRef.current = {
         menuAlignTo: alignTo,
@@ -289,5 +292,6 @@ export default (
     setColumnContextMenuInstanceProps,
     setRowContextMenuProps,
     preventIEMenuCloseRef,
+    columnContextMenuIndex,
   };
 };

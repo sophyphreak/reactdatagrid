@@ -82,6 +82,8 @@ export default class HeaderWrapper extends React.Component<any> {
       enableColumnFilterContextMenu,
       computedEnableColumnHover,
       renderRowDetailsMoreIcon,
+      hideColumnContextMenu,
+      updateMenuPosition,
     } = props;
 
     let scrollbarWidth = 0;
@@ -142,6 +144,7 @@ export default class HeaderWrapper extends React.Component<any> {
           filterable={filterable}
           showColumnContextMenu={props.showColumnContextMenu}
           showColumnFilterContextMenu={props.showColumnFilterContextMenu}
+          hideColumnFilterContextMenu={props.hideColumnFilterContextMenu}
           computedShowHeaderBorderRight={computedShowHeaderBorderRight}
           hasLockedEnd={props.hasLockedEnd}
           hasLockedStart={props.hasLockedStart}
@@ -195,6 +198,8 @@ export default class HeaderWrapper extends React.Component<any> {
           enableColumnFilterContextMenu={enableColumnFilterContextMenu}
           computedEnableColumnHover={computedEnableColumnHover}
           renderRowDetailsMoreIcon={renderRowDetailsMoreIcon}
+          hideColumnContextMenu={hideColumnContextMenu}
+          updateMenuPosition={updateMenuPosition}
         />
         <div className="InovuaReactDataGrid__header-wrapper__fill">
           {props.computedFilterable && (

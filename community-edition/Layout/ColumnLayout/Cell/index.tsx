@@ -27,7 +27,7 @@ import { id as REORDER_COLUMN_ID } from '../../../normalizeColumns/defaultRowReo
 import TextEditor from './editors/Text';
 import Renderable from '../../../types/TypeRenderable';
 import { EnhancedCellProps, CellRenderObject, CellProps } from './CellProps';
-import { setupResizeObserver } from '../../../utils/setupResizeObserver';
+// import { setupResizeObserver } from '../../../utils/setupResizeObserver';
 // import diff from '../../../packages/shallow-changes';
 
 const cellBem = bemFactory('InovuaReactDataGrid__cell');
@@ -1361,6 +1361,11 @@ export default class InovuaDataGridCell extends React.Component {
   onResizeMouseDown(cellProps, event) {
     const props = this.getProps();
 
+    this.hideFilterContextMenu();
+    if (props.hideColumnContextMenu) {
+      props.hideColumnContextMenu();
+    }
+
     if (props.onResizeMouseDown) {
       const node = this.getDOMNode();
 
@@ -1502,6 +1507,12 @@ export default class InovuaDataGridCell extends React.Component {
   showFilterContextMenu(node) {
     if (this.props.showColumnFilterContextMenu) {
       this.props.showColumnFilterContextMenu(node, this.getProps());
+    }
+  }
+
+  hideFilterContextMenu() {
+    if (this.props.hideColumnFilterContextMenu) {
+      this.props.hideColumnFilterContextMenu();
     }
   }
 

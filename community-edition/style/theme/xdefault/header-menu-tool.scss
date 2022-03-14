@@ -11,8 +11,9 @@
   .InovuaReactDataGrid__column-header__menu-tool {
     border-left: none;
     border-right: none;
-    margin-right: 8px;
-    padding: 1px;
+    padding: 2px;
+    padding-right: 10px;
+    transition: opacity 0ms ease-in-out 250ms;
 
     svg {
       transform: translateY(0);

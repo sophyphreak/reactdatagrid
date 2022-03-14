@@ -19,7 +19,10 @@ type TypeGenericFilterProps = {
   enableColumnFilterContextMenu?: boolean;
 };
 
-type TypeGenericFilterState = {};
+type TypeGenericFilterState = {
+  focused: boolean;
+  open: boolean;
+};
 
 class GenericFilter extends React.Component<
   TypeGenericFilterProps,
@@ -65,15 +68,38 @@ class GenericFilter extends React.Component<
     this.ref = (specificFilter: any) => {
       this.specificFilter = specificFilter;
     };
+
+    this.state = {
+      focused: false,
+      open: false,
+    };
   }
 
   onSettingsClick(e: any) {
+    if (!this.state.open) {
+      this.onMenuOpen(e);
+    } else {
+      this.onMenuClose(e);
+    }
+  }
+
+  onMenuOpen = (e: any) => {
     e.preventDefault();
     this.props.cellInstance.showFilterContextMenu(this.settings);
     this.setState({
       focused: true,
+      open: true,
     });
-  }
+  };
+
+  onMenuClose = (e: any) => {
+    e.preventDefault();
+    this.props.cellInstance.hideFilterContextMenu();
+    this.setState({
+      focused: false,
+      open: false,
+    });
+  };
 
   componentDidMount() {
     if (this.props.cellInstance) {

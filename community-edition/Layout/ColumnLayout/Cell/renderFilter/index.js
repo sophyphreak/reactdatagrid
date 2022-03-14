@@ -42,14 +42,35 @@ class GenericFilter extends React.Component {
         this.ref = (specificFilter) => {
             this.specificFilter = specificFilter;
         };
+        this.state = {
+            focused: false,
+            open: false,
+        };
     }
     onSettingsClick(e) {
+        if (!this.state.open) {
+            this.onMenuOpen(e);
+        }
+        else {
+            this.onMenuClose(e);
+        }
+    }
+    onMenuOpen = (e) => {
         e.preventDefault();
         this.props.cellInstance.showFilterContextMenu(this.settings);
         this.setState({
             focused: true,
+            open: true,
         });
-    }
+    };
+    onMenuClose = (e) => {
+        e.preventDefault();
+        this.props.cellInstance.hideFilterContextMenu();
+        this.setState({
+            focused: false,
+            open: false,
+        });
+    };
     componentDidMount() {
         if (this.props.cellInstance) {
             this.props.cellInstance.filter = this;

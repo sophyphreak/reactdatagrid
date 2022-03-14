@@ -91,6 +91,7 @@ const propTypes = {
   hasLockedStart: PropTypes.bool,
   showColumnContextMenu: PropTypes.func,
   showColumnFilterContextMenu: PropTypes.func,
+  hideColumnFilterContextMenu: PropTypes.func,
   onColumnHeaderFocus: PropTypes.func,
   showColumnMenuTool: PropTypes.bool,
   showColumnMenuToolOnHover: PropTypes.bool,
@@ -138,6 +139,8 @@ const propTypes = {
   enableColumnFilterContextMenu: PropTypes.bool,
   computedEnableColumnHover: PropTypes.bool,
   renderRowDetailsMoreIcon: PropTypes.func,
+  hideColumnContextMenu: PropTypes.func,
+  updateMenuPosition: PropTypes.func,
 };
 
 type TypeHeaderProps = {} | any;
@@ -602,6 +605,7 @@ export default class InovuaDataGridHeader extends React.Component<
       data,
       showColumnContextMenu,
       showColumnFilterContextMenu,
+      hideColumnFilterContextMenu,
       deselectAll,
       firstLockedEndIndex,
       firstUnlockedIndex,
@@ -637,6 +641,8 @@ export default class InovuaDataGridHeader extends React.Component<
       enableColumnFilterContextMenu,
       computedEnableColumnHover,
       renderRowDetailsMoreIcon,
+      hideColumnContextMenu,
+      updateMenuPosition,
     } = props;
 
     let columns = props.columns;
@@ -698,6 +704,7 @@ export default class InovuaDataGridHeader extends React.Component<
         totalCount,
         showColumnContextMenu,
         showColumnFilterContextMenu,
+        hideColumnFilterContextMenu,
         selectAll,
         deselectAll,
         style: cellStyle,
@@ -732,6 +739,8 @@ export default class InovuaDataGridHeader extends React.Component<
         enableColumnFilterContextMenu: displayColumnFilterContextMenu,
         computedEnableColumnHover,
         renderRowDetailsMoreIcon,
+        hideColumnContextMenu,
+        updateMenuPosition,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);
