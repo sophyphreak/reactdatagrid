@@ -182,6 +182,7 @@ const renderRows = (
     computedEnableColumnHover,
     renderRowDetailsExpandIcon,
     renderRowDetailsCollapsedIcon,
+    computedOnRowMouseDown,
   }: any
 ) => {
   const remoteOffset = computedLivePagination ? 0 : computedSkip || 0;
@@ -354,6 +355,7 @@ const renderRows = (
       onMouseEnter: !empty ? onRowMouseEnter : null,
       onMouseLeave: !empty ? onRowMouseLeave : null,
       onClick: !empty ? computedOnRowClick : null,
+      onMouseDown: !empty ? computedOnRowMouseDown : null,
       scrollToColumn,
       scrollToIndexIfNeeded,
       onCellClick,

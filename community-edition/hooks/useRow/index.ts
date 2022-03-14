@@ -31,6 +31,7 @@ export default (
   computedOnFocus: (event: FocusEvent) => void;
   computedOnBlur: (event: FocusEvent) => void;
   computedOnRowClick: (event: MouseEvent, rowProps: TypeRowProps) => void;
+  computedOnRowMouseDown: (event: MouseEvent, rowProps: TypeRowProps) => void;
   computedOnCellMouseDown: (
     event: MouseEvent,
     cellProps: TypeCellProps
@@ -371,7 +372,9 @@ export default (
     }
   };
 
-  const computedOnRowClick = useCallback(
+  const computedOnRowClick = useCallback(() => {}, []);
+
+  const computedOnRowMouseDown = useCallback(
     (event: MouseEvent, rowProps: TypeRowProps) => {
       const { current: computedProps } = computedPropsRef;
 
@@ -633,6 +636,7 @@ export default (
     computedOnFocus,
     computedOnBlur,
     computedOnRowClick,
+    computedOnRowMouseDown,
     computedOnCellMouseDown,
     isGroup,
     computedActiveItem:

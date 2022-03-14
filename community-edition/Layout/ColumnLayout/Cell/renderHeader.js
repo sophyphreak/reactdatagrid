@@ -96,8 +96,8 @@ const renderHeader = (props, domProps, cellInstance, state = EMPTY_OBJECT) => {
             styleCloned = true;
         }
         let resizeHandle;
-        if (!dragging && virtualizeColumns) {
-            theStyle.left = props.left;
+        if (!dragging && !computedLocked && virtualizeColumns) {
+            theStyle.left = props.computedOffset;
             theStyle.position = 'absolute';
         }
         if (props.computedResizable) {

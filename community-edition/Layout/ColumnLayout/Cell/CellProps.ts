@@ -235,6 +235,10 @@ export type CellProps = {
   renderRowDetailsMoreIcon?: () => void;
   renderRowDetailsExpandIcon?: () => void;
   renderRowDetailsCollapsedIcon?: () => void;
+  isRowDetailsCell?: boolean;
+  isCheckboxColumn?: boolean;
+  onColumnMouseEnter?: (props: CellProps) => void;
+  onColumnMouseLeave?: (props: CellProps) => void;
 };
 
 export type EnhancedCellProps = CellProps & {

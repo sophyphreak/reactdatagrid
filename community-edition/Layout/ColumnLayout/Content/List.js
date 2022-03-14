@@ -476,7 +476,7 @@ export default class InovuaDataGridList extends Component {
             this.updateOnScrollLeft(undefined, (force = true));
         });
     };
-    onContainerScrollHorizontal = (scrollLeft, force) => {
+    onContainerScrollHorizontal = (scrollLeft, force, scrollLeftMax) => {
         if (scrollLeft < 0) {
             // protect against SAFARI inertial scroling reporting negative values when bouncing
             scrollLeft = 0;
@@ -487,7 +487,7 @@ export default class InovuaDataGridList extends Component {
             return;
         }
         if (this.props.onContainerScrollHorizontal) {
-            this.props.onContainerScrollHorizontal(scrollLeft);
+            this.props.onContainerScrollHorizontal(scrollLeft, scrollLeftMax);
         }
         if (this.props.scrollProps &&
             this.props.scrollProps.onContainerScrollHorizontal) {

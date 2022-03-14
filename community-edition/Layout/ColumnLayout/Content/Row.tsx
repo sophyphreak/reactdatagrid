@@ -1541,13 +1541,17 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     if (props.computedTreeEnabled && props.expandOnMouseDown) {
       toggleNodeExpand(props.rowIndex);
     }
-
     if (props.onClick) {
       props.onClick(event, props);
     }
-
     if (props.passedProps && props.passedProps.onClick) {
       props.passedProps.onClick(event, props);
+    }
+  };
+
+  const onMouseDown = (event: MouseEvent) => {
+    if (props.onMouseDown) {
+      props.onMouseDown(event, props);
     }
   };
 
@@ -1590,6 +1594,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       expandRangeWithColspan,
       renderRow,
       onClick,
+      onMouseDown,
       getCurrentGaps,
       rowProps,
       domRef: domRef,
@@ -1749,7 +1754,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     // passedProps should not overwrite the folowing methods
     // onEvent prop will be called also
     onClick: onClick,
-
+    onMouseDown: onMouseDown,
     onContextMenu: onContextMenu,
   };
 

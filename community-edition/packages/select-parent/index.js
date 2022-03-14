@@ -6,9 +6,10 @@
  */
 'use strict';
 import curry from './curry';
+import nativeMatches from '../matches';
 var matches;
 export default curry(function (selector, node) {
-    matches = matches || require('../matches');
+    matches = matches || nativeMatches;
     while ((node = node.parentElement)) {
         if (matches.call(node, selector)) {
             return node;

@@ -228,11 +228,15 @@ export default class InovuaDataGridColumnLayout extends React.Component {
     return;
   }
 
-  onContainerScrollHorizontal = (computedProps, scrollLeft) => {
+  onContainerScrollHorizontal = (
+    computedProps: TypeComputedProps,
+    scrollLeft: number,
+    scrollLeftMax?: number
+  ) => {
     this.scrollLeft = scrollLeft;
 
     if (this.headerLayout) {
-      this.headerLayout.onContainerScrollHorizontal(scrollLeft);
+      this.headerLayout.onContainerScrollHorizontal(scrollLeft, scrollLeftMax);
     }
 
     if (computedProps.onScroll) {

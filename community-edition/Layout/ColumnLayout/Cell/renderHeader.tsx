@@ -159,8 +159,8 @@ const renderHeader = (
 
     let resizeHandle;
 
-    if (!dragging && virtualizeColumns) {
-      theStyle.left = props.left;
+    if (!dragging && !computedLocked && virtualizeColumns) {
+      theStyle.left = props.computedOffset;
       theStyle.position = 'absolute';
     }
 

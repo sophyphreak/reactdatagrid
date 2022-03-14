@@ -380,6 +380,8 @@ export default class InovuaDataGridCell extends React.Component {
             onContextMenu: this.onContextMenu,
             onMouseDown: this.onMouseDown,
             onTouchStart: this.onTouchStart,
+            onMouseEnter: this.onCellEnter,
+            onMouseLeave: this.onCellLeave,
         });
         cellProps.className = headerCell
             ? headerProps.className
@@ -445,9 +447,6 @@ export default class InovuaDataGridCell extends React.Component {
                 gotoPrev: this.gotoPrevEditor,
             };
         }
-        if (onCellEnter) {
-            cellProps.onMouseEnter = this.onCellEnter;
-        }
         if (headerCell) {
             cellProps.onFocus = this.onHeaderCellFocus;
         }
@@ -508,8 +507,8 @@ export default class InovuaDataGridCell extends React.Component {
             onDoubleClick: cellProps.onDoubleClick || initialDOMProps.onDoubleClick,
             onMouseDown: cellProps.onMouseDown || initialDOMProps.onMouseDown,
             onTouchStart: cellProps.onTouchStart || initialDOMProps.onTouchStart,
-            onMouseEnter: this.onMouseEnter,
-            onMouseLeave: this.onMouseLeave,
+            onMouseEnter: cellProps.onMouseEnter || initialDOMProps.onMouseEnter,
+            onMouseLeave: cellProps.onMouseLeave || initialDOMProps.onMouseLeave,
             style: initialDOMProps.style
                 ? Object.assign({}, initialDOMProps.style, cellProps.style)
                 : cellProps.style,
@@ -518,40 +517,6 @@ export default class InovuaDataGridCell extends React.Component {
         domProps.ref = this.domRef;
         return headerCell ? (RENDER_HEADER(cellProps, domProps, this, this.state)) : (React.createElement("div", { ...domProps, children: cellProps.children, id: null, name: null, value: null, title: null, data: null }));
     }
-    onMouseEnter = (_event) => {
-        const props = this.getProps();
-        const initialDOMProps = this.getInitialDOMProps();
-        if (!props.computedEnableColumnHover ||
-            props.groupProps ||
-            props.groupSpacerColumn ||
-            props.isRowDetailsCell ||
-            props.isCheckboxColumn) {
-            return;
-        }
-        if (props.onColumnMouseEnter) {
-            props.onColumnMouseEnter(props);
-        }
-        else if (initialDOMProps.onMouseEnter) {
-            initialDOMProps.onMouseEnter();
-        }
-    };
-    onMouseLeave = (_event) => {
-        const props = this.getProps();
-        const initialDOMProps = this.getInitialDOMProps();
-        if (!props.computedEnableColumnHover ||
-            props.groupProps ||
-            props.groupSpacerColumn ||
-            props.isRowDetailsCell ||
-            props.isCheckboxColumn) {
-            return;
-        }
-        if (props.onColumnMouseLeave) {
-            props.onColumnMouseLeave(props);
-        }
-        else if (initialDOMProps.onMouseLeave) {
-            initialDOMProps.onMouseLeave();
-        }
-    };
     renderNodeTool(props) {
         const { data, renderTreeCollapseTool, renderTreeExpandTool, renderTreeLoadingTool, } = props;
         const nodeProps = data.__nodeProps || emptyObject;
@@ -814,14 +779,52 @@ export default class InovuaDataGridCell extends React.Component {
             initialProps.onFocus(event, props);
         }
     }
+    onColumnHoverMouseEnter = (props) => {
+        if (props.groupProps ||
+            props.groupSpacerColumn ||
+            props.isRowDetailsCell ||
+            props.isCheckboxColumn) {
+            return;
+        }
+        if (props.onColumnMouseEnter) {
+            props.onColumnMouseEnter(props);
+        }
+    };
+    onColumnHoverMouseLeave = (props) => {
+        if (props.groupProps ||
+            props.groupSpacerColumn ||
+            props.isRowDetailsCell ||
+            props.isCheckboxColumn) {
+            return;
+        }
+        if (props.onColumnMouseLeave) {
+            props.onColumnMouseLeave(props);
+        }
+    };
     onCellEnter(event) {
         const props = this.getProps();
+        const initialProps = this.getInitialDOMProps();
         if (props.onCellEnter) {
             props.onCellEnter(event, props);
         }
-        const initialProps = this.getInitialDOMProps();
+        if (props.computedEnableColumnHover) {
+            this.onColumnHoverMouseEnter(props);
+        }
         if (initialProps.onMouseEnter) {
             initialProps.onMouseEnter(event, props);
+        }
+    }
+    onCellLeave(event) {
+        const props = this.getProps();
+        const initialProps = this.getInitialDOMProps();
+        if (props.onCellLeave) {
+            props.onCellLeave(event, props);
+        }
+        if (props.computedEnableColumnHover) {
+            this.onColumnHoverMouseLeave(props);
+        }
+        if (initialProps.onMouseLeave) {
+            initialProps.onMouseLeave(event, props);
         }
     }
     onCellSelectionDraggerMouseDown(event) {

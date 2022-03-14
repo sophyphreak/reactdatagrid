@@ -7,21 +7,21 @@
 
 'use strict';
 
-function curry(fn, n) {
+function curry(fn: any, n?: number) {
   if (typeof n !== 'number') {
     n = fn.length;
   }
 
-  function getCurryClosure(prevArgs) {
-    function curryClosure() {
+  function getCurryClosure(prevArgs: any) {
+    function curryClosure(this: any) {
       var len = arguments.length;
-      var args = [].concat(prevArgs);
+      var args: any = [].concat(prevArgs);
 
       if (len) {
         args.push.apply(args, arguments);
       }
 
-      if (args.length < n) {
+      if (n !== undefined && args.length < n) {
         return getCurryClosure(args);
       }
 

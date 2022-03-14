@@ -60,7 +60,7 @@ export const hasNextPage = ({ skip, limit, count }) =>
 export const hasPrevPage = ({ skip, limit }) =>
   getCurrentPage({ skip, limit }) > 1;
 
-export default class InovuaPaginationToolbar extends React.Component {
+export default class InovuaPaginationToolbar extends React.Component<any> {
   constructor(props) {
     super(props);
 

@@ -52,6 +52,8 @@ export {
   TypeSummaryReducer,
   TypeHeaderProps,
 } from './TypeColumn';
+export { RowProps } from '../Layout/ColumnLayout/Content/RowProps';
+export { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 
 export { TypeRowReorderFn };
 

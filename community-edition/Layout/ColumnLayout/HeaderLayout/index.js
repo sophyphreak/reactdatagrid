@@ -265,10 +265,10 @@ export default class InovuaDataGridHeaderLayout extends Component {
             this.header.notifyScrollLeftMax(scrollLeftMax === undefined ? this.getScrollLeftMax() : scrollLeftMax);
         }
     }
-    onContainerScrollHorizontal(scrollLeft) {
+    onContainerScrollHorizontal(scrollLeft, scrollLeftMax) {
         this.scrollLeft = scrollLeft;
         if (this.header) {
-            this.header.setScrollLeft(scrollLeft);
+            this.header.setScrollLeft(scrollLeft, scrollLeftMax);
             this.lazyNotifyHeaderScrollLeftMax();
         }
     }

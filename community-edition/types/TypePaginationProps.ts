@@ -5,15 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { ReactNode } from 'react';
+
 export type TypePaginationProps = {
   skip: number;
   limit: number;
   count: number;
   pagination: boolean;
-  livePagination: boolean;
+  livePagination?: boolean;
   remotePagination: boolean;
   localPagination: boolean;
   totalCount: number;
+  pageSizes?: number[];
   gotoNextPage: () => void;
   reload: () => void;
   onRefresh: () => void;
@@ -25,6 +28,15 @@ export type TypePaginationProps = {
   onSkipChange: (skip: number) => void;
   onLimitChange: (limit: number) => void;
   gotoPage: (page: number, config?: { force: boolean }) => void;
+  onClick?: any;
+  theme?: string;
+  className?: string;
+  perPageText?: ReactNode;
+  pageText?: ReactNode;
+  ofText?: ReactNode;
+  showingText?: ReactNode;
+  rtl?: boolean;
+  bordered?: boolean;
 };
 
 export default TypeErrorConstructor;
