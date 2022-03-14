@@ -61,6 +61,7 @@ export default {
         width: startWrapperWidth,
         minWidth: startWrapperWidth,
         background: 'inherit',
+        height: '100%',
       };
       if (style) {
         if (style.background) {
@@ -76,7 +77,7 @@ export default {
         startWrapperStyle.left = -startOffset;
       }
       if (virtualizeColumns) {
-        startWrapperStyle.height = rowHeight;
+        startWrapperStyle.height = rowHeight ? rowHeight : '100%';
         startWrapperStyle.position = 'absolute';
         startWrapperStyle.left = 0;
       } else {
@@ -115,6 +116,7 @@ export default {
       );
     }
   },
+
   renderLockedEndCells: ({
     rtl,
     scrollLeft,

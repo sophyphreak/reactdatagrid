@@ -67,12 +67,15 @@ for (let i = 0; i < 1000; i++) {
   let result = {};
   for (let j = 0; j < initialCols.length; j++) {
     let chunk = {};
+    let columnIndex = 1;
     for (let k = 0; k < COLS_TIMES; k++) {
       const res = {
-        [`firstName--${k}`]: makeid(5),
-        [`lastName--${k}`]: makeid(10),
-        [`age--${k}`]: randomIntFromInterval(20, 100),
+        [`firstName--${k}`]: `${columnIndex}--${makeid(5)}`,
+        [`lastName--${k}`]: `${columnIndex + 1}--${makeid(10)}`,
+        [`age--${k}`]: `${columnIndex + 2}--${randomIntFromInterval(20, 100)}`,
       };
+      columnIndex = columnIndex + 3;
+
       Object.assign(chunk, res);
     }
     Object.assign(result, chunk);
@@ -91,7 +94,9 @@ export default function App() {
       // showColumnMenuTool={false}
       headerHeight={50}
       nativeScroll={true}
-      // rowIndexColumn
+      virtualizeColumns
+      rowIndexColumn
+      defaultGroupBy={[]}
     />
   );
 }
