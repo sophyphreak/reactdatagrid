@@ -268,8 +268,8 @@ export default (props, computedProps, computedPropsRef) => {
             });
         }
     };
-    const computedOnRowClick = useCallback(() => { }, []);
-    const computedOnRowMouseDown = useCallback((event, rowProps) => {
+    const computedOnRowMouseDown = useCallback(() => { }, []);
+    const computedOnRowClick = useCallback((event, rowProps) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
             return;

@@ -372,9 +372,9 @@ export default (
     }
   };
 
-  const computedOnRowClick = useCallback(() => {}, []);
+  const computedOnRowMouseDown = useCallback(() => {}, []);
 
-  const computedOnRowMouseDown = useCallback(
+  const computedOnRowClick = useCallback(
     (event: MouseEvent, rowProps: TypeRowProps) => {
       const { current: computedProps } = computedPropsRef;
 
