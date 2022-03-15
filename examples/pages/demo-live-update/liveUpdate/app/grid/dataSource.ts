@@ -1,23 +1,37 @@
 const buildDataSource = (
   records: number,
   cols: string,
+  times: number,
   callback?: Function
 ) => {
   if (callback) {
     return callback();
   }
 
-  const dataSource = [...new Array(records)].map((_: any, index: number) => {
+  const dataSource: any = [];
+  const colsArray = cols.split('');
+
+  for (let i = 0; i < records; i++) {
     const result = {
-      id: index,
+      id: i,
     };
 
-    cols.split('').map((letter: string) => {
-      result[letter] = letter.toUpperCase() + ' ' + (index + 1);
-    });
+    for (let j = 0; j < times; j++) {
+      for (let k = 0; k < colsArray.length; k++) {
+        const letter = colsArray[k];
 
-    return result;
-  });
+        if (j === 0) {
+          result[letter] = letter.toUpperCase() + ' ' + (i + 1);
+        } else if (j > 0) {
+          result[`${colsArray[j - 1]}${letter}`] = `${colsArray[
+            j - 1
+          ].toUpperCase()}${letter.toUpperCase()} ${i + 1}`;
+        }
+      }
+    }
+
+    dataSource.push(result);
+  }
 
   return dataSource;
 };

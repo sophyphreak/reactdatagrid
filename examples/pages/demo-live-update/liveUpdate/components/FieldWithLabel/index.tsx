@@ -30,6 +30,7 @@ const FieldWithLabel = (props: any) => {
             height: 36,
           }}
           disabled={props.disabled}
+          clearIcon={null}
           dataSource={props.selectData}
           value={props.selectValue}
           onChange={props.onSelectChange}

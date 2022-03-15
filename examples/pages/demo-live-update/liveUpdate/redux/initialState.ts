@@ -10,15 +10,17 @@ export type State = {
   interval?: number;
   load?: boolean;
   cellSelection?: any;
+  times?: number;
 };
 
 export const initialState: State = {
   theme: 'default-dark',
   data: [],
-  cols: 'abcdefghij', //'klmnopqrstuvwxyz',
+  cols: 'abcdefghijklmnopqrstuvwxyz',
   records: 1000,
   updateRecords: 1000,
   interval: 1000,
   load: false,
   cellSelection: {},
+  times: 7,
 };

@@ -1,43 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import ReactDataGrid from '../../../../../../enterprise-edition';
+import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 import buildColumns from './columns';
 import { useAppState, useAppActions } from '../../hooks';
 
-const gridStyles = {
-  height: 500,
-};
-const emptyText = (
-  <div style={{ fontSize: 14, color: '#9ba7b4' }}>No records available</div>
-);
-
 const DataGrid = (props: any) => {
-  const { theme, data, cols, load, cellSelection } = useAppState();
+  const { theme, data, cols, load, times, cellSelection } = useAppState();
   const { setCellSelection } = useAppActions();
-  const [groupBy, setGroupBy] = useState([]);
 
-  const [columns] = React.useState(() => buildColumns(cols));
-
-  const onGroupByChange = (groupBy: any[]) => {
-    setGroupBy(groupBy);
+  const gridStyles = {
+    height: '100%',
   };
 
+  const columns = buildColumns(cols, times);
+  const emptyText = (
+    <div style={{ fontSize: 14, color: '#9ba7b4' }}>No records available</div>
+  );
+
   const gridDOMProps: any = {
-    key: `${load}`,
+    key: `${JSON.stringify(columns)}-${load}`,
     idProperty: 'id',
     theme,
     handle: props.setGridRef,
     style: gridStyles,
-    licenseKey: process.env.NEXT_PUBLIC_LICENSE_KEY,
+    licenseKey:
+      'AppName=multi_app,Company=Inovua,ExpiryDate=2022-07-06,LicenseDeveloperCount=1,LicenseType=multi_app,Ref=InovuaLicenseRef,Z=-464174999-2163366611737475820-2096356925-464174999-785223719',
     columns,
     dataSource: data || [],
     rowIndexColumn: true,
     emptyText,
     cellSelection,
     onCellSelectionChange: setCellSelection,
-    clearDataSourceCacheOnChange: false,
-    groupBy,
-    onGroupByChange,
   };
 
   return <ReactDataGrid {...gridDOMProps} />;

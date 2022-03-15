@@ -6,14 +6,12 @@ import buildDataSource from '../grid/dataSource';
 import FieldWithLabel from '../../components/FieldWithLabel';
 
 const recordsDataSource = [
-  { id: 31, label: '31' },
   { id: 1000, label: '1000' },
   { id: 5000, label: '5000' },
   { id: 10000, label: '10000' },
 ];
 
 const recordsToUpdateDataSource = [
-  { id: 10, label: '10' },
   { id: 100, label: '100' },
   { id: 300, label: '300' },
   { id: 500, label: '500' },
@@ -42,14 +40,9 @@ const Configurator = (props: any) => {
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const {
-    loadDataSource,
-    setRecords,
-    setTimer,
-    setUpdateRecords,
-    setLoad,
-  } = useAppActions();
-  const { cols, records, interval, data, updateRecords } = useAppState();
+  const { loadDataSource, setRecords, setTimer, setUpdateRecords, setLoad } =
+    useAppActions();
+  const { cols, times, records, interval, data, updateRecords } = useAppState();
 
   useEffect(() => {
     setTimeout(() => {
@@ -73,7 +66,7 @@ const Configurator = (props: any) => {
   };
 
   const loadData = () => {
-    const data = buildDataSource(records, cols);
+    const data = buildDataSource(records, cols, times);
     onLoadChange();
     loadDataSource(data);
   };
@@ -85,22 +78,6 @@ const Configurator = (props: any) => {
 
   const getRandomInt = (max: number) => {
     return Math.floor(Math.random() * max);
-  };
-
-  const startLiveUpdate = () => {
-    setStatus(statuses.START);
-    isUpdating = true;
-    if (data.length < updateRecords) {
-      throw 'The number of records to update must be less than the total number of records';
-    }
-
-    setLoading(true);
-
-    updateData();
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
   };
 
   const updateData = () => {
@@ -148,18 +125,6 @@ const Configurator = (props: any) => {
     });
   };
 
-  const stopLiveUpdate = () => {
-    isUpdating = false;
-
-    setStatus(statuses.STOP);
-    setLoading(true);
-
-    setTimeout(() => {
-      setStatus(statuses.STAND_BY);
-      setLoading(false);
-    }, 500);
-  };
-
   const onLiveUpdateChange = () => {
     if (status === statuses.STAND_BY) {
       startLiveUpdate();
@@ -176,6 +141,34 @@ const Configurator = (props: any) => {
         updateData();
       });
     }, interval);
+  };
+
+  const startLiveUpdate = () => {
+    setStatus(statuses.START);
+    isUpdating = true;
+    if (data.length < updateRecords) {
+      throw 'The number of records to update must be less than the total number of records';
+    }
+
+    setLoading(true);
+
+    prepareLiveUpdate();
+
+    setTimeout(() => {
+      setLoading(false);
+    }, interval);
+  };
+
+  const stopLiveUpdate = () => {
+    isUpdating = false;
+
+    setStatus(statuses.STOP);
+    setLoading(true);
+
+    setTimeout(() => {
+      setStatus(statuses.STAND_BY);
+      setLoading(false);
+    }, 1000);
   };
 
   const onRecordsChange = (value: number) => {
@@ -198,7 +191,7 @@ const Configurator = (props: any) => {
   const disabledCombo = status !== statuses.STAND_BY;
 
   return (
-    <div className="configurator" style={{ height: 467 }}>
+    <div className="configurator">
       <div className="configurator-title">Configurator</div>
 
       <FieldWithLabel

@@ -1,12 +1,11 @@
 import React from 'react';
 
-import App from './liveUpdate';
-import './liveUpdate/styles/app.scss';
+import AppContainer from './liveUpdate';
 
 const LiveUpdateApp = () => {
   return (
     <div>
-      <App />
+      <AppContainer />
     </div>
   );
 };

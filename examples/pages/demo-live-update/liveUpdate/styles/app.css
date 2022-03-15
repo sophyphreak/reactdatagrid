@@ -1,20 +1,17 @@
 
 .app {
-  height: calc(100vh - 40px);
-  background: #2e3439;
+  padding: 20px;
+  height: 100vh;
+  background:#2c333c;
   font-size: 15px;
-}
-
-.app-content-wrapper {
-  height: 100%;
 }
 
 .app-content {
   display: flex;
   max-width: 1562px;
   margin: 0 auto;
-  margin-top: 48px;
-  // height: calc(100% - 90px);
+  height: 100%;
+  padding-top: 75px;
 }
 
 .configurator {
@@ -36,33 +33,6 @@
 
 .configurator-button {
   width: auto;
-  background: #313943 ;
-  border: 1px solid #7986cb;
-  color: #9ba7b4;
-  border-radius: 1px;
-  transform: translateY(0px);
-  transition: background 0.25s;
-
-  &:hover{
-    background: rgba(121, 134, 203, 0.15) ;
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
-}
-
-.configurator-select {
-  background: #464d56 ;
-  border: 1px solid ;
-  border-color: #464d56;
-  border-radius: 1px;
-  color: #9ba7b4;
-  transition: background 0.25s, border-color 0.25s;
-
-  &:hover {
-    border-color: #7986cb;
-  }
 }
 
 .field-with-label-wrapper {
@@ -71,7 +41,6 @@
   align-items: center;
   margin-bottom: 12px;
 }
-
 .spinner {
   position: relative;
   display: flex;
