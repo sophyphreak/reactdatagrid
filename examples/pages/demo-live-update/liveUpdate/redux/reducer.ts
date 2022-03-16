@@ -7,6 +7,8 @@ const SET_INTERVAL = 'SET_INTERVAL';
 const SET_UPDATE_RECORDS = 'SET_UPDATE_RECORDS';
 const SET_LOAD = 'SET_LOAD';
 const SET_CELL_SELECTION = 'SET_CELL_SELECTION';
+const SET_COLUMNS = 'SET_COLUMNS';
+const COLUMNS_ARRAY = 'COLUMNS_ARRAY';
 
 const getActions = (dispatch: any) => {
   return {
@@ -28,6 +30,13 @@ const getActions = (dispatch: any) => {
       dispatch({
         type: SET_RECORDS,
         payload: records,
+      });
+    },
+
+    setColumns: (columns: number) => {
+      dispatch({
+        type: SET_COLUMNS,
+        payload: columns,
       });
     },
 
@@ -57,6 +66,13 @@ const getActions = (dispatch: any) => {
         payload: cells,
       });
     },
+
+    setColumnsArray: (columns: string[]) => {
+      dispatch({
+        type: COLUMNS_ARRAY,
+        payload: columns,
+      });
+    },
   };
 };
 
@@ -78,6 +94,13 @@ const setRecords = (state: State, action: any) => {
   return {
     ...state,
     records: action.payload,
+  };
+};
+
+const setColumns = (state: State, action: any) => {
+  return {
+    ...state,
+    columnsCount: action.payload,
   };
 };
 
@@ -109,14 +132,23 @@ const setCellSelection = (state: State, action: any) => {
   };
 };
 
+const setColumnsArray = (state: State, action: any) => {
+  return {
+    ...state,
+    columnsArray: action.payload,
+  };
+};
+
 const reducers: any = {
   SET_THEME: setTheme,
   SET_DATA: loadDataSource,
   SET_RECORDS: setRecords,
+  SET_COLUMNS: setColumns,
   SET_INTERVAL: setTimer,
   SET_UPDATE_RECORDS: setUpdateRecords,
   SET_LOAD: setLoad,
   SET_CELL_SELECTION: setCellSelection,
+  COLUMNS_ARRAY: setColumnsArray,
 };
 
 const appReducer = (

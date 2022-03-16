@@ -33,6 +33,18 @@ const intervalDataSource = [
   { id: 5000, label: '5000ms' },
 ];
 
+const columnsDataSource = [
+  { id: 10, label: '10' },
+  { id: 20, label: '20' },
+  { id: 30, label: '30' },
+  { id: 50, label: '50' },
+  { id: 100, label: '100' },
+  { id: 150, label: '150' },
+  { id: 200, label: '200' },
+  { id: 300, label: '300' },
+  { id: 500, label: '500' },
+];
+
 const statuses = Object.freeze({
   STAND_BY: 'stand-by',
   START: 'start',
@@ -50,17 +62,26 @@ const Configurator = (props: any) => {
   const {
     loadDataSource,
     setRecords,
+    setColumns,
     setTimer,
     setUpdateRecords,
     setLoad,
   } = useAppActions();
-  const { cols, times, records, interval, data, updateRecords } = useAppState();
+  const {
+    cols,
+    records,
+    columnsCount,
+    columnsArray,
+    interval,
+    data,
+    updateRecords,
+  } = useAppState();
 
   useEffect(() => {
     setTimeout(() => {
       loadData();
     }, 0);
-  }, []);
+  }, [columnsArray]);
 
   const onLoadChange = () => {
     setLoad();
@@ -78,7 +99,7 @@ const Configurator = (props: any) => {
   };
 
   const loadData = () => {
-    const data = buildDataSource(records, cols, times);
+    const data = buildDataSource(records, columnsArray);
     onLoadChange();
     loadDataSource(data);
   };
@@ -197,6 +218,10 @@ const Configurator = (props: any) => {
     setUpdateRecords(value);
   };
 
+  const onColumnsChange = (value: number) => {
+    setColumns(value);
+  };
+
   let liveUpdateButtonLabel = 'Start live update';
   if (status === statuses.UPDATING) liveUpdateButtonLabel = 'Stop live update';
 
@@ -219,6 +244,15 @@ const Configurator = (props: any) => {
         onSelectChange={onRecordsChange}
         selectData={recordsDataSource}
         selectValue={records}
+        disabled={disabledCombo}
+      ></FieldWithLabel>
+
+      <FieldWithLabel
+        type="select"
+        label="Columns count"
+        onSelectChange={onColumnsChange}
+        selectData={columnsDataSource}
+        selectValue={columnsCount}
         disabled={disabledCombo}
       ></FieldWithLabel>
 

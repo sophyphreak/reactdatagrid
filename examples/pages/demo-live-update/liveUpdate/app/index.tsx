@@ -12,7 +12,7 @@ const menuIcon = (
 
 const App = () => {
   const [gridRef, setGridRef] = useState(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   return (
     <div className="app">

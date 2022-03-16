@@ -10,7 +10,8 @@ export type State = {
   interval?: number;
   load?: boolean;
   cellSelection?: any;
-  times?: number;
+  columnsCount?: number;
+  columnsArray?: string[];
 };
 
 export const initialState: State = {
@@ -22,5 +23,6 @@ export const initialState: State = {
   interval: 1000,
   load: false,
   cellSelection: {},
-  times: 7,
+  columnsCount: 30,
+  columnsArray: [],
 };
