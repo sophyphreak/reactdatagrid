@@ -1,7 +1,7 @@
 
 .app {
   padding: 20px;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 90px);
   background:#2c333c;
   font-size: 15px;
 }
@@ -11,6 +11,7 @@
   max-width: 1562px;
   margin: 0 auto;
   height: 100%;
+  padding-top: 30px;
 }
 
 .app-content-menu-button {
@@ -19,6 +20,9 @@
   fill: #9ba7b4;
   margin-left: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  position: absolute;
+  top: 30px;
+  right: 40px;
 }
 
 .configurator {
