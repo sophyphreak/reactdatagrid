@@ -12,6 +12,7 @@ import React, {
   useEffect,
   useRef,
   useImperativeHandle,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -32,15 +33,15 @@ import { TypeComputedColumn } from '../../../types';
 import InovuaDataGridCell from '../Cell';
 import { RowProps, EnhancedRowProps } from './RowProps';
 import usePrevious from '../../../hooks/usePrevious';
-// import diff from '../../../packages/shallow-changes';
+import diff from '../../../packages/shallow-changes';
 
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-// const rowClean = (p: any) => {
-//   const result = { ...p };
+const rowClean = (p: any) => {
+  const result = { ...p };
 
-//   delete result.activeRowRef;
-//   return result;
-// };
+  delete result.activeRowRef;
+  return result;
+};
 
 const skipSelect = (event: SyntheticEvent) => {
   (event.nativeEvent as any).skipSelect = true;
@@ -112,9 +113,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     return cells.current;
   };
 
-  const getCells = () => {
+  const getCells = useCallback(() => {
     return cells.current;
-  };
+  }, []);
 
   const prevColumnRenderCount = usePrevious(
     props.columnRenderCount,
@@ -2181,15 +2182,39 @@ export default React.memo(
       scrollToIndexIfNeeded: 1,
       onColumnMouseEnter: 1,
       onColumnMouseLeave: 1,
+      // computedCellSelection: 1,
+      // getCellSelectionKey: 1,
+      // lastCellInRange: 1,
+      // onCellEnter: 1, // todo emove this from here and useCallback to make it same reference
     });
 
+    // if (areEqual.result) {
+    //   if (prevProps.computedActiveCell != nextProps.computedActiveCell) {
+    //     const [oldRowIndex] = prevProps.computedActiveCell || [];
+    //     const [newRowIndex] = nextProps.computedActiveCell || [];
+
+    //     if (
+    //       oldRowIndex === nextProps.rowIndex ||
+    //       newRowIndex === nextProps.rowIndex
+    //     ) {
+    //       console.log('row diff on active cell', nextProps.rowIndex);
+    //       return false;
+    //     }
+    //   }
+    // }
+
     if (!areEqual.result) {
+      // const theDiff = diff(rowClean(nextProps), rowClean(prevProps));
       // console.log(
       //   'UPDATE ROW (HOOKS)',
-      //   areEqual.key
-      //   // prevProps[areEqual.key!],
-      //   // nextProps[areEqual.key!],
-      //   // diff(rowClean(nextProps), rowClean(prevProps))
+      //   nextProps.rowIndex,
+      //   areEqual.key,
+      //   //   // prevProps[areEqual.key!],
+      //   //   // nextProps[areEqual.key!],
+      //   theDiff,
+      //   theDiff.updated.map(prop => {
+      //     return { prop, old: prevProps[prop], new: nextProps[prop] };
+      //   })
       // );
       return false;
     }

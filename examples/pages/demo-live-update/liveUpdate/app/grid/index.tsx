@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 import buildColumns from './columns';
@@ -48,7 +48,10 @@ const DataGrid = (props: any) => {
     setColumnsArray(colsArray);
   }, [columnsCount]);
 
-  const columns = buildColumns(columnsArray);
+  const columns = useMemo(() => {
+    console.log('RENDER COLUMNS');
+    return buildColumns(columnsArray);
+  }, [columnsArray]);
   const emptyText = (
     <div style={{ fontSize: 14, color: '#9ba7b4' }}>No records available</div>
   );
@@ -65,8 +68,9 @@ const DataGrid = (props: any) => {
     dataSource: data || [],
     rowIndexColumn: true,
     emptyText,
-    cellSelection,
-    onCellSelectionChange: setCellSelection,
+    enableSelection: true,
+    // cellSelection,
+    // onCellSelectionChange: setCellSelection,
     virtualizeColumns: true,
   };
 

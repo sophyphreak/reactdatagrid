@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useEffect, useRef, useImperativeHandle, } from 'react';
+import React, { useEffect, useRef, useImperativeHandle, useCallback, } from 'react';
 import PropTypes from 'prop-types';
 import cleanProps from '../../../packages/react-clean-props';
 import { 
@@ -16,13 +16,12 @@ import Cell from '../Cell';
 import renderCellsMaybeLocked from './renderCellsMaybeLocked';
 import adjustCellProps from './adjustCellProps';
 import usePrevious from '../../../hooks/usePrevious';
-// import diff from '../../../packages/shallow-changes';
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-// const rowClean = (p: any) => {
-//   const result = { ...p };
-//   delete result.activeRowRef;
-//   return result;
-// };
+const rowClean = (p) => {
+    const result = { ...p };
+    delete result.activeRowRef;
+    return result;
+};
 const skipSelect = (event) => {
     event.nativeEvent.skipSelect = true;
 };
@@ -74,9 +73,9 @@ const DataGridRow = React.forwardRef((props, ref) => {
         cells.current = cells.current.filter(Boolean);
         return cells.current;
     };
-    const getCells = () => {
+    const getCells = useCallback(() => {
         return cells.current;
-    };
+    }, []);
     const prevColumnRenderCount = usePrevious(props.columnRenderCount, props.columnRenderCount);
     if (props.columnRenderCount < prevColumnRenderCount) {
         cleanupCells();
@@ -1532,14 +1531,36 @@ export default React.memo(DataGridRow, (prevProps, nextProps) => {
         scrollToIndexIfNeeded: 1,
         onColumnMouseEnter: 1,
         onColumnMouseLeave: 1,
+        // computedCellSelection: 1,
+        // getCellSelectionKey: 1,
+        // lastCellInRange: 1,
+        // onCellEnter: 1, // todo emove this from here and useCallback to make it same reference
     });
+    // if (areEqual.result) {
+    //   if (prevProps.computedActiveCell != nextProps.computedActiveCell) {
+    //     const [oldRowIndex] = prevProps.computedActiveCell || [];
+    //     const [newRowIndex] = nextProps.computedActiveCell || [];
+    //     if (
+    //       oldRowIndex === nextProps.rowIndex ||
+    //       newRowIndex === nextProps.rowIndex
+    //     ) {
+    //       console.log('row diff on active cell', nextProps.rowIndex);
+    //       return false;
+    //     }
+    //   }
+    // }
     if (!areEqual.result) {
+        // const theDiff = diff(rowClean(nextProps), rowClean(prevProps));
         // console.log(
         //   'UPDATE ROW (HOOKS)',
-        //   areEqual.key
-        //   // prevProps[areEqual.key!],
-        //   // nextProps[areEqual.key!],
-        //   // diff(rowClean(nextProps), rowClean(prevProps))
+        //   nextProps.rowIndex,
+        //   areEqual.key,
+        //   //   // prevProps[areEqual.key!],
+        //   //   // nextProps[areEqual.key!],
+        //   theDiff,
+        //   theDiff.updated.map(prop => {
+        //     return { prop, old: prevProps[prop], new: nextProps[prop] };
+        //   })
         // );
         return false;
     }
