@@ -377,6 +377,7 @@ export default (
 
             if (computedProps.setColumnSizesToFit) {
               computedProps.setColumnSizesToFit();
+              computedProps.hideColumnContextMenu();
             }
           },
         },
@@ -397,6 +398,7 @@ export default (
             const columnId = cellProps.id;
             if (computedProps.setColumnSizeAuto) {
               computedProps.setColumnSizeAuto(columnId);
+              computedProps.hideColumnContextMenu();
             }
           },
         },
@@ -416,6 +418,7 @@ export default (
 
             if (computedProps.setColumnsSizesAuto) {
               computedProps.setColumnsSizesAuto();
+              computedProps.hideColumnContextMenu();
             }
           },
         },
