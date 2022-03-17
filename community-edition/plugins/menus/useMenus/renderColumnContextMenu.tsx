@@ -128,30 +128,33 @@ export default (
     });
 
     if (computedProps.updateMenuPositionOnColumnsChange) {
-      const menuTools = Array.prototype.slice.call(
-        computedProps.domRef.current.querySelectorAll(
-          '.InovuaReactDataGrid__column-header__menu-tool'
-        )
-      );
+      requestAnimationFrame(() => {
+        const menuTools = Array.prototype.slice.call(
+          computedProps.domRef.current.querySelectorAll(
+            '.InovuaReactDataGrid__column-header__menu-tool'
+          )
+        );
 
-      const mainMenu = computedProps.domRef.current.querySelector(
-        '.InovuaReactDataGrid > .inovua-react-toolkit-menu'
-      );
+        const mainMenu = computedProps.domRef.current.querySelector(
+          '.InovuaReactDataGrid > .inovua-react-toolkit-menu'
+        );
 
-      const cellInstance = computedProps.columnContextMenuInstanceProps;
-      const columnIndex = cellInstance.props.computedVisibleIndex;
+        const cellInstance = computedProps.columnContextMenuInstanceProps;
+        const columnIndex = cellInstance.props.computedVisibleIndex;
 
-      const alignTo = getAlignTo(selection, menuTools, columnIndex);
-      if (alignTo) {
-        computedProps.updateMainMenuPosition(alignTo);
+        const alignTo = getAlignTo(selection, menuTools, columnIndex);
 
-        if (mainMenu) {
-          (mainMenu as any).style.transition = 'transform 200ms';
-          setTimeout(() => {
-            (mainMenu as any).style.transition = '';
-          }, 200);
+        if (alignTo) {
+          computedProps.updateMainMenuPosition(alignTo);
+
+          if (mainMenu) {
+            (mainMenu as any).style.transition = 'transform 200ms';
+            setTimeout(() => {
+              (mainMenu as any).style.transition = '';
+            }, 200);
+          }
         }
-      }
+      });
     }
   };
 
