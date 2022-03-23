@@ -201,7 +201,7 @@ export const useCellSelection = (props, { rowSelectionEnabled, hasRowNavigation,
             return onCellSelectionDraggerMouseDown;
         }
         return null;
-    }, [cellMultiSelectionEnabled, cellSelection]);
+    }, []);
     return {
         onCellEnter,
         toggleActiveCellSelection,

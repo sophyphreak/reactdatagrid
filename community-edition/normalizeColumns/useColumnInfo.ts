@@ -274,7 +274,6 @@ const useColumnInfo = (params: TypeParamObject) => {
     (a, b) => {
       const { result, key } = equalReturnKey(a, b);
 
-      // console.log('compared', params, 'diff', key, params[key]);
       return result;
     }
   );

@@ -68,9 +68,9 @@ const DataGrid = (props: any) => {
     dataSource: data || [],
     rowIndexColumn: true,
     emptyText,
-    enableSelection: true,
-    // cellSelection,
-    // onCellSelectionChange: setCellSelection,
+    // enableSelection: true,
+    cellSelection,
+    onCellSelectionChange: setCellSelection,
     virtualizeColumns: true,
   };
 

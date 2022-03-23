@@ -73,9 +73,9 @@ const DataGridRow = React.forwardRef((props, ref) => {
         cells.current = cells.current.filter(Boolean);
         return cells.current;
     };
-    const getCells = useCallback(() => {
+    const getCells = () => {
         return cells.current;
-    }, []);
+    };
     const prevColumnRenderCount = usePrevious(props.columnRenderCount, props.columnRenderCount);
     if (props.columnRenderCount < prevColumnRenderCount) {
         cleanupCells();
@@ -86,9 +86,9 @@ const DataGridRow = React.forwardRef((props, ref) => {
             cell.setStateProps(null);
         });
     }
-    const getDOMNode = () => {
+    const getDOMNode = useCallback(() => {
         return domRef.current;
-    };
+    }, []);
     const setActiveRowRef = () => {
         props.activeRowRef.current = {
             instance: {
@@ -125,12 +125,12 @@ const DataGridRow = React.forwardRef((props, ref) => {
             setActiveRowRef();
         }
     });
-    const onCellUnmount = (_cellProps, cell) => {
+    const onCellUnmount = useCallback((_cellProps, cell) => {
         if (cells.current) {
             cells.current = cells.current.filter((c) => c !== cell);
         }
-    };
-    const orderCells = () => {
+    }, []);
+    const orderCells = useCallback(() => {
         const cells = cleanupCells();
         const sortedProps = cells
             .map(c => c.getProps())
@@ -139,8 +139,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
         cells.forEach((c, i) => {
             c.setStateProps(sortedProps[i]);
         });
-    };
-    const updateEditCell = () => {
+    }, []);
+    const updateEditCell = useCallback(() => {
         const cells = getCells();
         const { editColumnIndex } = props;
         for (let i = 0, len = cells.length, cell; i < len; i++) {
@@ -153,13 +153,13 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 setCellIndex(cell, getCellIndex(cell));
             }
         }
-    };
-    const fixForColspan = () => {
+    }, [props.editColumnIndex]);
+    const fixForColspan = useCallback(() => {
         if (props.computedHasColSpan) {
             setColumnRenderStartIndex(columnRenderStartIndex.current);
         }
-    };
-    const setScrolling = (scrolling) => {
+    }, [props.computedHasColSpan]);
+    const setScrolling = useCallback((scrolling) => {
         const node = (getDOMNode() ||
             domRef.current);
         let scrollingDir = scrollingDirection.current;
@@ -182,14 +182,14 @@ const DataGridRow = React.forwardRef((props, ref) => {
             }
         }
         return;
-    };
-    const renderRowDetails = (rowDetailsInfo) => {
+    }, []);
+    const renderRowDetails = useCallback((rowDetailsInfo) => {
         if (props.computedRenderRowDetails) {
             return props.computedRenderRowDetails(rowDetailsInfo);
         }
         return 'Please specify `renderRowDetails`';
-    };
-    const onContextMenu = (event) => {
+    }, []);
+    const onContextMenu = useCallback((event) => {
         const { passedProps, onRowContextMenu } = props;
         if (onRowContextMenu) {
             onRowContextMenu(props, event);
@@ -197,31 +197,31 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (passedProps && passedProps.onContextMenu) {
             passedProps.onContextMenu(event, props);
         }
-    };
-    const setCellIndex = (cell, index, cellProps) => {
+    }, [props.passedProps]);
+    const setCellIndex = useCallback((cell, index, cellProps) => {
         cellProps =
             cellProps ||
                 (props.computedHasColSpan
                     ? getPropsForCells().slice(index, index + 1)[0]
                     : getPropsForCells(index, index)[0]);
         cell.setStateProps(cellProps);
-    };
-    const getCellIndex = (cell) => {
+    }, [props.editColumnIndex]);
+    const getCellIndex = useCallback((cell) => {
         return cell.getProps().computedVisibleIndex;
-    };
-    const sortCells = (cells) => {
+    }, []);
+    const sortCells = useCallback((cells) => {
         return cells.sort((cell1, cell2) => getCellIndex(cell1) - getCellIndex(cell2));
-    };
-    const getCellAt = (index) => {
+    }, []);
+    const getCellAt = useCallback((index) => {
         return getCells().filter((c) => c.getProps().computedVisibleIndex === index)[0];
-    };
-    const getCellById = (id) => {
+    }, []);
+    const getCellById = useCallback((id) => {
         return getCells().filter((c) => c.getProps().id === id)[0];
-    };
-    const getSortedCells = () => {
+    }, []);
+    const getSortedCells = useCallback(() => {
         return sortCells(getCells().slice());
-    };
-    const getGaps = (startIndex, endIndex) => {
+    }, []);
+    const getGaps = useCallback((startIndex, endIndex) => {
         const visibleCellPositions = {};
         const sortedCells = getSortedCells();
         sortedCells.forEach((cell) => {
@@ -247,35 +247,35 @@ const DataGridRow = React.forwardRef((props, ref) => {
             }
         }
         return gaps;
-    };
-    const getVirtualizeColumns = () => {
+    }, []);
+    const getVirtualizeColumns = useCallback(() => {
         return props.virtualizeColumns;
         return scrollingDirection.current !== 'horizontal'
             ? props.virtualizeColumns
             : false;
-    };
-    const toggleRowExpand = (rowIndex) => {
+    }, [props.virtualizeColumns]);
+    const toggleRowExpand = useCallback((rowIndex) => {
         if (typeof rowIndex !== 'number') {
             rowIndex = props.realIndex;
         }
         props.toggleRowExpand(rowIndex);
-    };
-    const toggleNodeExpand = (rowIndex) => {
+    }, [props.realIndex]);
+    const toggleNodeExpand = useCallback((rowIndex) => {
         if (typeof rowIndex !== 'number') {
             rowIndex = props.realIndex;
         }
         props.toggleNodeExpand(rowIndex);
-    };
-    const loadNodeAsync = () => {
+    }, [props.realIndex]);
+    const loadNodeAsync = useCallback(() => {
         props.loadNodeAsync?.(props.data);
-    };
-    const isRowExpandable = (rowIndex) => {
+    }, []);
+    const isRowExpandable = useCallback((rowIndex) => {
         if (typeof rowIndex !== 'number') {
             rowIndex = props.realIndex;
         }
         return props.isRowExpandableAt(rowIndex);
-    };
-    const setRowExpanded = (expanded, _) => {
+    }, [props.realIndex]);
+    const setRowExpanded = useCallback((expanded, _) => {
         let rowIndex = props.realIndex;
         let _expanded = expanded;
         if (typeof expanded === 'number') {
@@ -283,9 +283,9 @@ const DataGridRow = React.forwardRef((props, ref) => {
             _expanded = _;
         }
         props.setRowExpanded(rowIndex, _expanded);
-    };
+    }, [props.realIndex]);
     const getCurrentGaps = () => { };
-    const setColumnRenderStartIndex = (columnStartIndex) => {
+    const setColumnRenderStartIndex = useCallback((columnStartIndex) => {
         if (columnRenderStartIndex.current === columnStartIndex) {
             return;
         }
@@ -352,7 +352,11 @@ const DataGridRow = React.forwardRef((props, ref) => {
             const newIndex = call[1];
             setCellIndex(cell, newIndex, cellPropsAt(newIndex));
         });
-    };
+    }, [
+        props.columnRenderStartIndex,
+        props.computedHasColSpan,
+        props.columnRenderCount,
+    ]);
     const getPropsForCells = (startIndex, endIndex) => {
         // if (startIndex !== undefined || endIndex !== undefined) {
         //   console.warn(
@@ -774,7 +778,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         hasBorderBottom.current = hasBorderBottomVar;
         return cellPropsArray;
     };
-    const onCellStopEdit = (value, cellProps) => {
+    const onCellStopEdit = useCallback((value, cellProps) => {
         if (props.onEditStop) {
             props.onEditStop({
                 value,
@@ -786,8 +790,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 cellProps,
             });
         }
-    };
-    const onCellStartEdit = (value, cellProps) => {
+    }, [props.onEditStop]);
+    const onCellStartEdit = useCallback((value, cellProps) => {
         if (props.onEditStart) {
             props.onEditStart({
                 data: cellProps.data,
@@ -799,8 +803,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 cellProps,
             });
         }
-    };
-    const onCellEditCancel = (cellProps) => {
+    }, [props.onEditStart]);
+    const onCellEditCancel = useCallback((cellProps) => {
         if (props.onEditCancel) {
             props.onEditCancel({
                 data: cellProps.data,
@@ -811,8 +815,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 cellProps,
             });
         }
-    };
-    const onCellEditValueChange = (value, cellProps) => {
+    }, [props.onEditCancel]);
+    const onCellEditValueChange = useCallback((value, cellProps) => {
         if (props.onEditValueChange) {
             props.onEditValueChange({
                 value,
@@ -824,8 +828,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 cellProps,
             });
         }
-    };
-    const onCellEditComplete = (value, cellProps) => {
+    }, [props.onEditValueChange]);
+    const onCellEditComplete = useCallback((value, cellProps) => {
         if (props.onEditComplete) {
             props.onEditComplete({
                 value,
@@ -837,8 +841,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 cellProps,
             });
         }
-    };
-    const tryRowCellEdit = (editIndex, dir = 0, isEnterNavigation) => {
+    }, [props.onEditComplete]);
+    const tryRowCellEdit = useCallback((editIndex, dir = 0, isEnterNavigation) => {
         const cols = props.columns;
         let col;
         let colIndex;
@@ -924,8 +928,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
             };
             startEdit(foundCols, 0);
         });
-    };
-    const tryNextRowEdit = (dir, columnIndex, isEnterNavigation) => {
+    }, [props.columns, props.editable]);
+    const tryNextRowEdit = useCallback((dir, columnIndex, isEnterNavigation) => {
         if (props.scrollToIndexIfNeeded) {
             props.scrollToIndexIfNeeded(props.rowIndex + 2 * dir, { direction: dir == -1 ? 'top' : 'bottom' }, () => {
                 if (props.tryNextRowEdit) {
@@ -933,8 +937,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 }
             });
         }
-    };
-    const onTransitionEnd = (cellProps, columnProps, e) => {
+    }, [props.rowIndex]);
+    const onTransitionEnd = useCallback((cellProps, columnProps, e) => {
         e.stopPropagation();
         if (columnProps.onTransitionEnd) {
             columnProps.onTransitionEnd(e);
@@ -942,8 +946,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (props.onTransitionEnd) {
             props.onTransitionEnd(e, cellProps);
         }
-    };
-    const getColumnRenderRange = (cellProps) => {
+    }, []);
+    const getColumnRenderRange = useCallback((cellProps) => {
         const virtualizeColumns = getVirtualizeColumns();
         if (!virtualizeColumns) {
             return null;
@@ -968,7 +972,8 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (props.columnRenderCount != null) {
             let columnRenderEndIndex = columnStartIndex + props.columnRenderCount;
             columnRenderEndIndex = Math.min(columnRenderEndIndex, maxEndIndex);
-            if (columnRenderEndIndex - props.columnRenderCount != columnStartIndex) {
+            if (columnRenderEndIndex - props.columnRenderCount !=
+                columnStartIndex) {
                 columnStartIndex = Math.max(columnRenderEndIndex - props.columnRenderCount, minStartIndex);
             }
             if (columnRenderEndIndex < 0) {
@@ -981,11 +986,20 @@ const DataGridRow = React.forwardRef((props, ref) => {
             return { start: columnStartIndex, end: columnRenderEndIndex };
         }
         return null;
-    };
-    const expandRangeWithColspan = (range, cellProps) => {
+    }, [
+        props.virtualizeColumns,
+        props.columnRenderCount,
+        props.lockedStartColumns,
+        props.lockedEndColumns,
+        props.groupColumn,
+        props.columnRenderStartIndex,
+    ]);
+    const expandRangeWithColspan = useCallback((range, cellProps) => {
         let extraNeededColumns = cellProps.reduce((total, cellProps) => {
             return (total +
-                (cellProps.computedColspan > 1 ? cellProps.computedColspan - 1 : 0));
+                (cellProps.computedColspan > 1
+                    ? cellProps.computedColspan - 1
+                    : 0));
         }, 0);
         if (!extraNeededColumns) {
             return range;
@@ -1003,7 +1017,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
             range.end += extraNeededColumns;
         }
         return range;
-    };
+    }, []);
     const renderRowInstance = (_, __, style) => {
         const { scrollLeft, hasLockedStart, hasLockedEnd, lockedStartColumns, lockedEndColumns, computedHasColSpan, groupProps, columns, } = props;
         const virtualizeColumns = getVirtualizeColumns();
@@ -1072,7 +1086,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         });
         return renderCellsMaybeLocked(result, props, scrollLeft, undefined, style);
     };
-    const onClick = (event) => {
+    const onClick = useCallback((event) => {
         if (props.computedTreeEnabled && props.expandOnMouseDown) {
             toggleNodeExpand(props.rowIndex);
         }
@@ -1082,12 +1096,12 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (props.passedProps && props.passedProps.onClick) {
             props.passedProps.onClick(event, props);
         }
-    };
-    const onMouseDown = (event) => {
+    }, [props.passedProps, props.computedTreeEnabled, props.rowIndex]);
+    const onMouseDown = useCallback((event) => {
         if (props.onMouseDown) {
             props.onMouseDown(event, props);
         }
-    };
+    }, []);
     useImperativeHandle(ref, () => {
         return {
             onCellUnmount,
@@ -1200,7 +1214,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         // passedProps should not overwrite the folowing methods
         // onEvent prop will be called also
         onClick: onClick,
-        onMouseDown: onMouseDown,
+        // onMouseDown: onMouseDown,
         onContextMenu: onContextMenu,
     };
     rowProps.children = [
@@ -1531,24 +1545,19 @@ export default React.memo(DataGridRow, (prevProps, nextProps) => {
         scrollToIndexIfNeeded: 1,
         onColumnMouseEnter: 1,
         onColumnMouseLeave: 1,
-        // computedCellSelection: 1,
-        // getCellSelectionKey: 1,
-        // lastCellInRange: 1,
-        // onCellEnter: 1, // todo emove this from here and useCallback to make it same reference
+        computedCellSelection: 1,
+        getCellSelectionKey: 1,
     });
-    // if (areEqual.result) {
-    //   if (prevProps.computedActiveCell != nextProps.computedActiveCell) {
-    //     const [oldRowIndex] = prevProps.computedActiveCell || [];
-    //     const [newRowIndex] = nextProps.computedActiveCell || [];
-    //     if (
-    //       oldRowIndex === nextProps.rowIndex ||
-    //       newRowIndex === nextProps.rowIndex
-    //     ) {
-    //       console.log('row diff on active cell', nextProps.rowIndex);
-    //       return false;
-    //     }
-    //   }
-    // }
+    if (areEqual.result) {
+        if (prevProps.computedActiveCell != nextProps.computedActiveCell) {
+            const [oldRowIndex] = prevProps.computedActiveCell || [];
+            const [newRowIndex] = nextProps.computedActiveCell || [];
+            if (oldRowIndex === nextProps.rowIndex ||
+                newRowIndex === nextProps.rowIndex) {
+                return false;
+            }
+        }
+    }
     if (!areEqual.result) {
         // const theDiff = diff(rowClean(nextProps), rowClean(prevProps));
         // console.log(
@@ -1558,7 +1567,7 @@ export default React.memo(DataGridRow, (prevProps, nextProps) => {
         //   //   // prevProps[areEqual.key!],
         //   //   // nextProps[areEqual.key!],
         //   theDiff,
-        //   theDiff.updated.map(prop => {
+        //   theDiff.updated.map((prop: any) => {
         //     return { prop, old: prevProps[prop], new: nextProps[prop] };
         //   })
         // );

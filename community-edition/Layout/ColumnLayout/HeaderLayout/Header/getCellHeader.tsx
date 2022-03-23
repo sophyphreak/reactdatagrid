@@ -20,6 +20,7 @@ export default (
     if (typeof header !== 'function') {
       return header;
     }
+    console.log('header', cellProps.headerCell, headerProps.selected);
     return header(cellProps, { cellProps, column, headerProps, contextMenu });
   }
 

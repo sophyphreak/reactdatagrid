@@ -376,7 +376,7 @@ export const useCellSelection = (
       return onCellSelectionDraggerMouseDown;
     }
     return null;
-  }, [cellMultiSelectionEnabled, cellSelection]);
+  }, []);
 
   return {
     onCellEnter,
