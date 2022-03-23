@@ -281,7 +281,6 @@ export default class InovuaDataGridHeader extends React.Component<
   };
 
   setCellIndex = (cell: any, index: number) => {
-    console.log('[setCellIndex]');
     const cellProps = this.getPropsForCells(index)[0];
 
     cell.setStateProps(cellProps);
@@ -646,8 +645,6 @@ export default class InovuaDataGridHeader extends React.Component<
       updateMenuPosition,
     } = props;
 
-    console.log('SELECTED HEADER', props.selected);
-
     let columns = props.columns;
 
     if (startIndex !== undefined) {
@@ -872,8 +869,6 @@ export default class InovuaDataGridHeader extends React.Component<
       lockedEndColumns,
       columns,
     } = props;
-
-    console.log('[renderColumns]');
 
     const renderRange = this.getColumnRenderRange();
 
