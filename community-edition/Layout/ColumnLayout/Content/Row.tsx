@@ -107,15 +107,15 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     };
   };
 
-  const cleanupCells = () => {
+  const cleanupCells = useCallback(() => {
     cells.current = cells.current.filter(Boolean);
 
     return cells.current;
-  };
+  }, []);
 
-  const getCells = () => {
+  const getCells = useCallback(() => {
     return cells.current;
-  };
+  }, []);
 
   const prevColumnRenderCount = usePrevious(
     props.columnRenderCount,
@@ -137,7 +137,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     return domRef.current;
   }, []);
 
-  const setActiveRowRef = () => {
+  const setActiveRowRef = useCallback(() => {
     props.activeRowRef.current = {
       instance: {
         hasBorderBottom: hasBorderBottom.current,
@@ -146,7 +146,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       },
       node: getDOMNode(),
     };
-  };
+  }, [props.activeRowRef]);
 
   if (props.active) {
     setActiveRowRef();
@@ -170,6 +170,11 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
   useEffect(() => {
     if (props.groupProps && props.rowIndex !== prevRowIndex) {
+      // when the grid is scrolled both horiz & vertically
+      // and we scroll back up to a group row (with colspan)
+      // then we need to recompute visible rows, since the cell with colspan
+      // may otherwise be out of view - but still need to be visible
+      // due to the colspan it has
       fixForColspan();
     }
 
@@ -208,7 +213,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     cells.forEach((c, i) => {
       c.setStateProps(sortedProps[i]);
     });
-  }, []);
+  }, [cleanupCells]);
 
   const updateEditCell = useCallback(() => {
     const cells = getCells();
@@ -287,7 +292,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         passedProps.onContextMenu(event, props);
       }
     },
-    [props.passedProps]
+    [props.passedProps, props.passedProps.onContextMenu, props.onRowContextMenu]
   );
 
   const setCellIndex = useCallback(
@@ -299,7 +304,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
           : getPropsForCells(index, index)[0]);
       cell.setStateProps(cellProps);
     },
-    [props.editColumnIndex]
+    [props.computedHasColSpan]
   );
 
   const getCellIndex = useCallback((cell: InovuaDataGridCell) => {
@@ -381,7 +386,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       }
       props.toggleRowExpand(rowIndex!);
     },
-    [props.realIndex]
+    [props.realIndex, props.toggleRowExpand]
   );
 
   const toggleNodeExpand = useCallback(
@@ -391,12 +396,12 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       }
       props.toggleNodeExpand(rowIndex!);
     },
-    [props.realIndex]
+    [props.realIndex, props.toggleNodeExpand]
   );
 
   const loadNodeAsync = useCallback(() => {
     props.loadNodeAsync?.(props.data);
-  }, []);
+  }, [props.loadNodeAsync, props.data]);
 
   const isRowExpandable = useCallback(
     (rowIndex?: number) => {
@@ -405,7 +410,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       }
       return props.isRowExpandableAt(rowIndex!);
     },
-    [props.realIndex]
+    [props.realIndex, props.isRowExpandableAt]
   );
 
   const setRowExpanded = useCallback(
@@ -418,7 +423,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       }
       props.setRowExpanded(rowIndex!, _expanded);
     },
-    [props.realIndex]
+    [props.realIndex, props.setRowExpanded]
   );
 
   const getCurrentGaps = () => {};
@@ -496,7 +501,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
           groupProps &&
           cellIndex <= groupProps.depth + 1
         ) {
-          // dont reuse those cells
+          // don't reuse those cells
           return;
         }
 
@@ -531,8 +536,12 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       props.columnRenderStartIndex,
       props.computedHasColSpan,
       props.columnRenderCount,
+      props.virtualizeColumns,
     ]
   );
+
+  const propsRef = useRef(props);
+  propsRef.current = props;
 
   const getPropsForCells = (
     startIndex?: number,
@@ -543,6 +552,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     //     'Calling getPropsForCells with start/end index is deprecated. Use .slice instead'
     //   );
     // }
+    const props = propsRef.current;
     const initialColumns = props.columns;
     let columns = initialColumns;
 
@@ -1341,7 +1351,13 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         startEdit(foundCols, 0);
       });
     },
-    [props.columns, props.editable]
+    [
+      props.columns,
+      props.editable,
+      props.currentEditCompletePromise,
+      props.rowIndex,
+      props.scrollToColumn,
+    ]
   );
 
   const tryNextRowEdit = useCallback(
@@ -1363,7 +1379,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         );
       }
     },
-    [props.rowIndex]
+    [props.rowIndex, props.scrollToIndexIfNeeded, props.tryNextRowEdit]
   );
 
   const onTransitionEnd = useCallback(
@@ -1378,7 +1394,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         props.onTransitionEnd(e, cellProps);
       }
     },
-    []
+    [props.onTransitionEnd]
   );
 
   const getColumnRenderRange = useCallback(
@@ -1451,7 +1467,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       props.lockedStartColumns,
       props.lockedEndColumns,
       props.groupColumn,
+      props.groupProps,
       props.columnRenderStartIndex,
+      props.columns,
     ]
   );
 
@@ -1615,14 +1633,23 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         props.passedProps.onClick(event, props);
       }
     },
-    [props.passedProps, props.computedTreeEnabled, props.rowIndex]
+    [
+      props.passedProps,
+      props.computedTreeEnabled,
+      props.rowIndex,
+      props.expandOnMouseDown,
+      props.onClick,
+    ]
   );
 
-  const onMouseDown = useCallback((event: MouseEvent) => {
-    if (props.onMouseDown) {
-      props.onMouseDown(event, props);
-    }
-  }, []);
+  const onMouseDown = useCallback(
+    (event: MouseEvent) => {
+      if (props.onMouseDown) {
+        props.onMouseDown(event, props);
+      }
+    },
+    [props.onMouseDown]
+  );
 
   useImperativeHandle(ref, () => {
     return {

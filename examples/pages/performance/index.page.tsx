@@ -58,6 +58,7 @@ const App = () => {
   const [editable, setEditable] = useState(false);
   const [enableRowDetails, setEnableRowDetails] = useState(false);
   const [multiSelect, setMultiSelect] = useState(false);
+  const [checkboxColumn, setCheckboxColumn] = useState(false);
 
   const [lastEdit, setLastEdit] = useState(null);
 
@@ -111,6 +112,11 @@ const App = () => {
           Row details
         </CheckBox>
       </div>
+      <div style={{ marginBottom: '20px' }}>
+        <CheckBox checked={checkboxColumn} onChange={setCheckboxColumn}>
+          Checkbox column
+        </CheckBox>
+      </div>
 
       <ReactDataGrid
         idProperty="id"
@@ -122,13 +128,13 @@ const App = () => {
         // editable={editable}
         // isStartEditKeyPressed={isStartEditKeyPressed}
         // enableSelection={rowSelection}
-        // cellSelection={cellSelectionFlag ? cellSelection : undefined}
-        // onCellSelectionChange={cellSelectionFlag ? setCellSelection : undefined}
+        cellSelection={cellSelectionFlag ? cellSelection : undefined}
+        onCellSelectionChange={cellSelectionFlag ? setCellSelection : undefined}
         // rowExpandHeight={400}
         // renderRowDetails={enableRowDetails ? renderRowDetails : undefined}
         // onEditStop={editable ? onEditStop : undefined}
         // multiSelect={multiSelect}
-        checkboxColumn
+        // checkboxColumn={checkboxColumn}
       />
     </div>
   );

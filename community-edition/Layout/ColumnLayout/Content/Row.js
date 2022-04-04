@@ -69,13 +69,13 @@ const DataGridRow = React.forwardRef((props, ref) => {
             cells.current.push(c);
         };
     };
-    const cleanupCells = () => {
+    const cleanupCells = useCallback(() => {
         cells.current = cells.current.filter(Boolean);
         return cells.current;
-    };
-    const getCells = () => {
+    }, []);
+    const getCells = useCallback(() => {
         return cells.current;
-    };
+    }, []);
     const prevColumnRenderCount = usePrevious(props.columnRenderCount, props.columnRenderCount);
     if (props.columnRenderCount < prevColumnRenderCount) {
         cleanupCells();
@@ -89,7 +89,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
     const getDOMNode = useCallback(() => {
         return domRef.current;
     }, []);
-    const setActiveRowRef = () => {
+    const setActiveRowRef = useCallback(() => {
         props.activeRowRef.current = {
             instance: {
                 hasBorderBottom: hasBorderBottom.current,
@@ -98,7 +98,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
             },
             node: getDOMNode(),
         };
-    };
+    }, [props.activeRowRef]);
     if (props.active) {
         setActiveRowRef();
     }
@@ -116,6 +116,11 @@ const DataGridRow = React.forwardRef((props, ref) => {
     const prevActive = usePrevious(props.active, props.active);
     useEffect(() => {
         if (props.groupProps && props.rowIndex !== prevRowIndex) {
+            // when the grid is scrolled both horiz & vertically
+            // and we scroll back up to a group row (with colspan)
+            // then we need to recompute visible rows, since the cell with colspan
+            // may otherwise be out of view - but still need to be visible
+            // due to the colspan it has
             fixForColspan();
         }
         if (props.editing !== prevEditing) {
@@ -139,7 +144,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         cells.forEach((c, i) => {
             c.setStateProps(sortedProps[i]);
         });
-    }, []);
+    }, [cleanupCells]);
     const updateEditCell = useCallback(() => {
         const cells = getCells();
         const { editColumnIndex } = props;
@@ -197,7 +202,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (passedProps && passedProps.onContextMenu) {
             passedProps.onContextMenu(event, props);
         }
-    }, [props.passedProps]);
+    }, [props.passedProps, props.passedProps.onContextMenu, props.onRowContextMenu]);
     const setCellIndex = useCallback((cell, index, cellProps) => {
         cellProps =
             cellProps ||
@@ -205,7 +210,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
                     ? getPropsForCells().slice(index, index + 1)[0]
                     : getPropsForCells(index, index)[0]);
         cell.setStateProps(cellProps);
-    }, [props.editColumnIndex]);
+    }, [props.computedHasColSpan]);
     const getCellIndex = useCallback((cell) => {
         return cell.getProps().computedVisibleIndex;
     }, []);
@@ -259,22 +264,22 @@ const DataGridRow = React.forwardRef((props, ref) => {
             rowIndex = props.realIndex;
         }
         props.toggleRowExpand(rowIndex);
-    }, [props.realIndex]);
+    }, [props.realIndex, props.toggleRowExpand]);
     const toggleNodeExpand = useCallback((rowIndex) => {
         if (typeof rowIndex !== 'number') {
             rowIndex = props.realIndex;
         }
         props.toggleNodeExpand(rowIndex);
-    }, [props.realIndex]);
+    }, [props.realIndex, props.toggleNodeExpand]);
     const loadNodeAsync = useCallback(() => {
         props.loadNodeAsync?.(props.data);
-    }, []);
+    }, [props.loadNodeAsync, props.data]);
     const isRowExpandable = useCallback((rowIndex) => {
         if (typeof rowIndex !== 'number') {
             rowIndex = props.realIndex;
         }
         return props.isRowExpandableAt(rowIndex);
-    }, [props.realIndex]);
+    }, [props.realIndex, props.isRowExpandableAt]);
     const setRowExpanded = useCallback((expanded, _) => {
         let rowIndex = props.realIndex;
         let _expanded = expanded;
@@ -283,7 +288,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
             _expanded = _;
         }
         props.setRowExpanded(rowIndex, _expanded);
-    }, [props.realIndex]);
+    }, [props.realIndex, props.setRowExpanded]);
     const getCurrentGaps = () => { };
     const setColumnRenderStartIndex = useCallback((columnStartIndex) => {
         if (columnRenderStartIndex.current === columnStartIndex) {
@@ -329,7 +334,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
             if (!props.groupColumn &&
                 groupProps &&
                 cellIndex <= groupProps.depth + 1) {
-                // dont reuse those cells
+                // don't reuse those cells
                 return;
             }
             let outside = cellIndex < start || cellIndex > end || cellIndex === undefined;
@@ -356,13 +361,17 @@ const DataGridRow = React.forwardRef((props, ref) => {
         props.columnRenderStartIndex,
         props.computedHasColSpan,
         props.columnRenderCount,
+        props.virtualizeColumns,
     ]);
+    const propsRef = useRef(props);
+    propsRef.current = props;
     const getPropsForCells = (startIndex, endIndex) => {
         // if (startIndex !== undefined || endIndex !== undefined) {
         //   console.warn(
         //     'Calling getPropsForCells with start/end index is deprecated. Use .slice instead'
         //   );
         // }
+        const props = propsRef.current;
         const initialColumns = props.columns;
         let columns = initialColumns;
         const { hasLockedStart, data, onGroupToggle, computedPivot, rowHeight, remoteRowIndex, initialRowHeight, lastLockedStartIndex, lastLockedEndIndex, lastUnlockedIndex, minRowHeight, realIndex, showHorizontalCellBorders, showVerticalCellBorders, empty, treeColumn, groupColumn, totalDataCount, depth, dataSourceArray, computedGroupBy, groupProps, summaryProps, indexInGroup, firstUnlockedIndex, firstLockedEndIndex, selectAll, deselectAll, columnUserSelect, multiSelect, selection, setRowSelected, computedRowExpandEnabled, rtl, last: lastRow, computedCellSelection, lastNonEmpty, maxVisibleRows, onCellClick, editStartEvent, naturalRowHeight, renderNodeTool, computedTreeEnabled, expanded: rowExpanded, expandGroupTitle, expandColumn: expandColumnFn, onCellSelectionDraggerMouseDown, onCellMouseDown, onCellEnter, computedCellMultiSelectionEnabled, getCellSelectionKey, lastCellInRange, computedRowspans, renderIndex, nativeScroll, onDragRowMouseDown, theme, onContextMenu, setActiveIndex, renderTreeCollapseTool, renderTreeExpandTool, renderTreeLoadingTool, onColumnMouseEnter, onColumnMouseLeave, columnIndexHovered, computedEnableColumnHover, columnHoverClassName, enableColumnAutosize, renderRowDetailsExpandIcon, renderRowDetailsCollapsedIcon, } = props;
@@ -928,7 +937,13 @@ const DataGridRow = React.forwardRef((props, ref) => {
             };
             startEdit(foundCols, 0);
         });
-    }, [props.columns, props.editable]);
+    }, [
+        props.columns,
+        props.editable,
+        props.currentEditCompletePromise,
+        props.rowIndex,
+        props.scrollToColumn,
+    ]);
     const tryNextRowEdit = useCallback((dir, columnIndex, isEnterNavigation) => {
         if (props.scrollToIndexIfNeeded) {
             props.scrollToIndexIfNeeded(props.rowIndex + 2 * dir, { direction: dir == -1 ? 'top' : 'bottom' }, () => {
@@ -937,7 +952,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 }
             });
         }
-    }, [props.rowIndex]);
+    }, [props.rowIndex, props.scrollToIndexIfNeeded, props.tryNextRowEdit]);
     const onTransitionEnd = useCallback((cellProps, columnProps, e) => {
         e.stopPropagation();
         if (columnProps.onTransitionEnd) {
@@ -946,7 +961,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (props.onTransitionEnd) {
             props.onTransitionEnd(e, cellProps);
         }
-    }, []);
+    }, [props.onTransitionEnd]);
     const getColumnRenderRange = useCallback((cellProps) => {
         const virtualizeColumns = getVirtualizeColumns();
         if (!virtualizeColumns) {
@@ -992,7 +1007,9 @@ const DataGridRow = React.forwardRef((props, ref) => {
         props.lockedStartColumns,
         props.lockedEndColumns,
         props.groupColumn,
+        props.groupProps,
         props.columnRenderStartIndex,
+        props.columns,
     ]);
     const expandRangeWithColspan = useCallback((range, cellProps) => {
         let extraNeededColumns = cellProps.reduce((total, cellProps) => {
@@ -1096,12 +1113,18 @@ const DataGridRow = React.forwardRef((props, ref) => {
         if (props.passedProps && props.passedProps.onClick) {
             props.passedProps.onClick(event, props);
         }
-    }, [props.passedProps, props.computedTreeEnabled, props.rowIndex]);
+    }, [
+        props.passedProps,
+        props.computedTreeEnabled,
+        props.rowIndex,
+        props.expandOnMouseDown,
+        props.onClick,
+    ]);
     const onMouseDown = useCallback((event) => {
         if (props.onMouseDown) {
             props.onMouseDown(event, props);
         }
-    }, []);
+    }, [props.onMouseDown]);
     useImperativeHandle(ref, () => {
         return {
             onCellUnmount,
