@@ -1097,6 +1097,7 @@ const GridFactory = ({ plugins } = {}, edition = 'community') => {
     const defaultProps = {
         idProperty: 'id',
         rowHeight: 40,
+        headerHeight: 40,
         minRowHeight: 20,
         nativeScroll: false,
         autoCheckboxColumn: false,

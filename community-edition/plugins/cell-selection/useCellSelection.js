@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { useMemo, useState, useCallback, } from 'react';
+import { useMemo, useState, useCallback, useRef, } from 'react';
 import useProperty from '@inovua/reactdatagrid-community/hooks/useProperty';
 import batchUpdate from '@inovua/reactdatagrid-community/utils/batchUpdate';
 import clamp from '@inovua/reactdatagrid-community/utils/clamp';
@@ -37,7 +37,10 @@ export const useCellSelection = (props, { rowSelectionEnabled, hasRowNavigation,
     if (props.enableKeyboardNavigation === false) {
         cellNavigationEnabled = false;
     }
-    const cellMultiSelectionEnabled = cellSelectionEnabled && props.multiSelect !== false;
+    const cellMultiSelectionEnabledRef = useRef(false);
+    cellMultiSelectionEnabledRef.current =
+        cellSelectionEnabled && props.multiSelect !== false;
+    const cellMultiSelectionEnabled = cellMultiSelectionEnabledRef.current;
     const onCellEnter = useMemo(() => listenOnCellEnter
         ? (event, { columnIndex, rowIndex }) => {
             const { current: computedProps } = computedPropsRef;
@@ -150,8 +153,10 @@ export const useCellSelection = (props, { rowSelectionEnabled, hasRowNavigation,
         return false;
     }, []);
     const [cellDragStartRowIndex, setCellDragStartRowIndex] = useState(null);
+    const cellSelectionRef = useRef(cellSelection);
+    cellSelectionRef.current = cellSelection;
     const onCellSelectionDraggerMouseDown = useMemo(() => {
-        if (cellMultiSelectionEnabled && cellSelection) {
+        if (cellMultiSelectionEnabled && cellSelectionRef.current) {
             let onCellSelectionDraggerMouseDown = (event, { columnIndex, rowIndex }, selectionFixedCell) => {
                 const { current: computedProps } = computedPropsRef;
                 if (!computedProps) {
@@ -201,7 +206,7 @@ export const useCellSelection = (props, { rowSelectionEnabled, hasRowNavigation,
             return onCellSelectionDraggerMouseDown;
         }
         return null;
-    }, [cellMultiSelectionEnabled, cellSelection]);
+    }, []);
     return {
         onCellEnter,
         toggleActiveCellSelection,

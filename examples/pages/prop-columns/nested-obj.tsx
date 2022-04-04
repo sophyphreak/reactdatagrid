@@ -89,7 +89,10 @@ const columns = [
     maxWidth: 400,
     defaultWidth: 200,
     sortable: true,
-    sort: (a1, a2) => a1 - a2,
+    sort: (a1, a2) => {
+      console.log({ a1, a2 });
+      return a1 - a2;
+    },
     render: ({ data }) => <span>{data.person.personalData.age}</span>,
   },
   {

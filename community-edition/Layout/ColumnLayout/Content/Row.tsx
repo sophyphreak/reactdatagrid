@@ -12,6 +12,7 @@ import React, {
   useEffect,
   useRef,
   useImperativeHandle,
+  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -32,15 +33,15 @@ import { TypeComputedColumn } from '../../../types';
 import InovuaDataGridCell from '../Cell';
 import { RowProps, EnhancedRowProps } from './RowProps';
 import usePrevious from '../../../hooks/usePrevious';
-// import diff from '../../../packages/shallow-changes';
+import diff from '../../../packages/shallow-changes';
 
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-// const rowClean = (p: any) => {
-//   const result = { ...p };
+const rowClean = (p: any) => {
+  const result = { ...p };
 
-//   delete result.activeRowRef;
-//   return result;
-// };
+  delete result.activeRowRef;
+  return result;
+};
 
 const skipSelect = (event: SyntheticEvent) => {
   (event.nativeEvent as any).skipSelect = true;
@@ -106,15 +107,15 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     };
   };
 
-  const cleanupCells = () => {
+  const cleanupCells = useCallback(() => {
     cells.current = cells.current.filter(Boolean);
 
     return cells.current;
-  };
+  }, []);
 
-  const getCells = () => {
+  const getCells = useCallback(() => {
     return cells.current;
-  };
+  }, []);
 
   const prevColumnRenderCount = usePrevious(
     props.columnRenderCount,
@@ -132,11 +133,11 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     });
   }
 
-  const getDOMNode = () => {
+  const getDOMNode = useCallback(() => {
     return domRef.current;
-  };
+  }, []);
 
-  const setActiveRowRef = () => {
+  const setActiveRowRef = useCallback(() => {
     props.activeRowRef.current = {
       instance: {
         hasBorderBottom: hasBorderBottom.current,
@@ -145,7 +146,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       },
       node: getDOMNode(),
     };
-  };
+  }, [props.activeRowRef]);
 
   if (props.active) {
     setActiveRowRef();
@@ -169,6 +170,11 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
   useEffect(() => {
     if (props.groupProps && props.rowIndex !== prevRowIndex) {
+      // when the grid is scrolled both horiz & vertically
+      // and we scroll back up to a group row (with colspan)
+      // then we need to recompute visible rows, since the cell with colspan
+      // may otherwise be out of view - but still need to be visible
+      // due to the colspan it has
       fixForColspan();
     }
 
@@ -181,15 +187,18 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     }
   });
 
-  const onCellUnmount = (_cellProps: CellProps, cell: InovuaDataGridCell) => {
-    if (cells.current) {
-      cells.current = cells.current.filter(
-        (c: InovuaDataGridCell) => c !== cell
-      );
-    }
-  };
+  const onCellUnmount = useCallback(
+    (_cellProps: CellProps, cell: InovuaDataGridCell) => {
+      if (cells.current) {
+        cells.current = cells.current.filter(
+          (c: InovuaDataGridCell) => c !== cell
+        );
+      }
+    },
+    []
+  );
 
-  const orderCells = () => {
+  const orderCells = useCallback(() => {
     const cells = cleanupCells();
 
     const sortedProps = cells
@@ -204,9 +213,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     cells.forEach((c, i) => {
       c.setStateProps(sortedProps[i]);
     });
-  };
+  }, [cleanupCells]);
 
-  const updateEditCell = () => {
+  const updateEditCell = useCallback(() => {
     const cells = getCells();
     const { editColumnIndex } = props;
 
@@ -222,285 +231,317 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         setCellIndex(cell, getCellIndex(cell));
       }
     }
-  };
+  }, [props.editColumnIndex]);
 
-  const fixForColspan = () => {
+  const fixForColspan = useCallback(() => {
     if (props.computedHasColSpan) {
       setColumnRenderStartIndex(columnRenderStartIndex.current);
     }
-  };
+  }, [props.computedHasColSpan]);
 
-  const setScrolling = (scrolling: boolean | 'vertical' | 'horizontal') => {
-    const node: HTMLDivElement | null = (getDOMNode() ||
-      domRef.current) as HTMLDivElement | null;
+  const setScrolling = useCallback(
+    (scrolling: boolean | 'vertical' | 'horizontal') => {
+      const node: HTMLDivElement | null = (getDOMNode() ||
+        domRef.current) as HTMLDivElement | null;
 
-    let scrollingDir = scrollingDirection.current;
-    if (scrolling !== false) {
-      scrollingDirection.current = scrolling as 'vertical' | 'horizontal';
-    }
-
-    const oldScrollingInProgress = scrollingInProgress.current;
-
-    scrollingDirection.current = scrollingDir;
-    scrollingInProgress.current = scrolling ? true : false;
-
-    if (!node) {
-      return;
-    }
-
-    if (oldScrollingInProgress !== scrollingInProgress.current) {
-      const className = `${CLASS_NAME}--scrolling`;
-
-      if (scrollingInProgress.current) {
-        node.classList.add(className);
-      } else {
-        node.classList.remove(className);
+      let scrollingDir = scrollingDirection.current;
+      if (scrolling !== false) {
+        scrollingDirection.current = scrolling as 'vertical' | 'horizontal';
       }
-    }
-    return;
-  };
 
-  const renderRowDetails = (rowDetailsInfo: any) => {
+      const oldScrollingInProgress = scrollingInProgress.current;
+
+      scrollingDirection.current = scrollingDir;
+      scrollingInProgress.current = scrolling ? true : false;
+
+      if (!node) {
+        return;
+      }
+
+      if (oldScrollingInProgress !== scrollingInProgress.current) {
+        const className = `${CLASS_NAME}--scrolling`;
+
+        if (scrollingInProgress.current) {
+          node.classList.add(className);
+        } else {
+          node.classList.remove(className);
+        }
+      }
+      return;
+    },
+    []
+  );
+
+  const renderRowDetails = useCallback((rowDetailsInfo: any) => {
     if (props.computedRenderRowDetails) {
       return props.computedRenderRowDetails(rowDetailsInfo);
     }
 
     return 'Please specify `renderRowDetails`';
-  };
+  }, []);
 
-  const onContextMenu = (event: MouseEvent) => {
-    const { passedProps, onRowContextMenu } = props;
+  const onContextMenu = useCallback(
+    (event: MouseEvent) => {
+      const { passedProps, onRowContextMenu } = props;
 
-    if (onRowContextMenu) {
-      onRowContextMenu(props, event);
-    }
+      if (onRowContextMenu) {
+        onRowContextMenu(props, event);
+      }
 
-    if (passedProps && passedProps.onContextMenu) {
-      passedProps.onContextMenu(event, props);
-    }
-  };
+      if (passedProps && passedProps.onContextMenu) {
+        passedProps.onContextMenu(event, props);
+      }
+    },
+    [props.passedProps, props.passedProps.onContextMenu, props.onRowContextMenu]
+  );
 
-  const setCellIndex = (
-    cell: InovuaDataGridCell,
-    index: number,
-    cellProps?: CellProps
-  ) => {
-    cellProps =
-      cellProps ||
-      (props.computedHasColSpan
-        ? getPropsForCells().slice(index, index + 1)[0]
-        : getPropsForCells(index, index)[0]);
-    cell.setStateProps(cellProps);
-  };
+  const setCellIndex = useCallback(
+    (cell: InovuaDataGridCell, index: number, cellProps?: CellProps) => {
+      cellProps =
+        cellProps ||
+        (props.computedHasColSpan
+          ? getPropsForCells().slice(index, index + 1)[0]
+          : getPropsForCells(index, index)[0]);
+      cell.setStateProps(cellProps);
+    },
+    [props.computedHasColSpan]
+  );
 
-  const getCellIndex = (cell: InovuaDataGridCell) => {
+  const getCellIndex = useCallback((cell: InovuaDataGridCell) => {
     return cell.getProps().computedVisibleIndex;
-  };
+  }, []);
 
-  const sortCells = (cells: InovuaDataGridCell[]) => {
+  const sortCells = useCallback((cells: InovuaDataGridCell[]) => {
     return cells.sort(
       (cell1: InovuaDataGridCell, cell2: InovuaDataGridCell) =>
         getCellIndex(cell1) - getCellIndex(cell2)
     );
-  };
+  }, []);
 
-  const getCellAt = (index: number) => {
+  const getCellAt = useCallback((index: number) => {
     return getCells().filter(
       (c: InovuaDataGridCell) => c.getProps().computedVisibleIndex === index
     )[0];
-  };
+  }, []);
 
-  const getCellById = (id: string | number) => {
+  const getCellById = useCallback((id: string | number) => {
     return getCells().filter(
       (c: InovuaDataGridCell) => c.getProps().id === id
     )[0];
-  };
+  }, []);
 
-  const getSortedCells = () => {
+  const getSortedCells = useCallback(() => {
     return sortCells(getCells().slice());
-  };
+  }, []);
 
-  const getGaps = (startIndex: number, endIndex: number): number[] => {
-    const visibleCellPositions: { [key: number]: boolean } = {};
+  const getGaps = useCallback(
+    (startIndex: number, endIndex: number): number[] => {
+      const visibleCellPositions: { [key: number]: boolean } = {};
 
-    const sortedCells = getSortedCells();
+      const sortedCells = getSortedCells();
 
-    sortedCells.forEach((cell: InovuaDataGridCell) => {
-      const cellProps = cell.getProps();
-      if (cellProps.computedLocked) {
-        return;
-      }
-      const { computedVisibleIndex, computedColspan, groupProps } = cellProps;
-      if (groupProps && computedVisibleIndex <= groupProps.depth + 1) {
-        return;
-      }
+      sortedCells.forEach((cell: InovuaDataGridCell) => {
+        const cellProps = cell.getProps();
+        if (cellProps.computedLocked) {
+          return;
+        }
+        const { computedVisibleIndex, computedColspan, groupProps } = cellProps;
+        if (groupProps && computedVisibleIndex <= groupProps.depth + 1) {
+          return;
+        }
 
-      visibleCellPositions[computedVisibleIndex] = true;
+        visibleCellPositions[computedVisibleIndex] = true;
 
-      if (computedColspan) {
-        for (var i = 0; i < computedColspan; i++) {
-          visibleCellPositions[computedVisibleIndex + i] = true;
+        if (computedColspan) {
+          for (var i = 0; i < computedColspan; i++) {
+            visibleCellPositions[computedVisibleIndex + i] = true;
+          }
+        }
+      });
+
+      const gaps = [];
+
+      for (; startIndex <= endIndex; startIndex++) {
+        if (!visibleCellPositions[startIndex]) {
+          gaps.push(startIndex);
         }
       }
-    });
 
-    const gaps = [];
+      return gaps;
+    },
+    []
+  );
 
-    for (; startIndex <= endIndex; startIndex++) {
-      if (!visibleCellPositions[startIndex]) {
-        gaps.push(startIndex);
-      }
-    }
-
-    return gaps;
-  };
-
-  const getVirtualizeColumns = (): boolean => {
+  const getVirtualizeColumns = useCallback((): boolean => {
     return props.virtualizeColumns;
     return scrollingDirection.current !== 'horizontal'
       ? props.virtualizeColumns
       : false;
-  };
+  }, [props.virtualizeColumns]);
 
-  const toggleRowExpand = (rowIndex?: number) => {
-    if (typeof rowIndex !== 'number') {
-      rowIndex = props.realIndex;
-    }
-    props.toggleRowExpand(rowIndex!);
-  };
+  const toggleRowExpand = useCallback(
+    (rowIndex?: number) => {
+      if (typeof rowIndex !== 'number') {
+        rowIndex = props.realIndex;
+      }
+      props.toggleRowExpand(rowIndex!);
+    },
+    [props.realIndex, props.toggleRowExpand]
+  );
 
-  const toggleNodeExpand = (rowIndex?: number) => {
-    if (typeof rowIndex !== 'number') {
-      rowIndex = props.realIndex;
-    }
-    props.toggleNodeExpand(rowIndex!);
-  };
+  const toggleNodeExpand = useCallback(
+    (rowIndex?: number) => {
+      if (typeof rowIndex !== 'number') {
+        rowIndex = props.realIndex;
+      }
+      props.toggleNodeExpand(rowIndex!);
+    },
+    [props.realIndex, props.toggleNodeExpand]
+  );
 
-  const loadNodeAsync = () => {
+  const loadNodeAsync = useCallback(() => {
     props.loadNodeAsync?.(props.data);
-  };
+  }, [props.loadNodeAsync, props.data]);
 
-  const isRowExpandable = (rowIndex?: number) => {
-    if (typeof rowIndex !== 'number') {
-      rowIndex = props.realIndex;
-    }
-    return props.isRowExpandableAt(rowIndex!);
-  };
+  const isRowExpandable = useCallback(
+    (rowIndex?: number) => {
+      if (typeof rowIndex !== 'number') {
+        rowIndex = props.realIndex;
+      }
+      return props.isRowExpandableAt(rowIndex!);
+    },
+    [props.realIndex, props.isRowExpandableAt]
+  );
 
-  const setRowExpanded = (expanded: number | boolean, _?: boolean) => {
-    let rowIndex = props.realIndex;
-    let _expanded: boolean = expanded as boolean;
-    if (typeof expanded === 'number') {
-      rowIndex = expanded;
-      _expanded = _ as boolean;
-    }
-    props.setRowExpanded(rowIndex!, _expanded);
-  };
+  const setRowExpanded = useCallback(
+    (expanded: number | boolean, _?: boolean) => {
+      let rowIndex = props.realIndex;
+      let _expanded: boolean = expanded as boolean;
+      if (typeof expanded === 'number') {
+        rowIndex = expanded;
+        _expanded = _ as boolean;
+      }
+      props.setRowExpanded(rowIndex!, _expanded);
+    },
+    [props.realIndex, props.setRowExpanded]
+  );
 
   const getCurrentGaps = () => {};
 
-  const setColumnRenderStartIndex = (columnStartIndex: number) => {
-    if (columnRenderStartIndex.current === columnStartIndex) {
-      return;
-    }
-    columnRenderStartIndex.current = columnStartIndex;
-
-    if (getVirtualizeColumns() === false) {
-      return;
-    }
-
-    let newCellProps: CellProps[];
-    let renderRange: {
-      start: number;
-      end: number;
-    } | null;
-
-    let cellPropsAt: (index: number) => CellProps;
-
-    if (props.computedHasColSpan) {
-      newCellProps = getPropsForCells();
-      renderRange = getColumnRenderRange(newCellProps);
-
-      cellPropsAt = (index: number) => newCellProps[index];
-    } else {
-      renderRange = getColumnRenderRange();
-      newCellProps = getPropsForCells(
-        renderRange?.start,
-        (renderRange?.end || 0) + 1
-      );
-
-      cellPropsAt = (index: number) =>
-        newCellProps.filter(
-          cellProps => cellProps.computedVisibleIndex === index
-        )[0];
-    }
-
-    if (!renderRange) {
-      return;
-    }
-
-    const { start, end } = renderRange;
-    const gaps = getGaps(start, end);
-
-    if (!gaps.length) {
-      return;
-    }
-    const gapsMap = gaps.reduce((acc, gapIndex) => {
-      acc[gapIndex] = true;
-      return acc;
-    }, {} as { [key: number]: boolean });
-
-    const tempCellMap: Record<number, boolean> = {};
-
-    const calls: [Cell, number][] = [];
-
-    getCells().forEach((cell: InovuaDataGridCell) => {
-      const cellProps = cell.getProps();
-      const {
-        groupProps,
-        computedVisibleIndex: cellIndex,
-        computedColspan,
-        computedLocked,
-      } = cellProps;
-
-      if (computedLocked) {
+  const setColumnRenderStartIndex = useCallback(
+    (columnStartIndex: number) => {
+      if (columnRenderStartIndex.current === columnStartIndex) {
         return;
       }
-      if (
-        !props.groupColumn &&
-        groupProps &&
-        cellIndex <= groupProps.depth + 1
-      ) {
-        // dont reuse those cells
+      columnRenderStartIndex.current = columnStartIndex;
+
+      if (getVirtualizeColumns() === false) {
         return;
       }
 
-      let outside =
-        cellIndex < start || cellIndex > end || cellIndex === undefined;
-      if (outside && computedColspan) {
-        var endCellIndex = cellIndex + (computedColspan - 1);
-        outside =
-          (cellIndex < start && endCellIndex < start) || cellIndex > end;
+      let newCellProps: CellProps[];
+      let renderRange: {
+        start: number;
+        end: number;
+      } | null;
+
+      let cellPropsAt: (index: number) => CellProps;
+
+      if (props.computedHasColSpan) {
+        newCellProps = getPropsForCells();
+        renderRange = getColumnRenderRange(newCellProps);
+
+        cellPropsAt = (index: number) => newCellProps[index];
+      } else {
+        renderRange = getColumnRenderRange();
+        newCellProps = getPropsForCells(
+          renderRange?.start,
+          (renderRange?.end || 0) + 1
+        );
+
+        cellPropsAt = (index: number) =>
+          newCellProps.filter(
+            cellProps => cellProps.computedVisibleIndex === index
+          )[0];
       }
-      const outOfView = outside || tempCellMap[cellIndex] || gapsMap[cellIndex];
-      tempCellMap[cellIndex] = true;
-      let newIndex;
 
-      if (outOfView && gaps.length) {
-        newIndex = gaps[gaps.length - 1];
-        calls.push([cell, newIndex]);
-
-        gaps.length -= 1;
+      if (!renderRange) {
+        return;
       }
-    });
 
-    calls.forEach(call => {
-      const cell = call[0];
-      const newIndex = call[1];
+      const { start, end } = renderRange;
+      const gaps = getGaps(start, end);
 
-      setCellIndex(cell, newIndex, cellPropsAt(newIndex));
-    });
-  };
+      if (!gaps.length) {
+        return;
+      }
+      const gapsMap = gaps.reduce((acc, gapIndex) => {
+        acc[gapIndex] = true;
+        return acc;
+      }, {} as { [key: number]: boolean });
+
+      const tempCellMap: Record<number, boolean> = {};
+
+      const calls: [Cell, number][] = [];
+
+      getCells().forEach((cell: InovuaDataGridCell) => {
+        const cellProps = cell.getProps();
+        const {
+          groupProps,
+          computedVisibleIndex: cellIndex,
+          computedColspan,
+          computedLocked,
+        } = cellProps;
+
+        if (computedLocked) {
+          return;
+        }
+        if (
+          !props.groupColumn &&
+          groupProps &&
+          cellIndex <= groupProps.depth + 1
+        ) {
+          // don't reuse those cells
+          return;
+        }
+
+        let outside =
+          cellIndex < start || cellIndex > end || cellIndex === undefined;
+        if (outside && computedColspan) {
+          var endCellIndex = cellIndex + (computedColspan - 1);
+          outside =
+            (cellIndex < start && endCellIndex < start) || cellIndex > end;
+        }
+        const outOfView =
+          outside || tempCellMap[cellIndex] || gapsMap[cellIndex];
+        tempCellMap[cellIndex] = true;
+        let newIndex;
+
+        if (outOfView && gaps.length) {
+          newIndex = gaps[gaps.length - 1];
+          calls.push([cell, newIndex]);
+
+          gaps.length -= 1;
+        }
+      });
+
+      calls.forEach(call => {
+        const cell = call[0];
+        const newIndex = call[1];
+
+        setCellIndex(cell, newIndex, cellPropsAt(newIndex));
+      });
+    },
+    [
+      props.columnRenderStartIndex,
+      props.computedHasColSpan,
+      props.columnRenderCount,
+      props.virtualizeColumns,
+    ]
+  );
+
+  const propsRef = useRef(props);
+  propsRef.current = props;
 
   const getPropsForCells = (
     startIndex?: number,
@@ -511,6 +552,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     //     'Calling getPropsForCells with start/end index is deprecated. Use .slice instead'
     //   );
     // }
+    const props = propsRef.current;
     const initialColumns = props.columns;
     let columns = initialColumns;
 
@@ -1119,317 +1161,359 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     return cellPropsArray;
   };
 
-  const onCellStopEdit = (value: any, cellProps: CellProps) => {
-    if (props.onEditStop) {
-      props.onEditStop({
-        value,
-        data: cellProps.data,
-        rowId: props.getItemId(cellProps.data),
-        columnId: cellProps.id,
-        columnIndex: cellProps.computedVisibleIndex,
-        rowIndex: cellProps.rowIndex,
-        cellProps,
-      });
-    }
-  };
+  const onCellStopEdit = useCallback(
+    (value: any, cellProps: CellProps) => {
+      if (props.onEditStop) {
+        props.onEditStop({
+          value,
+          data: cellProps.data,
+          rowId: props.getItemId(cellProps.data),
+          columnId: cellProps.id,
+          columnIndex: cellProps.computedVisibleIndex,
+          rowIndex: cellProps.rowIndex,
+          cellProps,
+        });
+      }
+    },
+    [props.onEditStop]
+  );
 
-  const onCellStartEdit = (value: any, cellProps: CellProps) => {
-    if (props.onEditStart) {
-      props.onEditStart({
-        data: cellProps.data,
-        value,
-        rowId: props.getItemId(cellProps.data),
-        columnId: cellProps.id,
-        columnIndex: cellProps.computedVisibleIndex,
-        rowIndex: cellProps.rowIndex,
-        cellProps,
-      });
-    }
-  };
+  const onCellStartEdit = useCallback(
+    (value: any, cellProps: CellProps) => {
+      if (props.onEditStart) {
+        props.onEditStart({
+          data: cellProps.data,
+          value,
+          rowId: props.getItemId(cellProps.data),
+          columnId: cellProps.id,
+          columnIndex: cellProps.computedVisibleIndex,
+          rowIndex: cellProps.rowIndex,
+          cellProps,
+        });
+      }
+    },
+    [props.onEditStart]
+  );
 
-  const onCellEditCancel = (cellProps: CellProps) => {
-    if (props.onEditCancel) {
-      props.onEditCancel({
-        data: cellProps.data,
-        rowId: props.getItemId(cellProps.data),
-        columnIndex: cellProps.computedVisibleIndex,
-        columnId: cellProps.id,
-        rowIndex: cellProps.rowIndex,
-        cellProps,
-      });
-    }
-  };
+  const onCellEditCancel = useCallback(
+    (cellProps: CellProps) => {
+      if (props.onEditCancel) {
+        props.onEditCancel({
+          data: cellProps.data,
+          rowId: props.getItemId(cellProps.data),
+          columnIndex: cellProps.computedVisibleIndex,
+          columnId: cellProps.id,
+          rowIndex: cellProps.rowIndex,
+          cellProps,
+        });
+      }
+    },
+    [props.onEditCancel]
+  );
 
-  const onCellEditValueChange = (value: any, cellProps: CellProps) => {
-    if (props.onEditValueChange) {
-      props.onEditValueChange({
-        value,
-        data: cellProps.data,
-        rowId: props.getItemId(cellProps.data),
-        columnId: cellProps.id,
-        columnIndex: cellProps.computedVisibleIndex,
-        rowIndex: cellProps.rowIndex,
-        cellProps,
-      });
-    }
-  };
+  const onCellEditValueChange = useCallback(
+    (value: any, cellProps: CellProps) => {
+      if (props.onEditValueChange) {
+        props.onEditValueChange({
+          value,
+          data: cellProps.data,
+          rowId: props.getItemId(cellProps.data),
+          columnId: cellProps.id,
+          columnIndex: cellProps.computedVisibleIndex,
+          rowIndex: cellProps.rowIndex,
+          cellProps,
+        });
+      }
+    },
+    [props.onEditValueChange]
+  );
 
-  const onCellEditComplete = (value: any, cellProps: CellProps) => {
-    if (props.onEditComplete) {
-      props.onEditComplete({
-        value,
-        data: cellProps.data,
-        rowId: props.getItemId(cellProps.data),
-        columnId: cellProps.id,
-        columnIndex: cellProps.computedVisibleIndex,
-        rowIndex: cellProps.rowIndex,
-        cellProps,
-      });
-    }
-  };
+  const onCellEditComplete = useCallback(
+    (value: any, cellProps: CellProps) => {
+      if (props.onEditComplete) {
+        props.onEditComplete({
+          value,
+          data: cellProps.data,
+          rowId: props.getItemId(cellProps.data),
+          columnId: cellProps.id,
+          columnIndex: cellProps.computedVisibleIndex,
+          rowIndex: cellProps.rowIndex,
+          cellProps,
+        });
+      }
+    },
+    [props.onEditComplete]
+  );
 
-  const tryRowCellEdit = (
-    editIndex: number,
-    dir: -1 | 0 | 1 = 0,
-    isEnterNavigation: boolean
-  ) => {
-    const cols = props.columns;
-    let col;
-    let colIndex;
+  const tryRowCellEdit = useCallback(
+    (editIndex: number, dir: -1 | 0 | 1 = 0, isEnterNavigation: boolean) => {
+      const cols = props.columns;
+      let col;
+      let colIndex;
 
-    if (!dir) {
-      dir = 1;
-    }
-    dir = dir == 1 ? 1 : -1;
-    let currentIndex = dir == 1 ? 0 : cols.length - 1;
+      if (!dir) {
+        dir = 1;
+      }
+      dir = dir == 1 ? 1 : -1;
+      let currentIndex = dir == 1 ? 0 : cols.length - 1;
 
-    const foundCols: TypeComputedColumn[] = [];
+      const foundCols: TypeComputedColumn[] = [];
 
-    while (cols[currentIndex]) {
-      col = cols[currentIndex];
+      while (cols[currentIndex]) {
+        col = cols[currentIndex];
 
-      if (col.editable || (props.editable && col.editable !== false)) {
-        colIndex = col.computedVisibleIndex;
-        if (colIndex == editIndex) {
-          foundCols.push(col);
-        } else {
-          if (dir < 0) {
-            if (colIndex < editIndex) {
-              foundCols.push(col);
-            }
-          } else if (dir > 0) {
-            if (colIndex > editIndex) {
-              foundCols.push(col);
+        if (col.editable || (props.editable && col.editable !== false)) {
+          colIndex = col.computedVisibleIndex;
+          if (colIndex == editIndex) {
+            foundCols.push(col);
+          } else {
+            if (dir < 0) {
+              if (colIndex < editIndex) {
+                foundCols.push(col);
+              }
+            } else if (dir > 0) {
+              if (colIndex > editIndex) {
+                foundCols.push(col);
+              }
             }
           }
         }
+        currentIndex += dir;
       }
-      currentIndex += dir;
-    }
 
-    if (!foundCols.length) {
-      tryNextRowEdit(
-        dir,
-        isEnterNavigation ? editIndex : dir > 0 ? 0 : props.columns.length - 1
-      );
-      return Promise.reject(null);
-    }
+      if (!foundCols.length) {
+        tryNextRowEdit(
+          dir,
+          isEnterNavigation ? editIndex : dir > 0 ? 0 : props.columns.length - 1
+        );
+        return Promise.reject(null);
+      }
 
-    foundCols.sort((a: any, b: any) => {
-      // if dir > 0, sort asc, otherwise, desc
-      return dir > 0 ? a - b : b - a;
-    });
+      foundCols.sort((a: any, b: any) => {
+        // if dir > 0, sort asc, otherwise, desc
+        return dir > 0 ? a - b : b - a;
+      });
 
-    // let retries: any = {};
+      // let retries: any = {};
 
-    return new Promise((resolve, reject) => {
-      const startEdit = (cols: any, index = 0) => {
-        props.currentEditCompletePromise.current
-          .then(() => {
-            const errBack = () => {
-              isEnterNavigation
-                ? tryNextRowEdit(dir, editIndex, true)
-                : startEdit(cols, index + 1);
-            };
-
-            const col = cols[index];
-            if (!col) {
-              tryNextRowEdit(
-                dir,
+      return new Promise((resolve, reject) => {
+        const startEdit = (cols: any, index = 0) => {
+          props.currentEditCompletePromise.current
+            .then(() => {
+              const errBack = () => {
                 isEnterNavigation
-                  ? editIndex
-                  : dir > 0
-                  ? 0
-                  : props.columns.length - 1
-              );
-              return reject('column not found');
-            }
+                  ? tryNextRowEdit(dir, editIndex, true)
+                  : startEdit(cols, index + 1);
+              };
 
-            const cell = getCellById(col.id);
-            if (!cell) {
-              // if (retries[col.id]) {
-              //   return reject('column not found');
-              // }
-              // retries[col.id] = true;
-
-              if (props.scrollToColumn) {
-                props.scrollToColumn(col.id, undefined, () => {
-                  setTimeout(() => {
-                    startEdit(cols, index);
-                  }, 20);
-                });
+              const col = cols[index];
+              if (!col) {
+                tryNextRowEdit(
+                  dir,
+                  isEnterNavigation
+                    ? editIndex
+                    : dir > 0
+                    ? 0
+                    : props.columns.length - 1
+                );
+                return reject('column not found');
               }
-              return;
+
+              const cell = getCellById(col.id);
+              if (!cell) {
+                // if (retries[col.id]) {
+                //   return reject('column not found');
+                // }
+                // retries[col.id] = true;
+
+                if (props.scrollToColumn) {
+                  props.scrollToColumn(col.id, undefined, () => {
+                    setTimeout(() => {
+                      startEdit(cols, index);
+                    }, 20);
+                  });
+                }
+                return;
+              }
+
+              setTimeout(() => {
+                return cell
+                  .startEdit(undefined, errBack)
+                  .then(resolve)
+                  .catch(errBack);
+              }, 0);
+            })
+            .catch((error: any) => reject(error));
+
+          return;
+        };
+
+        startEdit(foundCols, 0);
+      });
+    },
+    [
+      props.columns,
+      props.editable,
+      props.currentEditCompletePromise,
+      props.rowIndex,
+      props.scrollToColumn,
+    ]
+  );
+
+  const tryNextRowEdit = useCallback(
+    (dir: 1 | 0 | -1, columnIndex: any, isEnterNavigation?: boolean) => {
+      if (props.scrollToIndexIfNeeded) {
+        props.scrollToIndexIfNeeded(
+          props.rowIndex + 2 * dir,
+          { direction: dir == -1 ? 'top' : 'bottom' },
+          () => {
+            if (props.tryNextRowEdit) {
+              props.tryNextRowEdit(
+                props.rowIndex + dir,
+                dir,
+                columnIndex,
+                isEnterNavigation
+              );
             }
+          }
+        );
+      }
+    },
+    [props.rowIndex, props.scrollToIndexIfNeeded, props.tryNextRowEdit]
+  );
 
-            setTimeout(() => {
-              return cell
-                .startEdit(undefined, errBack)
-                .then(resolve)
-                .catch(errBack);
-            }, 0);
-          })
-          .catch((error: any) => reject(error));
+  const onTransitionEnd = useCallback(
+    (cellProps: CellProps, columnProps: any, e?: any) => {
+      e.stopPropagation();
 
-        return;
+      if (columnProps.onTransitionEnd) {
+        columnProps.onTransitionEnd(e);
+      }
+
+      if (props.onTransitionEnd) {
+        props.onTransitionEnd(e, cellProps);
+      }
+    },
+    [props.onTransitionEnd]
+  );
+
+  const getColumnRenderRange = useCallback(
+    (
+      cellProps?: CellProps[]
+    ): {
+      start: number;
+      end: number;
+    } | null => {
+      const virtualizeColumns = getVirtualizeColumns();
+
+      if (!virtualizeColumns) {
+        return null;
+      }
+
+      const minStartIndex = props.lockedStartColumns.length
+        ? props.lockedStartColumns.length
+        : props.groupProps && !props.groupColumn //when there is a groupColumn, start virtualization from there
+        ? props.groupProps.depth + 2
+        : 0;
+      const maxEndIndex =
+        props.columns.length - props.lockedEndColumns.length - 1;
+
+      let columnStartIndex =
+        columnRenderStartIndex.current == null
+          ? props.columnRenderStartIndex || 0
+          : columnRenderStartIndex.current;
+
+      columnStartIndex = Math.max(columnStartIndex, minStartIndex);
+
+      const fixStartIndexForColspan = () => {
+        if (cellProps) {
+          while (cellProps[columnStartIndex].computedColspanedBy) {
+            columnStartIndex--;
+          }
+        }
       };
 
-      startEdit(foundCols, 0);
-    });
-  };
+      if (props.columnRenderCount != null) {
+        let columnRenderEndIndex = columnStartIndex + props.columnRenderCount;
+        columnRenderEndIndex = Math.min(columnRenderEndIndex, maxEndIndex);
 
-  const tryNextRowEdit = (
-    dir: 1 | 0 | -1,
-    columnIndex: any,
-    isEnterNavigation?: boolean
-  ) => {
-    if (props.scrollToIndexIfNeeded) {
-      props.scrollToIndexIfNeeded(
-        props.rowIndex + 2 * dir,
-        { direction: dir == -1 ? 'top' : 'bottom' },
-        () => {
-          if (props.tryNextRowEdit) {
-            props.tryNextRowEdit(
-              props.rowIndex + dir,
-              dir,
-              columnIndex,
-              isEnterNavigation
-            );
-          }
+        if (
+          columnRenderEndIndex - props.columnRenderCount !=
+          columnStartIndex
+        ) {
+          columnStartIndex = Math.max(
+            columnRenderEndIndex - props.columnRenderCount,
+            minStartIndex
+          );
         }
-      );
-    }
-  };
 
-  const onTransitionEnd = (cellProps: CellProps, columnProps: any, e?: any) => {
-    e.stopPropagation();
+        if (columnRenderEndIndex < 0) {
+          return {
+            start: 0,
+            end: 0,
+          };
+        }
 
-    if (columnProps.onTransitionEnd) {
-      columnProps.onTransitionEnd(e);
-    }
+        fixStartIndexForColspan();
 
-    if (props.onTransitionEnd) {
-      props.onTransitionEnd(e, cellProps);
-    }
-  };
+        return { start: columnStartIndex, end: columnRenderEndIndex };
+      }
 
-  const getColumnRenderRange = (
-    cellProps?: CellProps[]
-  ): {
-    start: number;
-    end: number;
-  } | null => {
-    const virtualizeColumns = getVirtualizeColumns();
-
-    if (!virtualizeColumns) {
       return null;
-    }
+    },
+    [
+      props.virtualizeColumns,
+      props.columnRenderCount,
+      props.lockedStartColumns,
+      props.lockedEndColumns,
+      props.groupColumn,
+      props.groupProps,
+      props.columnRenderStartIndex,
+      props.columns,
+    ]
+  );
 
-    const minStartIndex = props.lockedStartColumns.length
-      ? props.lockedStartColumns.length
-      : props.groupProps && !props.groupColumn //when there is a groupColumn, start virtualization from there
-      ? props.groupProps.depth + 2
-      : 0;
-    const maxEndIndex =
-      props.columns.length - props.lockedEndColumns.length - 1;
+  const expandRangeWithColspan = useCallback(
+    (
+      range: { start: number; end: number },
+      cellProps: CellProps[]
+    ): { start: number; end: number } => {
+      let extraNeededColumns = cellProps.reduce(
+        (total: number, cellProps: CellProps) => {
+          return (
+            total +
+            (cellProps.computedColspan! > 1
+              ? cellProps.computedColspan! - 1
+              : 0)
+          );
+        },
+        0
+      );
 
-    let columnStartIndex =
-      columnRenderStartIndex.current == null
-        ? props.columnRenderStartIndex || 0
-        : columnRenderStartIndex.current;
-
-    columnStartIndex = Math.max(columnStartIndex, minStartIndex);
-
-    const fixStartIndexForColspan = () => {
-      if (cellProps) {
-        while (cellProps[columnStartIndex].computedColspanedBy) {
-          columnStartIndex--;
-        }
-      }
-    };
-
-    if (props.columnRenderCount != null) {
-      let columnRenderEndIndex = columnStartIndex + props.columnRenderCount;
-      columnRenderEndIndex = Math.min(columnRenderEndIndex, maxEndIndex);
-
-      if (columnRenderEndIndex - props.columnRenderCount != columnStartIndex) {
-        columnStartIndex = Math.max(
-          columnRenderEndIndex - props.columnRenderCount,
-          minStartIndex
-        );
+      if (!extraNeededColumns) {
+        return range;
       }
 
-      if (columnRenderEndIndex < 0) {
-        return {
-          start: 0,
-          end: 0,
-        };
+      if (range.start < props.firstUnlockedIndex) {
+        range.start = props.firstUnlockedIndex;
+      }
+      if (range.start > extraNeededColumns) {
+        range.start -= extraNeededColumns;
+
+        return range;
       }
 
-      fixStartIndexForColspan();
+      extraNeededColumns -= range.start;
+      range.start = 0;
 
-      return { start: columnStartIndex, end: columnRenderEndIndex };
-    }
-
-    return null;
-  };
-
-  const expandRangeWithColspan = (
-    range: { start: number; end: number },
-    cellProps: CellProps[]
-  ): { start: number; end: number } => {
-    let extraNeededColumns = cellProps.reduce(
-      (total: number, cellProps: CellProps) => {
-        return (
-          total +
-          (cellProps.computedColspan! > 1 ? cellProps.computedColspan! - 1 : 0)
-        );
-      },
-      0
-    );
-
-    if (!extraNeededColumns) {
-      return range;
-    }
-
-    if (range.start < props.firstUnlockedIndex) {
-      range.start = props.firstUnlockedIndex;
-    }
-    if (range.start > extraNeededColumns) {
-      range.start -= extraNeededColumns;
+      if (extraNeededColumns) {
+        range.end += extraNeededColumns;
+      }
 
       return range;
-    }
-
-    extraNeededColumns -= range.start;
-    range.start = 0;
-
-    if (extraNeededColumns) {
-      range.end += extraNeededColumns;
-    }
-
-    return range;
-  };
+    },
+    []
+  );
 
   const renderRowInstance = (_: any, __: any, style: any) => {
     const {
@@ -1537,23 +1621,35 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     return renderCellsMaybeLocked(result, props, scrollLeft, undefined, style);
   };
 
-  const onClick = (event: MouseEvent) => {
-    if (props.computedTreeEnabled && props.expandOnMouseDown) {
-      toggleNodeExpand(props.rowIndex);
-    }
-    if (props.onClick) {
-      props.onClick(event, props);
-    }
-    if (props.passedProps && props.passedProps.onClick) {
-      props.passedProps.onClick(event, props);
-    }
-  };
+  const onClick = useCallback(
+    (event: MouseEvent) => {
+      if (props.computedTreeEnabled && props.expandOnMouseDown) {
+        toggleNodeExpand(props.rowIndex);
+      }
+      if (props.onClick) {
+        props.onClick(event, props);
+      }
+      if (props.passedProps && props.passedProps.onClick) {
+        props.passedProps.onClick(event, props);
+      }
+    },
+    [
+      props.passedProps,
+      props.computedTreeEnabled,
+      props.rowIndex,
+      props.expandOnMouseDown,
+      props.onClick,
+    ]
+  );
 
-  const onMouseDown = (event: MouseEvent) => {
-    if (props.onMouseDown) {
-      props.onMouseDown(event, props);
-    }
-  };
+  const onMouseDown = useCallback(
+    (event: MouseEvent) => {
+      if (props.onMouseDown) {
+        props.onMouseDown(event, props);
+      }
+    },
+    [props.onMouseDown]
+  );
 
   useImperativeHandle(ref, () => {
     return {
@@ -1754,7 +1850,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     // passedProps should not overwrite the folowing methods
     // onEvent prop will be called also
     onClick: onClick,
-    onMouseDown: onMouseDown,
+    // onMouseDown: onMouseDown,
     onContextMenu: onContextMenu,
   };
 
@@ -2181,15 +2277,36 @@ export default React.memo(
       scrollToIndexIfNeeded: 1,
       onColumnMouseEnter: 1,
       onColumnMouseLeave: 1,
+      computedCellSelection: 1,
+      getCellSelectionKey: 1,
     });
 
+    if (areEqual.result) {
+      if (prevProps.computedActiveCell != nextProps.computedActiveCell) {
+        const [oldRowIndex] = prevProps.computedActiveCell || [];
+        const [newRowIndex] = nextProps.computedActiveCell || [];
+
+        if (
+          oldRowIndex === nextProps.rowIndex ||
+          newRowIndex === nextProps.rowIndex
+        ) {
+          return false;
+        }
+      }
+    }
+
     if (!areEqual.result) {
+      // const theDiff = diff(rowClean(nextProps), rowClean(prevProps));
       // console.log(
       //   'UPDATE ROW (HOOKS)',
-      //   areEqual.key
-      //   // prevProps[areEqual.key!],
-      //   // nextProps[areEqual.key!],
-      //   // diff(rowClean(nextProps), rowClean(prevProps))
+      //   nextProps.rowIndex,
+      //   areEqual.key,
+      //   //   // prevProps[areEqual.key!],
+      //   //   // nextProps[areEqual.key!],
+      //   theDiff,
+      //   theDiff.updated.map((prop: any) => {
+      //     return { prop, old: prevProps[prop], new: nextProps[prop] };
+      //   })
       // );
       return false;
     }
