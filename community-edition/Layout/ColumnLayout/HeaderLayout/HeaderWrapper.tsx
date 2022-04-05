@@ -97,6 +97,8 @@ export default class HeaderWrapper extends React.Component<any> {
       columnsMap,
     });
 
+    const headerHeight = !props.computedGroups ? props.headerHeight : undefined;
+
     return (
       <div
         className={`InovuaReactDataGrid__header-wrapper InovuaReactDataGrid__header-wrapper--direction-${
@@ -148,7 +150,7 @@ export default class HeaderWrapper extends React.Component<any> {
           computedShowHeaderBorderRight={computedShowHeaderBorderRight}
           hasLockedEnd={props.hasLockedEnd}
           hasLockedStart={props.hasLockedStart}
-          headerHeight={props.headerHeight}
+          headerHeight={headerHeight}
           isMultiSort={isMultiSort}
           lockedEndColumns={props.lockedEndColumns}
           lockedStartColumns={props.lockedStartColumns}
@@ -184,9 +186,7 @@ export default class HeaderWrapper extends React.Component<any> {
           virtualListBorderRight={virtualListBorderRight}
           updateLockedWrapperPositions={updateLockedWrapperPositions}
           virtualizeColumns={
-            props.virtualizeColumns &&
-            !!props.headerHeight &&
-            !props.computedGroups
+            props.virtualizeColumns && !!headerHeight && !props.computedGroups
           }
           columnWidthPrefixSums={columnWidthPrefixSums}
           renderMenuTool={renderMenuTool}
