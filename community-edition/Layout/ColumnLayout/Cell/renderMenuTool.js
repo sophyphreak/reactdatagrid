@@ -4,58 +4,47 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import join from '../../../packages/join';
 const BASE_CLASS_NAME = 'InovuaReactDataGrid__column-header__menu-tool';
-export class MenuTool extends React.Component {
-    domRef;
-    _unmounted;
-    constructor(props) {
-        super(props);
-        this.state = {
-            keepVisible: false,
+export const MenuTool = (props) => {
+    const [keepVisible, setKeepVisible] = useState(false);
+    const domRef = useRef();
+    const _unmounted = useRef();
+    useEffect(() => {
+        return () => {
+            _unmounted.current = true;
         };
-        this.domRef = React.createRef();
-        this.onClick = this.onClick.bind(this);
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.onHide = this.onHide.bind(this);
-    }
-    componentWillUnmount() {
-        this._unmounted = true;
-    }
-    onClick(event) {
+    }, []);
+    const onClick = (event) => {
         event.stopPropagation();
-    }
-    onMouseDown(event) {
+    };
+    const onMouseDown = (event) => {
         // prevent default, in order to avoid blurring the grid
         event.preventDefault();
-        this.props.showContextMenu &&
-            this.props.showContextMenu(this, this.props.showOnHover ? this.onHide : null);
-        if (this._unmounted) {
+        props.showContextMenu &&
+            props.showContextMenu(domRef.current, props.showOnHover ? onHide : null);
+        if (_unmounted.current) {
             return;
         }
-        if (this.props.showOnHover && !this.state.keepVisible) {
-            this.setState({
-                keepVisible: true,
-            });
+        if (props.showOnHover && !keepVisible) {
+            setKeepVisible(true);
         }
-    }
-    onHide() {
-        if (this._unmounted) {
+    };
+    const onHide = () => {
+        if (_unmounted.current) {
             return;
         }
-        this.setState({
-            keepVisible: false,
-        });
-    }
-    renderMenuTool = () => {
+        setKeepVisible(false);
+    };
+    const renderMenuTool = () => {
         const domProps = {
             className: join('', 'InovuaReactDataGrid__sort-icon--desc'),
             width: 14,
             height: 12,
         };
-        if (this.props.renderMenuTool) {
-            return this.props.renderMenuTool(domProps);
+        if (props.renderMenuTool) {
+            return props.renderMenuTool(domProps);
         }
         return (React.createElement("svg", { ...domProps, viewBox: "0 0 14 12" },
             React.createElement("g", { fillRule: "evenodd" },
@@ -63,19 +52,17 @@ export class MenuTool extends React.Component {
                 React.createElement("rect", { width: "14", height: "2", y: "5", rx: "1" }),
                 React.createElement("rect", { width: "14", height: "2", y: "10", rx: "1" }))));
     };
-    render() {
-        let className = BASE_CLASS_NAME;
-        const { showOnHover, rtl } = this.props;
-        if (showOnHover) {
-            className += ` ${BASE_CLASS_NAME}--show-on-hover`;
-        }
-        if (!showOnHover || this.state.keepVisible) {
-            className += ` ${BASE_CLASS_NAME}--visible`;
-        }
-        className += ` ${BASE_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`;
-        return (React.createElement("div", { className: className, onMouseDown: this.onMouseDown, onClick: this.onClick, ref: this.domRef }, this.renderMenuTool()));
+    let className = BASE_CLASS_NAME;
+    const { showOnHover, rtl } = props;
+    if (showOnHover) {
+        className += ` ${BASE_CLASS_NAME}--show-on-hover`;
     }
-}
+    if (!showOnHover || keepVisible) {
+        className += ` ${BASE_CLASS_NAME}--visible`;
+    }
+    className += ` ${BASE_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`;
+    return (React.createElement("div", { className: className, onMouseDown: onMouseDown, onClick: onClick, ref: domRef }, renderMenuTool()));
+};
 export default (props, cellInstance) => {
     if (props.groupSpacerColumn) {
         return null;

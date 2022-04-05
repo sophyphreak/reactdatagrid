@@ -5,15 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 
 import join from '../../../packages/join';
 
 const BASE_CLASS_NAME = 'InovuaReactDataGrid__column-header__menu-tool';
-
-type TypeState = {
-  keepVisible: boolean;
-};
 
 type TypeRenderMenuTool = (props: {
   className: string;
@@ -29,70 +25,53 @@ type TypeProps = {
   renderMenuTool?: TypeRenderMenuTool;
 };
 
-export class MenuTool extends React.Component<TypeProps, TypeState> {
-  domRef: any;
-  _unmounted: any;
+export const MenuTool = (props: TypeProps) => {
+  const [keepVisible, setKeepVisible] = useState(false);
 
-  constructor(props: any) {
-    super(props);
+  const domRef: any = useRef();
+  const _unmounted: any = useRef();
 
-    this.state = {
-      keepVisible: false,
+  useEffect(() => {
+    return () => {
+      _unmounted.current = true;
     };
+  }, []);
 
-    this.domRef = React.createRef();
-
-    this.onClick = this.onClick.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onHide = this.onHide.bind(this);
-  }
-
-  componentWillUnmount() {
-    this._unmounted = true;
-  }
-
-  onClick(event: any) {
+  const onClick = (event: any) => {
     event.stopPropagation();
-  }
+  };
 
-  onMouseDown(event: any) {
+  const onMouseDown = (event: any) => {
     // prevent default, in order to avoid blurring the grid
     event.preventDefault();
-    this.props.showContextMenu &&
-      this.props.showContextMenu(
-        this,
-        this.props.showOnHover ? this.onHide : null
-      );
+    props.showContextMenu &&
+      props.showContextMenu(domRef.current, props.showOnHover ? onHide : null);
 
-    if (this._unmounted) {
+    if (_unmounted.current) {
       return;
     }
 
-    if (this.props.showOnHover && !this.state.keepVisible) {
-      this.setState({
-        keepVisible: true,
-      });
+    if (props.showOnHover && !keepVisible) {
+      setKeepVisible(true);
     }
-  }
+  };
 
-  onHide() {
-    if (this._unmounted) {
+  const onHide = () => {
+    if (_unmounted.current) {
       return;
     }
-    this.setState({
-      keepVisible: false,
-    });
-  }
+    setKeepVisible(false);
+  };
 
-  renderMenuTool = () => {
+  const renderMenuTool = () => {
     const domProps = {
       className: join('', 'InovuaReactDataGrid__sort-icon--desc'),
       width: 14,
       height: 12,
     };
 
-    if (this.props.renderMenuTool) {
-      return this.props.renderMenuTool(domProps);
+    if (props.renderMenuTool) {
+      return props.renderMenuTool(domProps);
     }
 
     return (
@@ -106,32 +85,30 @@ export class MenuTool extends React.Component<TypeProps, TypeState> {
     );
   };
 
-  render() {
-    let className = BASE_CLASS_NAME;
+  let className = BASE_CLASS_NAME;
 
-    const { showOnHover, rtl } = this.props;
+  const { showOnHover, rtl } = props;
 
-    if (showOnHover) {
-      className += ` ${BASE_CLASS_NAME}--show-on-hover`;
-    }
-    if (!showOnHover || this.state.keepVisible) {
-      className += ` ${BASE_CLASS_NAME}--visible`;
-    }
-
-    className += ` ${BASE_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`;
-
-    return (
-      <div
-        className={className}
-        onMouseDown={this.onMouseDown}
-        onClick={this.onClick}
-        ref={this.domRef}
-      >
-        {this.renderMenuTool()}
-      </div>
-    );
+  if (showOnHover) {
+    className += ` ${BASE_CLASS_NAME}--show-on-hover`;
   }
-}
+  if (!showOnHover || keepVisible) {
+    className += ` ${BASE_CLASS_NAME}--visible`;
+  }
+
+  className += ` ${BASE_CLASS_NAME}--direction-${rtl ? 'rtl' : 'ltr'}`;
+
+  return (
+    <div
+      className={className}
+      onMouseDown={onMouseDown}
+      onClick={onClick}
+      ref={domRef}
+    >
+      {renderMenuTool()}
+    </div>
+  );
+};
 
 type TypeMenuToolProps = {
   groupSpacerColumn?: boolean;
