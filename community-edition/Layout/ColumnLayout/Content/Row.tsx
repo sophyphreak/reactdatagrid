@@ -137,7 +137,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     return domRef.current;
   }, []);
 
-  const setActiveRowRef = useCallback(() => {
+  const setActiveRowRef = () => {
     props.activeRowRef.current = {
       instance: {
         hasBorderBottom: hasBorderBottom.current,
@@ -146,7 +146,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       },
       node: getDOMNode(),
     };
-  }, [props.activeRowRef]);
+  };
 
   if (props.active) {
     setActiveRowRef();

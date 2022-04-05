@@ -59,3 +59,13 @@
   width: 14px;
   height: 14px;
 }
+
+.datagrid-demo__avatar-column.datagrid-demo__avatar-column.datagrid-demo__avatar-column {
+  min-height: 39px;
+
+  .InovuaReactDataGrid__cell__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

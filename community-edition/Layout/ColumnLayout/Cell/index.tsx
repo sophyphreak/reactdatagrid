@@ -478,7 +478,7 @@ export default class InovuaDataGridCell extends React.Component {
         this.state && this.state.left && `${baseClassName}--reordered`,
         props.computedSortable && `${baseClassName}--sortable`,
         headerUserSelect && `${baseClassName}--user-select-${headerUserSelect}`,
-        last && !headerEllipsis && `${baseClassName}--overflow-hidden`,
+        // last && !headerEllipsis && `${baseClassName}--overflow-hidden`,
         `${baseClassName}--align-${props.headerAlign || 'start'}`,
         props.group
           ? `${baseClassName}--has-group`

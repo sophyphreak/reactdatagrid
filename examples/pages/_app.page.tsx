@@ -25,6 +25,16 @@ import '../../community-edition/style/theme/pink-dark/index.scss';
 import '../pages/prop-checkboxColumn/prop-checkboxColumns.scss';
 
 import './index.scss';
+// import './demo/components/avatar/index.scss';
+// import './demo/components/avatarLetters/index.scss';
+// import './demo/components/combo/index.scss';
+// import './demo/components/label/index.scss';
+// import './demo/components/numberInput/index.scss';
+// import './demo/components/promiseImg/index.scss';
+// import './demo/components/radio/index.scss';
+// import './demo/components/section/index.scss';
+// import './demo/components/separator/index.scss';
+// import './demo/components/switch/index.scss';
 
 import ReactDataGridEnterprise from '../../enterprise-edition';
 import ReactDataGridCommunity from '../../community-edition';
