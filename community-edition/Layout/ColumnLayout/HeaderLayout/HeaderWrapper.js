@@ -8,7 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import getScrollbarWidth from '../../../packages/getScrollbarWidth';
 import Header from './Header';
-const fixScrollLeft = event => {
+const fixScrollLeft = (event) => {
     const target = event.currentTarget;
     requestAnimationFrame(() => {
         if (target.scrollLeft) {

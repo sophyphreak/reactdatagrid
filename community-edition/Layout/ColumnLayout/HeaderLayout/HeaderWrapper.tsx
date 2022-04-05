@@ -11,7 +11,7 @@ import getScrollbarWidth from '../../../packages/getScrollbarWidth';
 
 import Header from './Header';
 
-const fixScrollLeft = event => {
+const fixScrollLeft = (event: any) => {
   const target = event.currentTarget;
 
   requestAnimationFrame(() => {
@@ -22,12 +22,12 @@ const fixScrollLeft = event => {
 };
 
 export default class HeaderWrapper extends React.Component<any> {
-  getSortedColumnsInfo = ({ computedSortInfo, columnsMap }) => {
+  getSortedColumnsInfo = ({ computedSortInfo, columnsMap }: any) => {
     if (!computedSortInfo) {
       return;
     }
 
-    let sortedColumnsInfo = [];
+    let sortedColumnsInfo: any[] = [];
     if (Array.isArray(computedSortInfo)) {
       computedSortInfo.map(sortInfo => {
         sortedColumnsInfo.push(columnsMap[sortInfo.name]);
@@ -211,7 +211,7 @@ export default class HeaderWrapper extends React.Component<any> {
   }
 }
 
-HeaderWrapper.propTypes = {
+(HeaderWrapper as any).propTypes = {
   visibleColumns: PropTypes.array.isRequired,
   columnsMap: PropTypes.object.isRequired,
   deselectAll: PropTypes.func,
