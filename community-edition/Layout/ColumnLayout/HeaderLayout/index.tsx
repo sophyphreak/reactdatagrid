@@ -269,7 +269,7 @@ class ReorderArrow extends React.Component {
           left,
           right,
           width: size,
-          height: bottom - top,
+          height: '100%',
           bottom,
 
           pointerEvents: 'none',
