@@ -49,7 +49,6 @@ const DataGrid = (props: any) => {
   }, [columnsCount]);
 
   const columns = useMemo(() => {
-    console.log('RENDER COLUMNS');
     return buildColumns(columnsArray);
   }, [columnsArray]);
   const emptyText = (

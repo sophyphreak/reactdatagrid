@@ -39,7 +39,7 @@ export default function (props, state, domNode) {
      * the page can be scrolled and the menu should
      * check again if the submenu fits in the constrain.
      */
-    if (!this.aligning) {
+    if (!this.aligning && !sameMenu) {
         setTimeout(() => {
             if (!this.componentIsMounted) {
                 return;
