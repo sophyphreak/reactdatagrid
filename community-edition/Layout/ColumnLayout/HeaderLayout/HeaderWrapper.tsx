@@ -200,6 +200,8 @@ export default class HeaderWrapper extends React.Component<any> {
           renderRowDetailsMoreIcon={renderRowDetailsMoreIcon}
           hideColumnContextMenu={hideColumnContextMenu}
           updateMenuPosition={updateMenuPosition}
+          computedFilterable={props.computedFilterable}
+          filterRowHeight={props.filterRowHeight}
         />
         <div className="InovuaReactDataGrid__header-wrapper__fill">
           {props.computedFilterable && (
@@ -229,4 +231,6 @@ export default class HeaderWrapper extends React.Component<any> {
   lastUnlockedIndex: PropTypes.number,
   computedEnableColumnHover: PropTypes.bool,
   renderRowDetailsMoreIcon: PropTypes.func,
+  computedFilterable: PropTypes.bool,
+  filterRowHeight: PropTypes.number,
 };

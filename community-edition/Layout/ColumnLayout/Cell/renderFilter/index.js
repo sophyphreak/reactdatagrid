@@ -108,6 +108,9 @@ class GenericFilter extends React.Component {
             }
         }
         let settings;
+        let style = {
+            minHeight: props.filterRowHeight + 1, // adding the border
+        };
         if (filterValue) {
             const settingsIconClassName = 'InovuaReactDataGrid__column-header__filter-settings-icon';
             const settingsIcon = props.filterEditorProps && props.filterEditorProps.renderSettings ? (props.filterEditorProps.renderSettings({
@@ -119,7 +122,7 @@ class GenericFilter extends React.Component {
         }
         if (!filterValue) {
             className += ` ${filterWrapperClassName}--empty`;
-            return React.createElement("div", { className: className });
+            return React.createElement("div", { style: style, className: className });
         }
         const { filterTypes } = props;
         const filterTypeDescription = filterTypes[filterType] || { operators: [] };
@@ -144,7 +147,7 @@ class GenericFilter extends React.Component {
             filterType,
             theme: props.theme,
             render: (node) => {
-                return (React.createElement("div", { className: className },
+                return (React.createElement("div", { style: style, className: className },
                     node,
                     props.enableColumnFilterContextMenu && settings));
             },

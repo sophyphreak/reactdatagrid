@@ -1677,6 +1677,7 @@ const GridFactory = (
     idProperty: 'id',
     rowHeight: 40,
     headerHeight: 40,
+    filterRowHeight: 40,
     minRowHeight: 20,
     nativeScroll: false,
     autoCheckboxColumn: false,

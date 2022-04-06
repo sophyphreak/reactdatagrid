@@ -290,9 +290,7 @@ export default class InovuaDataGridCell extends React.Component {
                 `${baseClassName}--cell-has-${rtl ? 'left' : 'right'}-selected-sibling`);
         }
         if (isHeaderCell) {
-            className = join(className, commonClassName, props.headerClassName, props.titleClassName, this.state && this.state.dragging && `${baseClassName}--dragging`, this.state && this.state.left && `${baseClassName}--reordered`, props.computedSortable && `${baseClassName}--sortable`, headerUserSelect && `${baseClassName}--user-select-${headerUserSelect}`, 
-            // last && !headerEllipsis && `${baseClassName}--overflow-hidden`,
-            `${baseClassName}--align-${props.headerAlign || 'start'}`, props.group
+            className = join(className, commonClassName, props.headerClassName, props.titleClassName, this.state && this.state.dragging && `${baseClassName}--dragging`, this.state && this.state.left && `${baseClassName}--reordered`, props.computedSortable && `${baseClassName}--sortable`, headerUserSelect && `${baseClassName}--user-select-${headerUserSelect}`, last && !headerEllipsis && `${baseClassName}--overflow-hidden`, `${baseClassName}--align-${props.headerAlign || 'start'}`, props.group
                 ? `${baseClassName}--has-group`
                 : `${baseClassName}--has-no-group`, props.headerVerticalAlign &&
                 `${baseClassName}--vertical-align-${props.headerVerticalAlign}`, props.computedResizable

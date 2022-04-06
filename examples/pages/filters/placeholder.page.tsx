@@ -13,7 +13,7 @@ import people from '../people';
 import flags from '../flags';
 import moment from 'moment';
 
-const gridStyle = { minHeight: 600 };
+const gridStyle = { minHeight: 400 };
 
 const COUNTRIES = {
   ca: 'Canada',
@@ -59,6 +59,7 @@ const columns = [
     name: 'name',
     header: 'Name',
     defaultFlex: 1,
+    minWidth: 180,
     filterEditorProps: {
       placeholder: 'Name',
     },
@@ -67,6 +68,7 @@ const columns = [
     name: 'age',
     header: 'Age',
     defaultFlex: 1,
+    minWidth: 180,
     type: 'number',
     filterEditorProps: { placeholder: 'Age' },
     filterEditor: NumberFilter,
@@ -75,6 +77,7 @@ const columns = [
     name: 'country',
     header: 'Country',
     defaultFlex: 1,
+    minWidth: 180,
     filterEditor: SelectFilter,
     filterEditorProps: {
       placeholder: 'All',
@@ -103,9 +106,16 @@ const columns = [
     },
   },
   {
+    name: 'email',
+    header: 'Email',
+    defaultFlex: 1,
+    minWidth: 180,
+  },
+  {
     name: 'student',
     header: 'Student',
     defaultFlex: 1,
+    minWidth: 180,
     filterEditor: BoolFilter,
     render: ({ data }) => {
       return data.student ? 'Yes' : 'No';
@@ -115,6 +125,7 @@ const columns = [
     name: 'city',
     header: 'City',
     defaultFlex: 1,
+    minWidth: 180,
     filterEditorProps: { placeholder: 'City' },
   },
 ];

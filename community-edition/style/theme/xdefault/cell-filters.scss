@@ -9,7 +9,7 @@
 
 .InovuaReactDataGrid--theme-#{$THEME_NAME} {
   .InovuaReactDataGrid__column-header__filter-wrapper {
-    min-height: $INOVUA_DATAGRID_FILTER_ROW_HEIGHT;
+    // min-height: $INOVUA_DATAGRID_FILTER_ROW_HEIGHT;
     border: 0;
     background: $INOVUA_DATAGRID_BG_COLOR;
     border-top: 1px solid $INOVUA_DATAGRID_HEADER_BORDER_COLOR;

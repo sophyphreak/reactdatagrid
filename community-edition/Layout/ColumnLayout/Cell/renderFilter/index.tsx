@@ -147,6 +147,9 @@ class GenericFilter extends React.Component<
     }
 
     let settings: any;
+    let style: any = {
+      minHeight: props.filterRowHeight + 1, // adding the border
+    };
 
     if (filterValue) {
       const settingsIconClassName =
@@ -185,7 +188,7 @@ class GenericFilter extends React.Component<
 
     if (!filterValue) {
       className += ` ${filterWrapperClassName}--empty`;
-      return <div className={className} />;
+      return <div style={style} className={className} />;
     }
 
     const { filterTypes } = props;
@@ -217,7 +220,7 @@ class GenericFilter extends React.Component<
 
       render: (node: ReactNode) => {
         return (
-          <div className={className}>
+          <div style={style} className={className}>
             {node}
             {props.enableColumnFilterContextMenu && settings}
           </div>

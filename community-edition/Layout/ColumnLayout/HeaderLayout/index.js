@@ -198,7 +198,7 @@ class ReorderArrow extends React.Component {
         }
     }
     render() {
-        const { size } = this.props;
+        const { size, headerHeight } = this.props;
         const { bottom, top, left, right, visible, target } = this.state;
         return (React.createElement("div", { ref: this.refReorderArrow, style: {
                 position: 'absolute',
@@ -206,7 +206,7 @@ class ReorderArrow extends React.Component {
                 left,
                 right,
                 width: size,
-                height: '100%',
+                height: headerHeight,
                 bottom,
                 pointerEvents: 'none',
                 opacity: visible ? 1 : 0,
@@ -534,7 +534,7 @@ export default class InovuaDataGridHeaderLayout extends Component {
     }
     renderReorderIndicator() {
         const size = this.props.reorderProxySize;
-        return (React.createElement(ReorderArrow, { ref: this.refReorderArrow, size: size, rtl: this.props.rtl, renderReorderIndicator: this.props.renderReorderIndicator }));
+        return (React.createElement(ReorderArrow, { ref: this.refReorderArrow, size: size, rtl: this.props.rtl, renderReorderIndicator: this.props.renderReorderIndicator, headerHeight: this.props.headerHeight }));
     }
     setReorderArrowAt(index, ranges, target, offset = 0, visible) {
         visible =

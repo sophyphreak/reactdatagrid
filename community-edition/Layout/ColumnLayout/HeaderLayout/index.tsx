@@ -257,7 +257,7 @@ class ReorderArrow extends React.Component {
     }
   }
   render() {
-    const { size } = this.props;
+    const { size, headerHeight } = this.props;
     const { bottom, top, left, right, visible, target } = this.state;
 
     return (
@@ -269,7 +269,7 @@ class ReorderArrow extends React.Component {
           left,
           right,
           width: size,
-          height: '100%',
+          height: headerHeight,
           bottom,
 
           pointerEvents: 'none',
@@ -761,6 +761,7 @@ export default class InovuaDataGridHeaderLayout extends Component {
         size={size}
         rtl={this.props.rtl}
         renderReorderIndicator={this.props.renderReorderIndicator}
+        headerHeight={this.props.headerHeight}
       />
     );
   }

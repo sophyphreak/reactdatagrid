@@ -141,6 +141,8 @@ const propTypes = {
   renderRowDetailsMoreIcon: PropTypes.func,
   hideColumnContextMenu: PropTypes.func,
   updateMenuPosition: PropTypes.func,
+  computedFilterable: PropTypes.bool,
+  filterRowHeight: PropTypes.number,
 };
 
 type TypeHeaderProps = {} | any;
@@ -432,6 +434,9 @@ export default class InovuaDataGridHeader extends React.Component<
     if (headerHeight) {
       style.height = headerHeight;
     }
+    if (props.computedFilterable) {
+      style.height += props.filterRowHeight;
+    }
 
     style.zIndex = style.zIndex || 100 - (index || 0);
     const scrollLeft =
@@ -647,6 +652,7 @@ export default class InovuaDataGridHeader extends React.Component<
       renderRowDetailsMoreIcon,
       hideColumnContextMenu,
       updateMenuPosition,
+      filterRowHeight,
     } = props;
 
     let columns = props.columns;
@@ -678,6 +684,10 @@ export default class InovuaDataGridHeader extends React.Component<
           cellStyle = {};
         }
         cellStyle.height = props.headerHeight;
+
+        if (props.computedFilterable) {
+          cellStyle.height += props.filterRowHeight;
+        }
       }
 
       const defaults = {
@@ -745,6 +755,7 @@ export default class InovuaDataGridHeader extends React.Component<
         renderRowDetailsMoreIcon,
         hideColumnContextMenu,
         updateMenuPosition,
+        filterRowHeight,
       });
 
       cellProps.onFocus = this.onHeaderCellFocus.bind(this, cellProps, column);

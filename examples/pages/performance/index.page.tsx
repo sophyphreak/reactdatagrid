@@ -135,7 +135,7 @@ const App = () => {
         // onEditStop={editable ? onEditStop : undefined}
         // multiSelect={multiSelect}
         // checkboxColumn={checkboxColumn}
-        enableColumnHover
+        // enableColumnHover
       />
     </div>
   );
