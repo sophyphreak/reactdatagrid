@@ -200,6 +200,10 @@ export default class InovuaDataGridHeader extends React.Component<
       });
     }
 
+    if (prevProps.hasLockedStart && !this.props.hasLockedStart) {
+      setTimeout(() => this.updateColumns(), 0);
+    }
+
     if (
       (this.props.virtualizeColumns &&
         prevProps.columnRenderCount !== this.props.columnRenderCount) ||
