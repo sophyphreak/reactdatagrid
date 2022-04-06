@@ -16,7 +16,7 @@ import { getGlobal } from '../../../getGlobal';
 
 const globalObject = getGlobal();
 
-class InovuaButton extends Component<any> {
+class InovuaButton extends Component<any, any> {
   constructor(props) {
     super(props);
 
@@ -44,6 +44,10 @@ class InovuaButton extends Component<any> {
     if (!prevProps.disabled && this.props.disabled && prevState.focused) {
       this.handleBlur();
       this.setState({ mouseOver: false });
+    }
+
+    if (prevProps.disabled && !this.props.disabled && this.state.focused) {
+      this.handleBlur();
     }
   };
 

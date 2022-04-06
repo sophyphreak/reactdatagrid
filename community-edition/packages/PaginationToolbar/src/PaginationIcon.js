@@ -9,13 +9,11 @@ import PropTypes from 'prop-types';
 import Button from '../../Button';
 import join from '../../../common/join';
 const ICON_CLASS_NAME = 'inovua-react-pagination-toolbar__icon';
-export default class PaginationIcon extends React.Component {
-    render() {
-        const { icon, size, disabled, action, name, theme } = this.props;
-        const className = join(ICON_CLASS_NAME, `${ICON_CLASS_NAME}--named--${name}`);
-        return (React.createElement(Button, { disabled: disabled, className: className, icon: cloneElement(icon, { width: size, height: size }), onClick: action, theme: theme }));
-    }
-}
+const PaginationIcon = (props) => {
+    const { icon, size, disabled, action, name, theme } = props;
+    const className = join(ICON_CLASS_NAME, `${ICON_CLASS_NAME}--named--${name}`);
+    return (React.createElement(Button, { disabled: disabled, className: className, icon: cloneElement(icon, { width: size, height: size }), onClick: action, theme: theme }));
+};
 PaginationIcon.propTypes = {
     name: PropTypes.string,
     action: PropTypes.func,
@@ -23,3 +21,4 @@ PaginationIcon.propTypes = {
     icon: PropTypes.node,
     size: PropTypes.number,
 };
+export default PaginationIcon;

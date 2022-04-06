@@ -37,6 +37,9 @@ class InovuaButton extends Component {
             this.handleBlur();
             this.setState({ mouseOver: false });
         }
+        if (prevProps.disabled && !this.props.disabled && this.state.focused) {
+            this.handleBlur();
+        }
     };
     handleKeyDown(event) {
         const { key } = event;
