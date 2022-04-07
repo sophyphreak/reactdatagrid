@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import ReactDataGrid from '../../../community-edition';
+import Button from '../../../community-edition/packages/Button';
 import people from '../people';
 
 const gridStyle = { minHeight: 550 };
@@ -38,6 +39,11 @@ const columns = [
 
 const App = () => {
   const [dataSource, setDataSource] = useState(people);
+  const [gridRef, setGridRef] = useState(null);
+
+  useEffect(() => {
+    // console.log('grid ref: ', gridRef);
+  }, [gridRef]);
 
   const onEditComplete = useCallback(
     ({ value, columnId, rowIndex }) => {
@@ -49,15 +55,22 @@ const App = () => {
     [dataSource]
   );
 
+  const startEdit = () => {
+    gridRef.current.startEdit({ columnId: 'name', rowIndex: 3 });
+  };
+
   return (
     <div>
       <h3>Grid with inline edit</h3>
+      <div style={{ marginBottom: 20 }}>
+        <Button onClick={startEdit}>Start edit</Button>
+      </div>
+
       <ReactDataGrid
         idProperty="id"
-        theme="default-dark"
+        handle={setGridRef}
         defaultGroupBy={[]}
         style={gridStyle}
-        licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         onEditComplete={onEditComplete}
         editable={true}
         columns={columns}

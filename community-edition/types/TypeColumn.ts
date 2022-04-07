@@ -5,10 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { CSSProperties } from 'react';
+import { CSSProperties, FC, Component, ReactNode } from 'react';
 import { TypeSortInfo } from './TypeSortInfo';
 import { TypeLockedRow, TypeComputedProps, TypeFooterRow } from '.';
-import { FC, Component, ReactNode } from 'react';
 import { CellProps } from '../Layout/ColumnLayout/Cell/CellProps';
 
 export type TypeSummaryReducer<T = any> = {
@@ -58,7 +57,9 @@ export interface IColumn {
   readonly resizable?: boolean;
   readonly draggable?: boolean;
   readonly lockable?: boolean;
-  readonly editable?: boolean;
+  readonly editable?:
+    | boolean
+    | ((editValue: string, cellProps: CellProps) => void);
   readonly dateFormat?: string;
   readonly hideable?: boolean;
   readonly filterable?: boolean;
@@ -120,7 +121,7 @@ export interface IColumn {
   readonly headerProps?: TypeHeaderProps;
   readonly renderEditor?: (editorProps: any) => ReactNode;
   readonly editor?: ReactNode;
-  readonly renderHeader?: (cellProps: CellProps) => string;
+  readonly renderHeader?: (cellProps: CellProps) => string | ReactNode;
 }
 
 export interface TypeColWithNameProperty extends IColumn {

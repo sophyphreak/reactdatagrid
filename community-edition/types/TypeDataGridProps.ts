@@ -1357,6 +1357,39 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
     columnId: number | string;
     dir: number;
   }) => void;
+  startEdit?: ({
+    rowIndex,
+    rowId,
+    columnId,
+    dir,
+    value,
+  }: {
+    rowIndex?: number;
+    rowId?: string;
+    columnId: string;
+    dir: number;
+    value: any;
+  }) => void;
+  completeEdit?: ({
+    rowId,
+    rowIndex,
+    dir,
+    columnId,
+    value,
+  }: {
+    rowId?: string;
+    rowIndex?: number;
+    dir: number;
+    columnId: string;
+    value: any;
+  }) => void;
+  cancelEdit?: ({
+    rowIndex,
+    columnId,
+  }: {
+    rowIndex?: number;
+    columnId?: string;
+  }) => void;
   compoundIdProperty?: boolean;
 };
 
