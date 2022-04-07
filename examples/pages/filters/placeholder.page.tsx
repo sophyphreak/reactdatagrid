@@ -58,6 +58,7 @@ const columns = [
   {
     name: 'name',
     header: 'Name',
+    group: 'personalInfo',
     defaultFlex: 1,
     minWidth: 180,
     filterEditorProps: {
@@ -67,6 +68,7 @@ const columns = [
   {
     name: 'age',
     header: 'Age',
+    group: 'personalInfo',
     defaultFlex: 1,
     minWidth: 180,
     type: 'number',
@@ -130,6 +132,13 @@ const columns = [
   },
 ];
 
+const groups = [
+  { name: 'street', group: 'location', header: 'Street' },
+  { name: 'personalInfo', header: 'Personal info' },
+  { name: 'contactInfo', header: 'Contact info' },
+  { name: 'location', header: 'Location' },
+];
+
 const App = () => {
   const [dataSource, setDataSource] = useState(people);
   const [filterValue, setFilterValue] = useState(defaultFilterValue);
@@ -156,6 +165,7 @@ const App = () => {
         columns={columns}
         dataSource={dataSource}
         filteredRowsCount={filteredRowsCount}
+        groups={groups}
       />
       <p>
         Delete the filters if you want to show all data. You can click the
