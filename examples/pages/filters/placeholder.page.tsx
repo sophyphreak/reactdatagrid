@@ -58,7 +58,6 @@ const columns = [
   {
     name: 'name',
     header: 'Name',
-    group: 'personalInfo',
     defaultFlex: 1,
     minWidth: 180,
     filterEditorProps: {
@@ -78,6 +77,7 @@ const columns = [
   {
     name: 'country',
     header: 'Country',
+    group: 'personalInfo',
     defaultFlex: 1,
     minWidth: 180,
     filterEditor: SelectFilter,
@@ -166,6 +166,8 @@ const App = () => {
         dataSource={dataSource}
         filteredRowsCount={filteredRowsCount}
         groups={groups}
+        defaultGroupBy={[]}
+        pagination
       />
       <p>
         Delete the filters if you want to show all data. You can click the

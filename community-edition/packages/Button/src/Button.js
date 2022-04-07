@@ -101,9 +101,9 @@ class InovuaButton extends Component {
         this.props.onFocus(event);
     }
     handleBlur(event) {
-        if (this.props.disabled) {
-            return;
-        }
+        // if (this.props.disabled) {
+        //   return;
+        // }
         this.setState({ focused: false });
         this.props.onBlur(event);
     }
