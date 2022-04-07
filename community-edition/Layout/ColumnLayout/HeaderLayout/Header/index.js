@@ -327,9 +327,9 @@ export default class InovuaDataGridHeader extends React.Component {
         }
         if (headerHeight) {
             style.height = headerHeight;
-        }
-        if (props.computedFilterable) {
-            style.height += props.filterRowHeight;
+            if (props.computedFilterable) {
+                style.height += props.filterRowHeight;
+            }
         }
         style.zIndex = style.zIndex || 100 - (index || 0);
         const scrollLeft = 

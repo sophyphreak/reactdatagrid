@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
+import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
 const columns = [
   {
@@ -96,16 +97,27 @@ const dataSource = [
 ];
 const gridStyle = { minHeight: 550 };
 
-export default () => (
-  <div>
-    <h3>Stacked columns example</h3>
-    <ReactDataGrid
-      idProperty="id"
-      style={gridStyle}
-      columnMinWidth={100}
-      columns={columns}
-      groups={groups}
-      dataSource={dataSource}
-    />
-  </div>
-);
+export default () => {
+  const [stackedHeaders, setStackedHeaders] = useState(false);
+
+  return (
+    <div>
+      <h3>Stacked columns example</h3>
+      <div style={{ marginBottom: '20px' }}>
+        <CheckBox checked={stackedHeaders} onChange={setStackedHeaders}>
+          Stacked headers
+        </CheckBox>
+      </div>
+      <ReactDataGrid
+        idProperty="id"
+        style={gridStyle}
+        columnMinWidth={100}
+        columns={columns}
+        groups={stackedHeaders ? groups : undefined}
+        dataSource={dataSource}
+        pagination
+        defaultGroupBy={[]}
+      />
+    </div>
+  );
+};

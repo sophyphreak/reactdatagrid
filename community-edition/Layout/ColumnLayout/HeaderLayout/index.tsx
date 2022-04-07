@@ -77,7 +77,7 @@ const getColumnOrder = (props, filter) => {
 //     Contact                |
 // ----------------------------
 //    Address       |         |
-// _________________|   Office|
+// _________________|   Office |
 //   Street | City  |         |
 // ---------------------------|
 
@@ -257,7 +257,7 @@ class ReorderArrow extends React.Component {
     }
   }
   render() {
-    const { size, headerHeight } = this.props;
+    const { size } = this.props;
     const { bottom, top, left, right, visible, target } = this.state;
 
     return (
@@ -269,7 +269,7 @@ class ReorderArrow extends React.Component {
           left,
           right,
           width: size,
-          height: headerHeight,
+          height: bottom - top,
           bottom,
 
           pointerEvents: 'none',
@@ -761,7 +761,6 @@ export default class InovuaDataGridHeaderLayout extends Component {
         size={size}
         rtl={this.props.rtl}
         renderReorderIndicator={this.props.renderReorderIndicator}
-        headerHeight={this.props.headerHeight}
       />
     );
   }
