@@ -51,6 +51,7 @@ const DataGrid = (props: any) => {
   const columns = useMemo(() => {
     return buildColumns(columnsArray);
   }, [columnsArray]);
+
   const emptyText = (
     <div style={{ fontSize: 14, color: '#9ba7b4' }}>No records available</div>
   );

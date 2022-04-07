@@ -164,7 +164,9 @@ export default class InovuaDataGridHeader extends React.Component {
             this.props.selectedCount !== prevProps.selectedCount ||
             this.props.unselectedCount !== prevProps.unselectedCount ||
             this.props.columns !== prevProps.columns ||
-            this.props.columnIndexHovered !== prevProps.columnIndexHovered) {
+            this.props.columnIndexHovered !== prevProps.columnIndexHovered ||
+            this.props.lockedStartColumns.length !==
+                prevProps.lockedStartColumns.length) {
             this.setState({
                 children: this.renderColumns(),
             });
