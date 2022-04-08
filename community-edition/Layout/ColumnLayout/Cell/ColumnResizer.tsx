@@ -57,15 +57,17 @@ export default class ColumnResizer extends Component<
 
   onMouseEnter() {
     const parent = this.domRef.current.parentElement;
-    const filterWrapper = parent
-      ? parent.querySelector(
-          '.InovuaReactDataGrid__column-header__filter-wrapper'
-        )
-      : null;
+    // const filterWrapper = parent
+    //   ? parent.querySelector(
+    //       '.InovuaReactDataGrid__column-header__filter-wrapper'
+    //     )
+    //   : null;
 
-    const overHeight = filterWrapper
-      ? parent.offsetHeight - filterWrapper.offsetHeight
-      : null;
+    // const overHeight = filterWrapper
+    //   ? parent.offsetHeight - filterWrapper.offsetHeight
+    //   : null;
+
+    const overHeight = parent ? parent.offsetHeight : null;
 
     this.overHeight = overHeight;
     this.setOver(true);
@@ -119,7 +121,10 @@ export default class ColumnResizer extends Component<
       resizeHandleClassName,
     } = this.props;
 
-    let style = props.style;
+    let style = {
+      ...props.style,
+      height: this.state.overHeight,
+    };
 
     const resizeHandleStyle = {
       ...props.resizeHandleStyle,
