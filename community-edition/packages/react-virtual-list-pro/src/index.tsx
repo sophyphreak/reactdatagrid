@@ -517,7 +517,7 @@ export default class InovuaVirtualList extends Component<TypeProps> {
       return;
     }
     this.mapping[r.props.index] = r;
-    this.rows ? (this.rows[r.props.index] = r) : null;
+    this.rows ? (this.rows[r.props.index] = r) : null; // TODO React 18
   };
 
   onScrollStart = (...args) => {
@@ -1181,7 +1181,7 @@ export default class InovuaVirtualList extends Component<TypeProps> {
 
   getCleanupRows = (props = this.props) => {
     const indexes = [];
-    const length = this.rows && this.rows.length;
+    const length = this.rows && this.rows.length; // TODO React 18
     const visibleCount = this.getVisibleCount(props);
 
     for (let i = visibleCount; i < length; i++) {
