@@ -6,7 +6,7 @@ import { useAppState, useAppActions } from '../../hooks';
 
 const gridStyles = {
   width: '100%',
-  height: 'calc(100vh - 124px)',
+  height: 'calc(100vh - 64px)',
   flex: 1,
   zIndex: 1,
 };
