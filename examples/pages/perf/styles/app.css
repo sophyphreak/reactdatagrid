@@ -1,8 +1,8 @@
 
 .app {
   padding: 20px;
-  height: calc(100vh - 90px);
-  background:#2e3439;
+  height: 100vh;
+  background:#2c333c;
   font-size: 15px;
 }
 
@@ -11,22 +11,12 @@
   max-width: 1562px;
   margin: 0 auto;
   height: 100%;
-  padding-top: 30px;
-}
-
-.app-content-menu-button {
-  background: transparent;
-  border: none;
-  fill: #9ba7b4;
-  margin-left: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  position: absolute;
-  top: 30px;
-  right: 40px;
+  padding-top: 75px;
 }
 
 .configurator {
   width: 300px;
+  height: calc(100%);
   margin-left: 8px;
   padding: 16px;
   background: #313943;
@@ -34,7 +24,6 @@
   display: flex;
   flex-direction: column;
   color: #9ba7b4;
-  position: relative;
 }
 
 .configurator-title {
@@ -46,26 +35,6 @@
 .configurator-button {
   width: auto;
 }
-
-.configurator-close-button {
-  border: none;
-  background: transparent;
-  position: absolute;
-  top: 10px;
-  right: 5px;
-  fill: #9ba7b4;
-  transition: fill 125ms ease-in-out;
-}
-
-.configurator-close-button:hover {
-  fill: #e8e8e8;
-}
-
-.configurator-close-button:active {
-  fill: #e8e8e8;
-  transform: translateY(1px);
-}
-
 
 .field-with-label-wrapper {
   display: flex;

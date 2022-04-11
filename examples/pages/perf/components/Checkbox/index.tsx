@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InovuaCheckbox from '@inovua/reactdatagrid-community/packages/CheckBox';
+import InovuaCheckbox from '@inovua/react-ui-toolkit/CheckBox';
 import { useAppState } from '../../hooks';
 
 const Checkbox = (props: any) => {

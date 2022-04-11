@@ -4,25 +4,23 @@ export type State = {
   dispatch?: any;
   actions?: any;
   data?: any[];
-  cols?: string;
+  columns?: any[];
   records?: number;
-  updateRecords?: number;
-  interval?: number;
-  load?: boolean;
-  cellSelection?: any;
-  columnsCount?: number;
+  reinit?: boolean;
   columnsArray?: string[];
+  columnsCount?: number;
+  loading?: boolean;
+  reload?: boolean;
 };
 
 export const initialState: State = {
   theme: 'default-dark',
   data: [],
-  cols: 'abcdefghijklmnopqrstuvwxyz',
+  columns: [],
   records: 1000,
-  updateRecords: 1000,
-  interval: 1000,
-  load: false,
-  cellSelection: {},
-  columnsCount: 30,
+  columnsCount: 50,
   columnsArray: [],
+  reinit: false,
+  loading: false,
+  reload: false,
 };

@@ -7,10 +7,10 @@ const buildDataSource = (
     return callback();
   }
 
-  const dataSource = [];
+  const dataSource: any = [];
 
   for (let i = 0; i < records; i++) {
-    const result = {
+    const result: any = {
       id: i,
     };
 
