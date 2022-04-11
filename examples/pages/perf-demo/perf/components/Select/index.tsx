@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComboBox from '@inovua/react-ui-toolkit/ComboBox';
+import ComboBox from '@inovua/reactdatagrid-community/packages/ComboBox';
 import { useAppState } from '../../hooks';
 
 const Select = (props: any) => {
