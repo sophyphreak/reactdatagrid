@@ -1,11 +1,8 @@
 const path = require('path');
-
 const SRC_PATH = path.resolve('../');
 
 const result = (phase, { defaultConfig }) => {
-  /**
-   * @type {import('next').NextConfig}
-   */
+  /** @type {import('next').NextConfig} */
 
   const webpack = config => {
     // Perform customizations to webpack config
@@ -41,6 +38,7 @@ const result = (phase, { defaultConfig }) => {
     webpack,
     pageExtensions: ['page.ts', 'page.tsx', 'js', 'jsx', 'ts', 'tsx'],
     webpack5: true,
+    reactStrictMode: true,
   };
   return nextConfig;
 };

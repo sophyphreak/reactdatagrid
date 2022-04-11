@@ -1,11 +1,4 @@
-/**
- * Copyright © INOVUA TRADING.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 
 const columns = [
@@ -36,20 +29,16 @@ const dataSource = [
 ];
 
 export default () => {
-  const [shouldShow, setShouldShow] = useState(true);
-
-  useEffect(() => {
-    setShouldShow(false);
-  }, []);
+  if (typeof window === 'undefined') {
+    return <></>;
+  }
 
   return (
-    shouldShow && (
-      <ReactDataGrid
-        idProperty="id"
-        columns={columns}
-        dataSource={dataSource}
-        style={gridStyle}
-      />
-    )
+    <ReactDataGrid
+      idProperty="id"
+      columns={columns}
+      dataSource={dataSource}
+      style={gridStyle}
+    />
   );
 };

@@ -1,11 +1,8 @@
-/**
- * Copyright © INOVUA TRADING.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+import React, { useState, useEffect } from 'react';
 
-import React from 'react';
+import '../styles/globals.css'
+import type { AppProps } from 'next/app'
+
 import '../../community-edition/style/base.scss';
 import '../../community-edition/style/theme/default-light/index.scss';
 import '../../community-edition/style/theme/default-dark/index.scss';
@@ -47,42 +44,52 @@ ReactDataGridEnterprise.defaultProps.theme = 'default-dark';
 (ReactDataGridEnterprise.defaultProps as any).licenseKey =
   process.env.NEXT_PUBLIC_LICENSE_KEY;
 ReactDataGridCommunity.defaultProps.theme = 'default-dark';
-CheckBox.defaultProps.theme = 'default-dark';
-Button.defaultProps.theme = 'default-dark';
-ComboBox.defaultProps.theme = 'default-dark';
-Menu.defaultProps.theme = 'default-dark';
+(CheckBox as any).defaultProps.theme = 'default-dark';
+(Button as any).defaultProps.theme = 'default-dark';
+(ComboBox as any).defaultProps.theme = 'default-dark';
+(Menu as any).defaultProps.theme = 'default-dark';
 
-function MyApp({ Component, pageProps }) {
-  if (!(process as any).browser) {
-    return null;
+
+function MyApp({ Component, pageProps }: AppProps) {
+  const [showChild, setShowChild] = useState(false);
+
+  useEffect(() => {
+    setShowChild(true);
+  }, [])
+
+  if (!showChild) {
+    return;
   }
 
-  return (
-    <>
-      <React.StrictMode>
+  if (typeof window === 'undefined') {
+    return <></>
+  } else {
+    return (
+      <>
         <Component {...pageProps} />
-      </React.StrictMode>
-
-      <style global jsx>
-        {`
-          body {
-            background: #2e3439;
-            color: #fafafa;
-            margin: 20px;
-            height: calc(100% - 40px);
-            width: calc(100% - 40px);
-          }
-
-          #__next {
-            height: 100%;
-          }
-          html {
-            height: 100vh;
-          }
-        `}
-      </style>
+  
+        <style global jsx>
+          {`
+            body {
+              background: #2e3439;
+              color: #fafafa;
+              margin: 20px;
+              height: calc(100% - 40px);
+              width: calc(100% - 40px);
+            }
+  
+            #__next {
+              height: 100%;
+            }
+            html {
+              height: 100vh;
+            }
+          `}
+        </style>
     </>
-  );
+    )
+  }
+
 }
 
-export default MyApp;
+export default MyApp
