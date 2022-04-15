@@ -7,14 +7,27 @@
 
 import React from 'react';
 import Checkbox from '../packages/CheckBox';
+import { CellProps } from '../types';
 
-const stopPropagation = e => {
+type TypeCheckboxProps = {
+  disabled?: boolean;
+  tabIndex?: number;
+  onClick?: (event: MouseEvent) => void;
+  supportIndeterminate?: boolean;
+  theme?: string;
+  className?: string;
+  checked?: any;
+  onChange?: ((...args: any[]) => any) | null;
+  isIndeterminate?: boolean;
+};
+
+const stopPropagation = (e: MouseEvent) => {
   e.stopPropagation();
 };
 
 const emptyObject = {};
 
-export default (cellProps, { headerProps } = emptyObject) => {
+export default (cellProps: CellProps, { headerProps }: any = emptyObject) => {
   const {
     selectAll,
     deselectAll,
@@ -22,7 +35,6 @@ export default (cellProps, { headerProps } = emptyObject) => {
     unselectedCount,
     totalCount,
     headerCell,
-    data,
     empty,
     rowIndex,
     rowSelected,
@@ -34,7 +46,7 @@ export default (cellProps, { headerProps } = emptyObject) => {
   if (empty && !renderCheckbox) {
     return null;
   }
-  const checkboxProps = {
+  const checkboxProps: TypeCheckboxProps = {
     disabled: empty,
     tabIndex: cellProps.checkboxTabIndex,
     onClick: stopPropagation,
@@ -61,7 +73,7 @@ export default (cellProps, { headerProps } = emptyObject) => {
       checked =
         selectedCount == 0 || !totalCount
           ? false
-          : totalCount <= selectedCount && unselectedCount === 0
+          : totalCount <= selectedCount! && unselectedCount === 0
           ? true
           : checkboxProps.supportIndeterminate
           ? null

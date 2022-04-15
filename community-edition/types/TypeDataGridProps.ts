@@ -713,6 +713,8 @@ type TypeDataGridPropsNoI18n = {
   idPropertySeparator: string;
   renderRowDetailsExpandIcon?: () => void;
   renderRowDetailsCollapsedIcon?: () => void;
+  treeGridChildrenSelectionEnabled?: boolean;
+  treeGridChildrenDeselectionEnabled?: boolean;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

@@ -6,12 +6,12 @@
  */
 import React from 'react';
 import Checkbox from '../packages/CheckBox';
-const stopPropagation = e => {
+const stopPropagation = (e) => {
     e.stopPropagation();
 };
 const emptyObject = {};
 export default (cellProps, { headerProps } = emptyObject) => {
-    const { selectAll, deselectAll, selectedCount, unselectedCount, totalCount, headerCell, data, empty, rowIndex, rowSelected, setRowSelected, renderCheckbox, hideIntermediateState, } = cellProps;
+    const { selectAll, deselectAll, selectedCount, unselectedCount, totalCount, headerCell, empty, rowIndex, rowSelected, setRowSelected, renderCheckbox, hideIntermediateState, } = cellProps;
     if (empty && !renderCheckbox) {
         return null;
     }

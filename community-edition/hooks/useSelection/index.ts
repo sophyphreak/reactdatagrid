@@ -611,6 +611,85 @@ export default (
     []
   );
 
+  const treeGridChildrenSelection = (
+    dataArray: any,
+    id: string,
+    selected: boolean,
+    clone: any,
+    treeGridChildrenDeselectionEnabled?: boolean,
+    parentNode?: any
+  ) => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    const idProperty = computedProps.idProperty;
+    const nodesName = computedProps.nodesProperty;
+    const pathSeparator = computedProps.nodePathSeparator;
+    const expandedNodes: any =
+      computedProps.computedExpandedNodes || EMPTY_OBJECT;
+    const generateIdFromPath = computedProps.generateIdFromPath;
+
+    for (let i = 0; i < dataArray.length; i++) {
+      const item = dataArray[i];
+
+      if (item) {
+        const itemId = item[idProperty];
+        const itemNodes = item[nodesName];
+        const parentNodeId = parentNode
+          ? `${parentNode[idProperty]}`
+          : undefined;
+        const path = parentNode
+          ? `${parentNodeId}${pathSeparator}${itemId}`
+          : `${itemId}`;
+
+        if (generateIdFromPath) {
+          item[idProperty] = path;
+        }
+
+        const idLength = id.split(pathSeparator)?.length;
+        const idFromPath = path
+          .split(pathSeparator)
+          .slice(0, idLength)
+          .join(pathSeparator);
+
+        if (idFromPath === id) {
+          const treeData = computedProps.dataMap
+            ? computedProps.dataMap[path]
+            : null;
+          if (!treeData) {
+            continue;
+          }
+          if (selected) {
+            clone[path] = treeData;
+          } else {
+            if (treeGridChildrenDeselectionEnabled) {
+              delete clone[path];
+            } else {
+              delete clone[id];
+            }
+          }
+        }
+
+        if (expandedNodes && expandedNodes[itemId]) {
+          if (Array.isArray(itemNodes)) {
+            treeGridChildrenSelection(
+              itemNodes,
+              id,
+              selected,
+              clone,
+              treeGridChildrenDeselectionEnabled,
+              item
+            );
+          }
+        }
+      }
+    }
+
+    return clone;
+  };
+
   const setSelectedById = useCallback(
     (id: string, selected: boolean, queue?: TypeBatchUpdateQueue) => {
       const { current: computedProps } = computedPropsRef;
@@ -664,10 +743,29 @@ export default (
           }
         } else {
           clone = Object.assign({}, selectedMap);
-          if (selected) {
-            clone[id] = data;
+          if (
+            computedProps.computedTreeEnabled &&
+            computedProps.treeGridChildrenSelectionEnabled
+          ) {
+            const originalData: any = JSON.stringify(
+              computedProps.originalData || []
+            );
+            const cloneOriginalData = [...JSON.parse(originalData)];
+            const treeGridChildrenDeselectionEnabled =
+              computedProps.treeGridChildrenDeselectionEnabled;
+            treeGridChildrenSelection(
+              cloneOriginalData,
+              id,
+              selected,
+              clone,
+              treeGridChildrenDeselectionEnabled
+            );
           } else {
-            delete clone[id];
+            if (selected) {
+              clone[id] = data;
+            } else {
+              delete clone[id];
+            }
           }
         }
         notifySelection(computedProps, clone, data, unselectedMap, queue);
