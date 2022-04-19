@@ -17,6 +17,7 @@ import useProperty from '@inovua/reactdatagrid-community/hooks/useProperty';
 import batchUpdate from '@inovua/reactdatagrid-community/utils/batchUpdate';
 
 const EXPANDABLE_NODE_INFO: any = {};
+const EMPTY_OBJECT = {};
 
 const isNodeExpandableAt_FromProps = (
   computedPropsRef: MutableRefObject<TypeComputedProps | null>,
@@ -565,6 +566,72 @@ const useTreeColumn = (
     ? computedProps.initialProps.loadNodeOnce
     : computedProps.initialProps.loadNode;
 
+  const computeAllNodes = (
+    dataArray: any[],
+    config: any = EMPTY_OBJECT,
+    parentNode?: any,
+    result: { [key: string | number]: boolean } = {}
+  ) => {
+    const idProperty = config.idProperty;
+    const nodesName = config.nodesName;
+    const pathSeparator = config.pathSeparator;
+    const generateIdFromPath = computedProps.generateIdFromPath;
+
+    dataArray.forEach((item: any) => {
+      if (item) {
+        const itemId = item[idProperty];
+        const itemNodes = item[nodesName];
+        const parentNodeId = parentNode ? parentNode[idProperty] : undefined;
+        const path = parentNode
+          ? `${parentNodeId}${pathSeparator}${itemId}`
+          : `${itemId}`;
+
+        if (generateIdFromPath) {
+          item[idProperty] = path;
+        }
+
+        result[path] = true;
+
+        if (Array.isArray(itemNodes)) {
+          computeAllNodes(itemNodes, config, item, result);
+        }
+      }
+    });
+
+    return result;
+  };
+
+  const collapseAllTreeNodes = () => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    setExpandedNodes({});
+  };
+
+  const expandAllTreeNodes = () => {
+    const { current: computedProps } = computedPropsRef;
+    if (!computedProps) {
+      return;
+    }
+
+    const config = {
+      idProperty: !computedProps.compoundIdProperty
+        ? computedProps.idProperty
+        : 'id',
+      nodesName: computedProps.nodesProperty || 'nodes',
+      pathSeparator: computedProps.nodePathSeparator || '/',
+      generateIdFromPath: computedProps.generateIdFromPath,
+    };
+
+    const originalData: any = JSON.stringify(computedProps.originalData || []);
+    const cloneOriginalData = [...JSON.parse(originalData)];
+
+    const allNodes = computeAllNodes(cloneOriginalData, config);
+    setExpandedNodes(allNodes);
+  };
+
   return {
     clearNodeChildrenCache,
     toggleNodeExpand,
@@ -583,6 +650,8 @@ const useTreeColumn = (
     isNodeExpanded,
     setNodeExpandedAt,
     setNodeExpandedById,
+    collapseAllTreeNodes,
+    expandAllTreeNodes,
   };
 };
 
