@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
-const gridStyle = { minHeight: 750 };
+const gridStyle = { minHeight: 800 };
 
 const treeData = [
   {
@@ -80,6 +80,11 @@ const columns = [
   { name: 'size', header: 'Size', defaultWidth: 160 },
 ];
 
+const defaultFilterValue = [
+  { name: 'name', operator: 'startsWith', type: 'string', value: '' },
+  { name: 'size', operator: 'startsWith', type: 'string', value: '' },
+];
+
 const App = () => {
   const [expandedNodes, setExpandedNodes] = useState({
     1: true,
@@ -132,6 +137,8 @@ const App = () => {
         checkboxColumn
         treeGridChildrenSelectionEnabled={treeGridChildrenSelectionEnabled}
         treeGridChildrenDeselectionEnabled={treeGridChildrenDeselectionEnabled}
+        defaultFilterValue={defaultFilterValue}
+        pagination
       />
     </div>
   );

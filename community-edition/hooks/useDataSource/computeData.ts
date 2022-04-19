@@ -210,6 +210,7 @@ const computeData = (
             : 'id',
         });
       }
+      dataCountAfterFilter = config.data.length;
 
       return config;
     },

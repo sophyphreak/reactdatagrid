@@ -127,6 +127,7 @@ const computeData = (config, computedProps, batchUpdateQueue) => {
                     : 'id',
             });
         }
+        dataCountAfterFilter = config.data.length;
         return config;
     }, 
     // summary
