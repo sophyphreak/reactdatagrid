@@ -28,6 +28,7 @@ export {
   TypeFilterType,
   TypeFilterTypes,
   TypeFilterOperator,
+  TypeFilterParam,
 } from './TypeFilterValue';
 export {
   TypeDataGridProps,

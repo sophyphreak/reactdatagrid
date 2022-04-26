@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import ReactDataGrid from '@inovua/reactdatagrid-enterprise';
 import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 
-const gridStyle = { minHeight: 800 };
+const gridStyle = { minHeight: 1050 };
 
 const treeData = [
   {
@@ -11,37 +11,17 @@ const treeData = [
     name: 'Applications',
     folder: true,
     nodes: [
-      {
-        id: 1,
-        name: 'App store',
-        size: '4.5Mb',
-      },
-      {
-        id: 2,
-        name: 'iMovie',
-        size: '106Mb',
-      },
-      {
-        id: 3,
-        name: 'IRecall',
-        size: '200Mb',
-      },
+      { id: 1, name: 'App store', size: '4.5Mb' },
+      { id: 2, name: 'iMovie', size: '106Mb' },
+      { id: 3, name: 'IRecall', size: '200Mb' },
     ],
   },
   {
     id: 2,
     name: 'Documents',
     nodes: [
-      {
-        id: 1,
-        name: 'Todo.md',
-        size: '2Kb',
-      },
-      {
-        id: 2,
-        name: 'Calendar.md',
-        size: '15.2Kb',
-      },
+      { id: 1, name: 'Todo.md', size: '2Kb' },
+      { id: 2, name: 'Calendar.md', size: '15.2Kb' },
       { id: 3, name: 'Shopping list.csv', size: '20Kb' },
     ],
   },
@@ -53,17 +33,21 @@ const treeData = [
         id: 1,
         name: 'Email data',
         nodes: [
-          {
-            id: 1,
-            name: 'Personal.xls',
-            size: '100Gb',
-          },
+          { id: 1, name: 'Personal.xls', size: '100Gb' },
           {
             id: 2,
             name: 'Work.xls',
             nodes: [
               { id: 1, name: 'Business' },
-              { id: 2, name: 'Employee' },
+              {
+                id: 2,
+                name: 'Employee',
+                nodes: [
+                  { id: 1, name: 'Frontend Programmer' },
+                  { id: 2, name: 'Backend Programmer' },
+                  { id: 3, name: 'Tester' },
+                ],
+              },
               { id: 3, name: 'Secretary' },
             ],
           },
@@ -82,7 +66,12 @@ const columns = [
 
 const defaultFilterValue = [
   { name: 'name', operator: 'startsWith', type: 'string', value: '' },
-  { name: 'size', operator: 'startsWith', type: 'string', value: '' },
+  {
+    name: 'size',
+    operator: 'startsWith',
+    type: 'string',
+    value: '',
+  },
 ];
 
 const App = () => {
@@ -92,6 +81,7 @@ const App = () => {
     3: true,
     '3/1': true,
     '3/1/2': true,
+    '3/1/2/2': true,
   });
   const [
     treeGridChildrenSelectionEnabled,

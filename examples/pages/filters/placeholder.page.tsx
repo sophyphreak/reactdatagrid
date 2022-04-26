@@ -112,6 +112,7 @@ const columns = [
     header: 'Bith date',
     defualtFlex: 1,
     minWidth: 200,
+    dateFormat: 'MM-DD-YYYY',
     filterEditor: DateFilter,
     filterEditorProps: (props, { index }) => {
       // for range and notinrange operators, the index is 1 for the after field

@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { TypeColumn } from '.';
+
 export type TypeSingleFilterValue = {
   name: string;
   type: string;
@@ -13,6 +15,15 @@ export type TypeSingleFilterValue = {
   emptyValue?: any;
   fn?: (arg: any) => any;
   getFilterValue?: Function;
+  active?: boolean;
+};
+
+export type TypeFilterParam = {
+  column?: TypeColumn;
+  data?: any;
+  emptyValue?: string;
+  filterValue?: string | number;
+  value?: string | number;
 };
 
 export type TypeFilterValue = TypeSingleFilterValue[] | null;

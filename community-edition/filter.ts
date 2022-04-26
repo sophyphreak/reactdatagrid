@@ -6,16 +6,16 @@
  */
 
 import DEFAULT_FILTER_TYPES from './filterTypes';
-import { TypeSingleFilterValue, TypeColumn } from './types';
+import { TypeSingleFilterValue, TypeColumn, TypeFilterParam } from './types';
 
-export const buildTypeOperators = filterTypes => {
-  return Object.keys(filterTypes).reduce((acc, filterTypeName) => {
+export const buildTypeOperators = (filterTypes: any) => {
+  return Object.keys(filterTypes).reduce((acc: any, filterTypeName: any) => {
     const filterType = filterTypes[filterTypeName];
     if (!filterType || !filterType.operators) {
       return acc;
     }
     const operators = filterType.operators.reduce(
-      (operatorAccumulator, operator) => {
+      (operatorAccumulator: any, operator: any) => {
         operatorAccumulator[operator.name] = operator;
 
         return operatorAccumulator;
@@ -29,76 +29,147 @@ export const buildTypeOperators = filterTypes => {
   }, {});
 };
 
-export default (
-  data: any[],
-  filterValueArray: TypeSingleFilterValue[],
-  filterTypes = DEFAULT_FILTER_TYPES,
-  columnsMap?: { [key: string]: TypeColumn }
-) => {
-  const typeOperators = buildTypeOperators(filterTypes);
+export const buildFilterParam = (
+  item: any,
+  fv: TypeSingleFilterValue,
+  filterTypes: any = DEFAULT_FILTER_TYPES,
+  columnsMap: { [key: string]: TypeColumn } | undefined
+): TypeFilterParam => {
+  const filterParam: TypeFilterParam = {};
 
-  const filterFn = (item: any, index: number, data: any[]) => {
-    const filterParam = {};
+  const { name, getFilterValue, value: filterValue, type } = fv;
 
-    for (let i = 0, len = filterValueArray.length; i < len; i++) {
-      const fv = filterValueArray[i];
-      const {
-        name,
-        getFilterValue,
-        value: filterValue,
-        type,
-        operator,
-        active,
-        fn,
-      } = fv;
-      if (active === false) {
-        continue;
-      }
+  filterParam.emptyValue = fv.hasOwnProperty('emptyValue')
+    ? fv.emptyValue
+    : filterTypes[type].emptyValue;
+  filterParam.filterValue = filterValue;
+  if (columnsMap) {
+    filterParam.column = columnsMap[name];
+  }
 
-      if (!filterTypes[type]) {
-        continue;
-      }
-      filterParam.emptyValue = fv.hasOwnProperty('emptyValue')
-        ? fv.emptyValue
-        : filterTypes[type].emptyValue;
-      filterParam.filterValue = filterValue;
-      if (columnsMap) {
-        filterParam.column = columnsMap[name];
-      }
+  filterParam.data = item;
+  filterParam.value =
+    typeof getFilterValue === 'function'
+      ? getFilterValue({ data: item, value: item[name] })
+      : item[name];
 
-      const currentTypeOperators = typeOperators[type];
+  return filterParam;
+};
 
-      if (!fn && !currentTypeOperators) {
-        console.error(`No filter of type "${type}" found!`);
-        continue;
-      }
-      if (!fn && !currentTypeOperators[operator]) {
-        console.error(
-          `No operator "${operator}" found for filter type "${type}"!`
-        );
-        continue;
-      }
-
-      if (
-        filterParam.filterValue === filterParam.emptyValue &&
-        !currentTypeOperators[operator].filterOnEmptyValue
-      ) {
-        continue;
-      }
-
-      const filterFn = fn || currentTypeOperators[operator].fn;
-
-      filterParam.data = item;
-      filterParam.value =
-        typeof getFilterValue == 'function'
-          ? getFilterValue({ data: item, value: item[name] })
-          : item[name];
-
-      if (filterFn(filterParam) !== true) {
-        return false;
-      }
-    }
+export const hasTypeOperators = (
+  fn: ((arg: any) => any) | undefined,
+  currentTypeOperators: any,
+  type: string
+): boolean => {
+  if (!fn && !currentTypeOperators) {
+    console.error(`No filter of type "${type}" found!`);
     return true;
+  }
+  return false;
+};
+
+export const hasTypeOperator = (
+  fn: ((arg: any) => any) | undefined,
+  currentTypeOperators: any,
+  type: string,
+  operator: string
+): boolean => {
+  if (!fn && !currentTypeOperators[operator]) {
+    console.error(`No operator "${operator}" found for filter type "${type}"!`);
+    return true;
+  }
+  return false;
+};
+
+export const checkForEmptyValue = (
+  filterValue: string | number | undefined,
+  emptyValue: string | number | undefined,
+  filterOnEmptyValue: string | number
+): boolean => {
+  if (filterValue === emptyValue && !filterOnEmptyValue) {
+    return true;
+  }
+  return false;
+};
+
+export const validateFilters = (
+  fv: TypeSingleFilterValue,
+  filterTypes: any = DEFAULT_FILTER_TYPES,
+  currentTypeOperators: any
+): boolean => {
+  const { active, fn, type, operator } = fv;
+  const emptyValue = fv.hasOwnProperty('emptyValue')
+    ? fv.emptyValue
+    : filterTypes[type].emptyValue;
+  const filterOnEmptyValue = currentTypeOperators[operator].filterOnEmptyValue;
+
+  if (active === false) {
+    return true;
+  }
+  if (!filterTypes[type]) {
+    return true;
+  }
+  if (hasTypeOperators(fn, currentTypeOperators, type)) {
+    return true;
+  }
+  if (hasTypeOperator(fn, currentTypeOperators, type, operator)) {
+    return true;
+  }
+  if (checkForEmptyValue(fv.value, emptyValue, filterOnEmptyValue)) {
+    return true;
+  }
+
+  return false;
+};
+
+const doFilter = (
+  item: any,
+  filterValueArray: TypeSingleFilterValue[],
+  filterTypes: any = DEFAULT_FILTER_TYPES,
+  columnsMap: { [key: string]: TypeColumn }
+): boolean => {
+  const typeOperators: any = buildTypeOperators(filterTypes);
+
+  for (let i = 0, len = filterValueArray.length; i < len; i++) {
+    const fv: TypeSingleFilterValue = filterValueArray[i];
+    const { type, operator, fn } = fv;
+    const currentTypeOperators = typeOperators[type];
+
+    if (validateFilters(fv, filterTypes, currentTypeOperators)) {
+      continue;
+    }
+
+    const filterParam: TypeFilterParam = buildFilterParam(
+      item,
+      fv,
+      filterTypes,
+      columnsMap
+    );
+
+    const filterFn = fn || currentTypeOperators[operator].fn;
+    if (filterFn(filterParam) !== true) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const filter = (
+  data: any,
+  filterValueArray: TypeSingleFilterValue[],
+  filterTypes: any = DEFAULT_FILTER_TYPES,
+  columnsMap: { [key: string]: TypeColumn }
+) => {
+  const filterFn = (item: any) => {
+    const result: boolean = doFilter(
+      item,
+      filterValueArray,
+      filterTypes,
+      columnsMap
+    );
+
+    return result;
   };
 
   if (data === undefined) {
@@ -107,3 +178,5 @@ export default (
 
   return data.filter(filterFn);
 };
+
+export default filter;

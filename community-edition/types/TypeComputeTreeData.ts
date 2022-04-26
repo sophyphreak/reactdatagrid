@@ -5,10 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { TypeNodeProps } from '.';
+
 export type TypeComputeTreeDataParam = {
   expandedNodes: any;
-  isNodeLeaf: ({ node, nodeProps }: { node: any; nodeProps: any }) => boolean;
-  isNodeAsync: ({ node, nodeProps }: { node: any; nodeProps: any }) => boolean;
+  isNodeLeaf:
+    | ((args: { node: any; nodeProps: TypeNodeProps }) => boolean)
+    | undefined;
+  isNodeAsync:
+    | ((args: { node: any; nodeProps: TypeNodeProps }) => boolean)
+    | undefined;
   pathSeparator: string;
   loadingNodes: any;
   nodesName: string;
@@ -16,6 +22,7 @@ export type TypeComputeTreeDataParam = {
   dataSourceCache: any;
   generateIdFromPath: boolean;
   collapsingNodes: any;
+  idProperty: string;
 };
 export type TypeComputeTreeData = (
   data: any[],

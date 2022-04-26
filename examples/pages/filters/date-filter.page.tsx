@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDataGrid from '../../../enterprise-edition';
 
 import DateFilter from '@inovua/reactdatagrid-community/DateFilter';
+import NumberFilter from '@inovua/reactdatagrid-community/NumberFilter';
 
 import people from '../people';
 import flags from '../flags';
@@ -39,11 +40,11 @@ const countries = people.reduce((countries, p) => {
 
 const filterValue = [
   { name: 'name', operator: 'startsWith', type: 'string', value: '' },
-  { name: 'age', operator: 'startsWith', type: 'string', value: '' },
+  { name: 'age', operator: 'eq', type: 'number', value: null },
   { name: 'city', operator: 'startsWith', type: 'string', value: '' },
   {
     name: 'birthDate',
-    operator: 'after',
+    operator: 'before',
     type: 'date',
     value: '',
   },
@@ -64,6 +65,7 @@ const columns = [
     header: 'Age',
     defaultFlex: 1,
     type: 'number',
+    filterEditor: NumberFilter,
   },
   {
     name: 'country',
