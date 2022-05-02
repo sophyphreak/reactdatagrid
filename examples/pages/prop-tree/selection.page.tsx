@@ -34,8 +34,9 @@ const treeData = [
         name: 'Email data',
         nodes: [
           { id: 1, name: 'Personal.xls', size: '100Gb' },
+          { id: 2, name: 'Hobby', size: '200Mb' },
           {
-            id: 2,
+            id: 3,
             name: 'Work.xls',
             nodes: [
               { id: 1, name: 'Business' },
@@ -45,7 +46,8 @@ const treeData = [
                 nodes: [
                   { id: 1, name: 'Frontend Programmer' },
                   { id: 2, name: 'Backend Programmer' },
-                  { id: 3, name: 'Tester' },
+                  { id: 3, name: 'Backend Tester' },
+                  { id: 4, name: 'Tester' },
                 ],
               },
               { id: 3, name: 'Secretary' },
@@ -80,8 +82,8 @@ const App = () => {
     2: true,
     3: true,
     '3/1': true,
-    '3/1/2': true,
-    '3/1/2/2': true,
+    '3/1/3': true,
+    '3/1/3/2': true,
   });
   const [
     treeGridChildrenSelectionEnabled,

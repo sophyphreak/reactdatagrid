@@ -17,6 +17,7 @@ import {
 } from '../../types';
 
 import filter from '../../filter';
+import treeFilter from '../../treeFilter';
 
 import paginate from '../../utils/paginate';
 import getFilterValueForColumns from './getFilterValueForColumns';
@@ -34,8 +35,9 @@ const filterData = (
     filterTypes?: TypeFilterTypes;
     remoteFilter: boolean;
     columnsMap: TypeComputedColumnsMap;
-  }
-): any[] => {
+  },
+  config: any
+): any[] | ((item: any) => boolean) => {
   if (!Array.isArray(filterValue) || !filterValue.length) {
     return data;
   }
@@ -50,6 +52,12 @@ const filterData = (
 
   if (!filterValueForColumns.length) {
     return data;
+  }
+
+  if (config.treeEnabled) {
+    return treeFilter(data, filterValueForColumns, filterTypes, columnsMap, {
+      props: config.computedProps,
+    });
   }
 
   return filter(data, filterValueForColumns, filterTypes, columnsMap);
@@ -159,17 +167,21 @@ const computeData = (
     },
 
     // FILTER
-    (config: { data: any[]; dataCountAfterFilter: number | undefined }) => {
+    (config: { data: any; dataCountAfterFilter: number | undefined }) => {
       // only filter locally for uncontrolled prop
       if (filterValue && !computedProps.filterValue) {
         filterValue = getFilterValueForColumns(filterValue, columnsMap);
 
-        config.data = filterData(config.data, {
-          filterValue,
-          filterTypes,
-          remoteFilter,
-          columnsMap,
-        });
+        config.data = filterData(
+          config.data,
+          {
+            filterValue,
+            filterTypes,
+            remoteFilter,
+            columnsMap,
+          },
+          { treeEnabled, computedProps }
+        );
       }
       dataCountAfterFilter = config.data.length;
       return config;
