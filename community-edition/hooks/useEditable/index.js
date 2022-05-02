@@ -113,12 +113,11 @@ const useEditable = (props, computedProps, computedPropsRef) => {
             });
         });
     }, []);
-    const startEdit = useCallback(({ rowIndex, rowId, columnId, dir, value, } = {
-        rowIndex: undefined,
-        rowId: undefined,
+    const startEdit = useCallback(({ columnId, rowIndex, value, rowId, } = {
         columnId: '',
-        dir: 1,
+        rowIndex: -1,
         value: '',
+        rowId: undefined,
     }) => {
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {

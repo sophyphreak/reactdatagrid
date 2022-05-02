@@ -163,23 +163,20 @@ const useEditable = (
   const startEdit = useCallback(
     (
       {
-        rowIndex,
-        rowId,
         columnId,
-        dir,
+        rowIndex,
         value,
+        rowId,
       }: {
-        rowIndex?: number;
-        rowId?: string;
         columnId: string;
-        dir: number;
-        value: any;
+        rowIndex: number;
+        value?: any;
+        rowId?: string;
       } = {
-        rowIndex: undefined,
-        rowId: undefined,
         columnId: '',
-        dir: 1,
+        rowIndex: -1,
         value: '',
+        rowId: undefined,
       }
     ): Promise<any> => {
       const { current: computedProps } = computedPropsRef;
