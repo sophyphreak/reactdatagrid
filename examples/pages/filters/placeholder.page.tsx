@@ -13,13 +13,13 @@ import people from '../people';
 import flags from '../flags';
 import moment from 'moment';
 
-const gridStyle = { minHeight: 400 };
+const gridStyle = { minHeight: 600 };
 
 const filterIcon = className => {
   return (
     <svg
       className={className}
-      enable-background="new 0 0 24 24"
+      enableBackground="new 0 0 24 24"
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
@@ -171,6 +171,16 @@ const App = () => {
     setDataSource(data);
   }, []);
 
+  const onEditComplete = useCallback(
+    ({ value, columnId, rowIndex }) => {
+      const data = [...dataSource];
+      data[rowIndex][columnId] = value;
+
+      setDataSource(data);
+    },
+    [dataSource]
+  );
+
   const filteredRowsCount = useCallback((filteredRows: number) => {
     // console.log('filteredRows', filteredRows);
   }, []);
@@ -186,6 +196,8 @@ const App = () => {
         columns={columns}
         dataSource={dataSource}
         filteredRowsCount={filteredRowsCount}
+        onEditComplete={onEditComplete}
+        editable={true}
         groups={groups}
         defaultGroupBy={[]}
         pagination

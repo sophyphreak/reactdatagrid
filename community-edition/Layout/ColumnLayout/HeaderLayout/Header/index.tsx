@@ -970,6 +970,7 @@ export default class InovuaDataGridHeader extends React.Component<
       return (
         <Cell
           {...cProps}
+          timestamp={Date.now()}
           key={`${index}__${cProps.id}`}
           left={this.props.columnWidthPrefixSums[index]}
         />
@@ -1302,7 +1303,9 @@ export default class InovuaDataGridHeader extends React.Component<
       }
       const depth = group ? group.computedDepth + 1 : 0;
 
-      return <Cell {...props} key={props.id} depth={depth} />;
+      return (
+        <Cell {...props} key={props.id} depth={depth} timestamp={Date.now()} />
+      );
     });
 
     return this.renderItems(items);

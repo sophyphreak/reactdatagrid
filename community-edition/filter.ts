@@ -126,7 +126,7 @@ const doFilter = (
   item: any,
   filterValueArray: TypeSingleFilterValue[],
   filterTypes: any = DEFAULT_FILTER_TYPES,
-  columnsMap: { [key: string]: TypeColumn }
+  columnsMap?: { [key: string]: TypeColumn }
 ): boolean => {
   const typeOperators: any = buildTypeOperators(filterTypes);
 
@@ -159,7 +159,7 @@ const filter = (
   data: any,
   filterValueArray: TypeSingleFilterValue[],
   filterTypes: any = DEFAULT_FILTER_TYPES,
-  columnsMap: { [key: string]: TypeColumn }
+  columnsMap?: { [key: string]: TypeColumn }
 ) => {
   const filterFn = (item: any) => {
     const result: boolean = doFilter(

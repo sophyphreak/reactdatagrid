@@ -16,12 +16,13 @@ import Cell from '../Cell';
 import renderCellsMaybeLocked from './renderCellsMaybeLocked';
 import adjustCellProps from './adjustCellProps';
 import usePrevious from '../../../hooks/usePrevious';
+// import diff from '../../../packages/shallow-changes';
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-const rowClean = (p) => {
-    const result = { ...p };
-    delete result.activeRowRef;
-    return result;
-};
+// const rowClean = (p: any) => {
+//   const result = { ...p };
+//   delete result.activeRowRef;
+//   return result;
+// };
 const skipSelect = (event) => {
     event.nativeEvent.skipSelect = true;
 };
@@ -138,7 +139,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
     const orderCells = useCallback(() => {
         const cells = cleanupCells();
         const sortedProps = cells
-            .map(c => c.getProps())
+            .map((c) => c.getProps())
             .sort((p1, p2) => p1.index - p2.index);
         cells.sort((cell1, cell2) => cell1.props.renderIndex - cell2.props.renderIndex);
         cells.forEach((c, i) => {
@@ -926,10 +927,11 @@ const DataGridRow = React.forwardRef((props, ref) => {
                         return;
                     }
                     setTimeout(() => {
-                        return cell
-                            .startEdit(undefined, errBack)
-                            .then(resolve)
-                            .catch(errBack);
+                        return (cell.startEdit &&
+                            cell
+                                .startEdit(undefined, errBack)
+                                .then(resolve)
+                                .catch(errBack));
                     }, 0);
                 })
                     .catch((error) => reject(error));
@@ -1097,7 +1099,7 @@ const DataGridRow = React.forwardRef((props, ref) => {
                 cell = props.cellFactory(cProps);
             }
             if (cell === undefined) {
-                cell = (React.createElement(Cell, { ...cProps, ref: cProps.cellRef ? cProps.cellRef : null, key: key }));
+                cell = (React.createElement(Cell, { ...cProps, timestamp: Date.now(), ref: cProps.cellRef ? cProps.cellRef : null, key: key }));
             }
             return cell;
         });

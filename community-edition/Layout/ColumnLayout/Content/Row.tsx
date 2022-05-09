@@ -28,20 +28,20 @@ import clamp from '../../../utils/clamp';
 import Cell from '../Cell';
 import renderCellsMaybeLocked from './renderCellsMaybeLocked';
 import adjustCellProps from './adjustCellProps';
-import { CellProps } from '../Cell/CellProps';
+import { CellProps, CellInstance } from '../Cell/CellProps';
 import { TypeComputedColumn } from '../../../types';
-import InovuaDataGridCell from '../Cell';
+
 import { RowProps, EnhancedRowProps } from './RowProps';
 import usePrevious from '../../../hooks/usePrevious';
-import diff from '../../../packages/shallow-changes';
+// import diff from '../../../packages/shallow-changes';
 
 const CLASS_NAME = 'InovuaReactDataGrid__row';
-const rowClean = (p: any) => {
-  const result = { ...p };
+// const rowClean = (p: any) => {
+//   const result = { ...p };
 
-  delete result.activeRowRef;
-  return result;
-};
+//   delete result.activeRowRef;
+//   return result;
+// };
 
 const skipSelect = (event: SyntheticEvent) => {
   (event.nativeEvent as any).skipSelect = true;
@@ -89,8 +89,8 @@ const getValueForPivotColumnSummary = (
 };
 
 const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
-  const cells = useRef<InovuaDataGridCell[]>([]);
-  const cellRef = useRef<(c: InovuaDataGridCell | null | undefined) => void>();
+  const cells = useRef<CellProps[]>([]);
+  const cellRef = useRef<(c: CellProps | null | undefined) => void>();
   const domRef = useRef<RefObject<HTMLElement>>(null);
   const columnRenderStartIndex = useRef<number>(0);
   const hasBorderTop = useRef<boolean>(false);
@@ -100,7 +100,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
   const scrollingDirection = useRef<'horizontal' | 'vertical'>('vertical');
 
   const initCells = () => {
-    cellRef.current = (c: InovuaDataGridCell | null | undefined) => {
+    cellRef.current = (c: CellProps | null | undefined) => {
       if (!c) return;
 
       cells.current.push(c);
@@ -125,7 +125,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
   if (props.columnRenderCount < prevColumnRenderCount!) {
     cleanupCells();
 
-    getCells().forEach((cell: InovuaDataGridCell) => {
+    getCells().forEach((cell: any) => {
       if (cell.getProps().computedLocked) {
         return;
       }
@@ -188,11 +188,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
   });
 
   const onCellUnmount = useCallback(
-    (_cellProps: CellProps, cell: InovuaDataGridCell) => {
+    (_cellProps: CellProps, cell: CellInstance) => {
       if (cells.current) {
-        cells.current = cells.current.filter(
-          (c: InovuaDataGridCell) => c !== cell
-        );
+        cells.current = cells.current.filter((c: any) => c !== cell);
       }
     },
     []
@@ -202,7 +200,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     const cells = cleanupCells();
 
     const sortedProps = cells
-      .map(c => c.getProps())
+      .map((c: any) => c.getProps())
       .sort((p1, p2) => p1.index - p2.index);
 
     cells.sort(
@@ -210,7 +208,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         cell1.props.renderIndex - cell2.props.renderIndex
     );
 
-    cells.forEach((c, i) => {
+    cells.forEach((c: any, i: number) => {
       c.setStateProps(sortedProps[i]);
     });
   }, [cleanupCells]);
@@ -219,7 +217,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     const cells = getCells();
     const { editColumnIndex } = props;
 
-    for (let i = 0, len = cells.length, cell; i < len; i++) {
+    for (let i = 0, len = cells.length, cell: any; i < len; i++) {
       cell = cells[i];
 
       if (getCellIndex(cell) === editColumnIndex) {
@@ -296,7 +294,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
   );
 
   const setCellIndex = useCallback(
-    (cell: InovuaDataGridCell, index: number, cellProps?: CellProps) => {
+    (cell: CellInstance, index: number, cellProps?: CellProps) => {
       cellProps =
         cellProps ||
         (props.computedHasColSpan
@@ -307,27 +305,24 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
     [props.computedHasColSpan]
   );
 
-  const getCellIndex = useCallback((cell: InovuaDataGridCell) => {
+  const getCellIndex = useCallback((cell: any) => {
     return cell.getProps().computedVisibleIndex;
   }, []);
 
-  const sortCells = useCallback((cells: InovuaDataGridCell[]) => {
+  const sortCells = useCallback((cells: any[]) => {
     return cells.sort(
-      (cell1: InovuaDataGridCell, cell2: InovuaDataGridCell) =>
-        getCellIndex(cell1) - getCellIndex(cell2)
+      (cell1: any, cell2: any) => getCellIndex(cell1) - getCellIndex(cell2)
     );
   }, []);
 
   const getCellAt = useCallback((index: number) => {
     return getCells().filter(
-      (c: InovuaDataGridCell) => c.getProps().computedVisibleIndex === index
+      (c: any) => c.getProps().computedVisibleIndex === index
     )[0];
   }, []);
 
   const getCellById = useCallback((id: string | number) => {
-    return getCells().filter(
-      (c: InovuaDataGridCell) => c.getProps().id === id
-    )[0];
+    return getCells().filter((c: any) => c.getProps().id === id)[0];
   }, []);
 
   const getSortedCells = useCallback(() => {
@@ -340,7 +335,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
       const sortedCells = getSortedCells();
 
-      sortedCells.forEach((cell: InovuaDataGridCell) => {
+      sortedCells.forEach((cell: any) => {
         const cellProps = cell.getProps();
         if (cellProps.computedLocked) {
           return;
@@ -482,9 +477,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
       const tempCellMap: Record<number, boolean> = {};
 
-      const calls: [Cell, number][] = [];
+      const calls: [CellInstance, number][] = [];
 
-      getCells().forEach((cell: InovuaDataGridCell) => {
+      getCells().forEach((cell: any) => {
         const cellProps = cell.getProps();
         const {
           groupProps,
@@ -672,6 +667,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       const columnProps: any = column;
 
       const { name, computedVisibleIndex } = columnProps;
+
       let value = data ? data[name!] : null;
       const rowIndex = realIndex;
 
@@ -1012,8 +1008,8 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
                 ? !!groupColumn
                 : groupColumn
                 ? true
-                : computedVisibleIndex > cellProps.groupProps.depth &&
-                  cellProps.groupProps.depth >= computedGroupBy.length;
+                : computedVisibleIndex > cellProps.groupProps.depth! &&
+                  cellProps.groupProps.depth! >= computedGroupBy.length;
 
               cellProps.showBorderTop =
                 groupTitleCell ||
@@ -1028,7 +1024,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
               cellProps.showBorderBottom =
                 computedVisibleIndex >=
                 (cellProps.groupProps
-                  ? cellProps.groupProps.depth
+                  ? cellProps.groupProps.depth!
                   : computedGroupBy.length);
             }
           } else if (rowIndex! > 0 && showHorizontalCellBorders) {
@@ -1059,7 +1055,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
 
         if (
           cellProps.groupProps &&
-          computedVisibleIndex >= cellProps.groupProps.depth + 1 &&
+          computedVisibleIndex >= cellProps.groupProps.depth! + 1 &&
           !groupColumn &&
           props.expandGroupTitle
         ) {
@@ -1168,9 +1164,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
           value,
           data: cellProps.data,
           rowId: props.getItemId(cellProps.data),
-          columnId: cellProps.id,
-          columnIndex: cellProps.computedVisibleIndex,
-          rowIndex: cellProps.rowIndex,
+          columnId: cellProps.id!,
+          columnIndex: cellProps.computedVisibleIndex!,
+          rowIndex: cellProps.rowIndex!,
           cellProps,
         });
       }
@@ -1185,9 +1181,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
           data: cellProps.data,
           value,
           rowId: props.getItemId(cellProps.data),
-          columnId: cellProps.id,
-          columnIndex: cellProps.computedVisibleIndex,
-          rowIndex: cellProps.rowIndex,
+          columnId: cellProps.id!,
+          columnIndex: cellProps.computedVisibleIndex!,
+          rowIndex: cellProps.rowIndex!,
           cellProps,
         });
       }
@@ -1201,9 +1197,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         props.onEditCancel({
           data: cellProps.data,
           rowId: props.getItemId(cellProps.data),
-          columnIndex: cellProps.computedVisibleIndex,
-          columnId: cellProps.id,
-          rowIndex: cellProps.rowIndex,
+          columnIndex: cellProps.computedVisibleIndex!,
+          columnId: cellProps.id!,
+          rowIndex: cellProps.rowIndex!,
           cellProps,
         });
       }
@@ -1218,9 +1214,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
           value,
           data: cellProps.data,
           rowId: props.getItemId(cellProps.data),
-          columnId: cellProps.id,
-          columnIndex: cellProps.computedVisibleIndex,
-          rowIndex: cellProps.rowIndex,
+          columnId: cellProps.id!,
+          columnIndex: cellProps.computedVisibleIndex!,
+          rowIndex: cellProps.rowIndex!,
           cellProps,
         });
       }
@@ -1235,9 +1231,9 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
           value,
           data: cellProps.data,
           rowId: props.getItemId(cellProps.data),
-          columnId: cellProps.id,
-          columnIndex: cellProps.computedVisibleIndex,
-          rowIndex: cellProps.rowIndex,
+          columnId: cellProps.id!,
+          columnIndex: cellProps.computedVisibleIndex!,
+          rowIndex: cellProps.rowIndex!,
           cellProps,
         });
       }
@@ -1337,10 +1333,13 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
               }
 
               setTimeout(() => {
-                return cell
-                  .startEdit(undefined, errBack)
-                  .then(resolve)
-                  .catch(errBack);
+                return (
+                  cell.startEdit &&
+                  cell
+                    .startEdit(undefined, errBack)
+                    .then(resolve)
+                    .catch(errBack)
+                );
               }, 0);
             })
             .catch((error: any) => reject(error));
@@ -1609,6 +1608,7 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         cell = (
           <Cell
             {...cProps}
+            timestamp={Date.now()}
             ref={cProps.cellRef ? cProps.cellRef : null}
             key={key}
           />

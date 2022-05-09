@@ -152,7 +152,7 @@ export default (
     (
       alignTo: any,
       cellProps: TypeCellProps,
-      cellInstance: any,
+      { computedVisibleIndex }: { computedVisibleIndex: number },
       onHide: (...args: any[]) => void
     ) => {
       const { current: computedProps } = computedPropsRef;
@@ -178,7 +178,7 @@ export default (
       }
 
       computedProps.setColumnContextMenuProps(cellProps);
-      computedProps.setColumnContextMenuInstanceProps(cellInstance);
+      computedProps.setColumnContextMenuInstanceProps({ computedVisibleIndex });
     },
     []
   );
