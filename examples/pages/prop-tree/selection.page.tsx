@@ -63,17 +63,11 @@ const treeData = [
 
 const columns = [
   { name: 'name', header: 'Name', defaultFlex: 1 },
-  { name: 'size', header: 'Size', defaultWidth: 160 },
+  { name: 'size', header: 'Size', defaultWidth: 70 },
 ];
 
 const defaultFilterValue = [
   { name: 'name', operator: 'startsWith', type: 'string', value: '' },
-  {
-    name: 'size',
-    operator: 'startsWith',
-    type: 'string',
-    value: '',
-  },
 ];
 
 const App = () => {
