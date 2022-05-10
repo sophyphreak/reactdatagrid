@@ -1539,7 +1539,13 @@ export default class InovuaDataGridCell extends React.Component {
 
   renderGroupTool() {
     const props = this.getProps();
-    const { rtl, collapsed, groupProps } = props;
+    const {
+      rtl,
+      collapsed,
+      groupProps,
+      renderGroupCollapseTool,
+      renderGroupExpandTool,
+    } = props;
 
     return renderGroupTool({
       render: groupProps.renderGroupTool,
@@ -1547,6 +1553,8 @@ export default class InovuaDataGridCell extends React.Component {
       rtl,
       size: 20,
       toggleGroup: this.toggleGroup,
+      renderGroupCollapseTool,
+      renderGroupExpandTool,
     });
   }
 

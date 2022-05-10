@@ -59,6 +59,7 @@ import {
   TypePivotItem,
   TypePivotColumnSummaryReducer,
   TypeExpandedGroups,
+  TypeGroupTool,
 } from '.';
 import {
   TypeRowSelection,
@@ -715,6 +716,8 @@ type TypeDataGridPropsNoI18n = {
   renderRowDetailsCollapsedIcon?: () => void;
   treeGridChildrenSelectionEnabled?: boolean;
   treeGridChildrenDeselectionEnabled?: boolean;
+  renderGroupCollapseTool: TypeGroupTool;
+  renderGroupExpandTool: TypeGroupTool;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;
