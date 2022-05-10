@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React, { CSSProperties, MouseEventHandler } from 'react';
+import { CellProps } from './CellProps';
 
 const DEFAULT_STYLE = {
   position: 'relative',
@@ -14,16 +15,34 @@ const DEFAULT_STYLE = {
 };
 
 // stop propagation in order not to trigger row active index change
-const stopPropagation = e => e.stopPropagation();
+const stopPropagation = (e: any) => e.stopPropagation();
 
 export default (
-  { render, rtl, collapsed, toggleGroup, style, size },
-  cellProps
+  {
+    render,
+    rtl,
+    collapsed,
+    toggleGroup,
+    style,
+    size,
+  }: {
+    render: any;
+    rtl: boolean | undefined;
+    collapsed: boolean | undefined;
+    toggleGroup: (event: any) => void;
+    style?: any;
+    size: number;
+  },
+  cellProps?: CellProps
 ) => {
   size = size || 18;
   style = style ? { ...DEFAULT_STYLE, ...style } : DEFAULT_STYLE;
 
-  const domProps = {
+  const domProps: {
+    onMouseDown: MouseEventHandler<SVGSVGElement>;
+    onClick: MouseEventHandler<SVGSVGElement>;
+    style: CSSProperties;
+  } = {
     onMouseDown: toggleGroup,
     onClick: stopPropagation,
     style,

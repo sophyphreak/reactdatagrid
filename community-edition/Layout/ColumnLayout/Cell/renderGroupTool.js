@@ -11,8 +11,8 @@ const DEFAULT_STYLE = {
     cursor: 'pointer',
 };
 // stop propagation in order not to trigger row active index change
-const stopPropagation = e => e.stopPropagation();
-export default ({ render, rtl, collapsed, toggleGroup, style, size }, cellProps) => {
+const stopPropagation = (e) => e.stopPropagation();
+export default ({ render, rtl, collapsed, toggleGroup, style, size, }, cellProps) => {
     size = size || 18;
     style = style ? { ...DEFAULT_STYLE, ...style } : DEFAULT_STYLE;
     const domProps = {
