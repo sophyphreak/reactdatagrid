@@ -41,8 +41,8 @@ export default (
     toggleGroup: (event: any) => void;
     style?: any;
     size: number;
-    renderGroupCollapseTool: TypeGroupTool;
-    renderGroupExpandTool: TypeGroupTool;
+    renderGroupCollapseTool?: TypeGroupTool;
+    renderGroupExpandTool?: TypeGroupTool;
   },
   cellProps?: CellProps
 ) => {

@@ -239,8 +239,8 @@ export type RowProps = {
   computedEnableColumnHover?: boolean;
   renderRowDetailsExpandIcon?: () => void;
   renderRowDetailsCollapsedIcon?: () => void;
-  renderGroupCollapseTool: TypeGroupTool;
-  renderGroupExpandTool: TypeGroupTool;
+  renderGroupCollapseTool?: TypeGroupTool;
+  renderGroupExpandTool?: TypeGroupTool;
 };
 
 export type EnhancedRowProps = RowProps & {
