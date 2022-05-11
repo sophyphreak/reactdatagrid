@@ -60,6 +60,7 @@ import {
   TypePivotColumnSummaryReducer,
   TypeExpandedGroups,
   TypeGroupTool,
+  CellProps,
 } from '.';
 import {
   TypeRowSelection,
@@ -153,6 +154,8 @@ export type EnumRowDetailsWidth =
 type TypeGridPublicAPI = any;
 
 type TypeDataGridPropsNoI18n = {
+  rowContextMenuAlignPositions?: string[];
+  rowContextMenuPosition?: 'fixed' | 'absolute';
   filteredRowsCount?: (filteredRows: number) => void;
   renderRow?: (rowProps: {
     id?: string | number;
@@ -186,10 +189,10 @@ type TypeDataGridPropsNoI18n = {
     menuProps: any,
     details: {
       rowProps: TypeRowProps;
-      cellProps: TypeCellProps;
+      cellProps?: CellProps;
       grid: TypeGridPublicAPI;
       computedProps: TypeComputedProps;
-      computedPropsRef: MutableRefObject<TypeComputedProps>;
+      computedPropsRef: MutableRefObject<TypeComputedProps | null>;
     }
   ) => any;
   collapseChildrenOnAsyncNodeCollapse: boolean;
@@ -1075,11 +1078,13 @@ export type TypeComputedProps = TypeDataGridPropsNoI18n & {
     menuAlignTo: any;
     menuConstrainTo: any;
     menuOnHide: (...args: any[]) => void;
+    getMenuConstrainTo?: () => void;
   }>;
   rowContextMenuInfoRef: MutableRefObject<{
     menuAlignTo: any;
     menuConstrainTo: any;
     menuOnHide: (...args: any[]) => void;
+    cellProps?: CellProps;
   }>;
   publicAPI: TypeGridPublicAPI;
   isColumnVisible: (nameOrId: TypeGetColumnByParam) => boolean;
