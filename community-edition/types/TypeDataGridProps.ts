@@ -718,6 +718,11 @@ type TypeDataGridPropsNoI18n = {
   treeGridChildrenDeselectionEnabled?: boolean;
   renderGroupCollapseTool?: TypeGroupTool;
   renderGroupExpandTool?: TypeGroupTool;
+  setColumnContextMenuInstanceProps?: (cellInstance: any) => void;
+  computedIsFilterable?: boolean;
+  onRowContextMenu?: (rowProps: TypeRowProps, event: any) => void;
+  hideRowFilterContextMenu?: () => void;
+  renderGridMenu?: (result: any, computedProps: TypeComputedProps) => void;
 };
 type TypeDataGridComputedClashingProps = {
   i18n?: TypeI18n;

@@ -96,7 +96,7 @@ var POINT_POSITIONS = {
  *
  * @return {Region} this
  */
-var REGION = function(...args) {
+var REGION: any = function(...args) {
   const [top, right, bottom, left] = args;
   if (!(this instanceof REGION)) {
     return new REGION(...args);
