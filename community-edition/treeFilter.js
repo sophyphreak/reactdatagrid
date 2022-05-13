@@ -6,7 +6,6 @@
  */
 import DEFAULT_FILTER_TYPES from './filterTypes';
 import { buildTypeOperators, buildFilterParam, validateFilters, } from './filter';
-const EMPTY_OBJECT = {};
 const doFilter = (item, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, columnsMap) => {
     const typeOperators = buildTypeOperators(filterTypes);
     for (let i = 0, len = filterValueArray.length; i < len; i++) {
@@ -24,94 +23,27 @@ const doFilter = (item, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, co
     }
     return true;
 };
-let newParentNode = EMPTY_OBJECT;
-const xfilterData = (dataArray, config, parentNode, result = [], newDataArray = []) => {
-    const nodesName = config.nodesName;
-    const filterValueArray = config.filterValueArray;
-    const filterTypes = config.filterTypes;
-    const columnsMap = config.columnsMap;
-    const filterFn = (filterItem) => {
-        const filter = doFilter(filterItem, filterValueArray, filterTypes, columnsMap);
-        return filter;
-    };
-    dataArray.forEach((item) => {
-        if (item) {
-            const itemNodes = item[nodesName];
-            const filteredItem = filterFn(item);
-            if (filteredItem) {
-                newDataArray.push(item);
-            }
-            if (parentNode) {
-                newParentNode = {};
-                if (newDataArray.length > 0) {
-                    Object.assign(newParentNode, parentNode, {
-                        [nodesName]: newDataArray,
-                    });
-                }
-            }
-            if (Array.isArray(itemNodes)) {
-                xfilterData(itemNodes, config, item, result);
-            }
-            else {
-                if (!parentNode) {
-                    newParentNode = {};
-                    const filteredItem = filterFn(item);
-                    if (filteredItem) {
-                        Object.assign(newParentNode, item);
-                    }
-                }
-            }
-            if (!parentNode) {
-                if (Object.keys(newParentNode).length) {
-                    result.push(newParentNode);
-                }
-            }
-        }
-    });
-    return result;
-};
-function arrayTreeFilter(data, filterFn, options) {
-    options = options || {};
-    options.childrenKeyName = options.childrenKeyName || 'nodes';
-    var children = data || [];
-    var result = [];
-    var level = 0;
-    do {
-        var foundItem = children.filter(function (item) {
-            return filterFn(item, level);
-        })[0];
-        if (!foundItem) {
-            break;
-        }
-        result.push(foundItem);
-        children = foundItem[options.childrenKeyName] || [];
-        level += 1;
-    } while (children.length > 0);
-    return result;
-}
 const filterData = (dataArray, filterFn, config) => {
     const nodesName = config.nodesName;
-    return dataArray
+    return (dataArray
+        // the map fn is here only to make sure filtered results are not kept in the initial datasource
+        .map(item => {
+        return {
+            ...item,
+        };
+    })
         .filter((item) => {
         const itemNodes = item[nodesName];
         if (!itemNodes) {
-            const filteredItem = filterFn(item);
-            console.log('filtered', filteredItem, item);
-            return filteredItem;
+            return filterFn(item);
         }
-        else {
+        const filteredItemNodes = filterData(itemNodes, filterFn, config);
+        if (filteredItemNodes.length) {
+            item[nodesName] = filteredItemNodes;
             return true;
         }
-    })
-        .map((item) => {
-        item = Object.assign({}, item);
-        const itemNodes = item[nodesName];
-        if (Array.isArray(itemNodes)) {
-            filterData(itemNodes, filterFn, config);
-        }
-        // console.log('item', item);
-        return item;
-    });
+        return false;
+    }));
 };
 const treeFilter = (data, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, columnsMap, options) => {
     const computedProps = options.props || {};
@@ -123,10 +55,6 @@ const treeFilter = (data, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, 
         const filterItem = doFilter(item, filterValueArray, filterTypes, columnsMap);
         return filterItem;
     };
-    // const config = { childrenKeyName: nodesName };
-    // const filteredData = arrayTreeFilter(data, filterFn, config);
-    const filteredData = filterData(data, filterFn, config);
-    console.log('FILTER DATA', filteredData);
-    return filteredData || [];
+    return filterData(data, filterFn, config);
 };
 export default treeFilter;
