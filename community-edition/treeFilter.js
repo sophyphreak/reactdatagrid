@@ -55,6 +55,6 @@ const treeFilter = (data, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, 
         const filterItem = doFilter(item, filterValueArray, filterTypes, columnsMap);
         return filterItem;
     };
-    return filterData(data, filterFn, config);
+    return filterData(data, filterFn, config) || [];
 };
 export default treeFilter;

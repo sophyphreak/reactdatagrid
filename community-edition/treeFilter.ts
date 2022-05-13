@@ -122,7 +122,7 @@ const treeFilter = (
     return filterItem;
   };
 
-  return filterData(data, filterFn, config);
+  return filterData(data, filterFn, config) || [];
 };
 
 export default treeFilter;
