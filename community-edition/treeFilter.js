@@ -25,7 +25,7 @@ const doFilter = (item, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, co
     return true;
 };
 let newParentNode = EMPTY_OBJECT;
-const filterData = (dataArray, config, parentNode, result = [], newDataArray = []) => {
+const xfilterData = (dataArray, config, parentNode, result = [], newDataArray = []) => {
     const nodesName = config.nodesName;
     const filterValueArray = config.filterValueArray;
     const filterTypes = config.filterTypes;
@@ -50,7 +50,7 @@ const filterData = (dataArray, config, parentNode, result = [], newDataArray = [
                 }
             }
             if (Array.isArray(itemNodes)) {
-                filterData(itemNodes, config, item, result);
+                xfilterData(itemNodes, config, item, result);
             }
             else {
                 if (!parentNode) {
@@ -70,16 +70,63 @@ const filterData = (dataArray, config, parentNode, result = [], newDataArray = [
     });
     return result;
 };
+function arrayTreeFilter(data, filterFn, options) {
+    options = options || {};
+    options.childrenKeyName = options.childrenKeyName || 'nodes';
+    var children = data || [];
+    var result = [];
+    var level = 0;
+    do {
+        var foundItem = children.filter(function (item) {
+            return filterFn(item, level);
+        })[0];
+        if (!foundItem) {
+            break;
+        }
+        result.push(foundItem);
+        children = foundItem[options.childrenKeyName] || [];
+        level += 1;
+    } while (children.length > 0);
+    return result;
+}
+const filterData = (dataArray, filterFn, config) => {
+    const nodesName = config.nodesName;
+    return dataArray
+        .filter((item) => {
+        const itemNodes = item[nodesName];
+        if (!itemNodes) {
+            const filteredItem = filterFn(item);
+            console.log('filtered', filteredItem, item);
+            return filteredItem;
+        }
+        else {
+            return true;
+        }
+    })
+        .map((item) => {
+        item = Object.assign({}, item);
+        const itemNodes = item[nodesName];
+        if (Array.isArray(itemNodes)) {
+            filterData(itemNodes, filterFn, config);
+        }
+        // console.log('item', item);
+        return item;
+    });
+};
 const treeFilter = (data, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, columnsMap, options) => {
     const computedProps = options.props || {};
     const nodesName = computedProps.nodesProperty || 'nodes';
     const config = {
         nodesName,
-        filterValueArray,
-        filterTypes,
-        columnsMap,
     };
-    const filteredData = filterData(data, config);
+    const filterFn = (item) => {
+        const filterItem = doFilter(item, filterValueArray, filterTypes, columnsMap);
+        return filterItem;
+    };
+    // const config = { childrenKeyName: nodesName };
+    // const filteredData = arrayTreeFilter(data, filterFn, config);
+    const filteredData = filterData(data, filterFn, config);
+    console.log('FILTER DATA', filteredData);
     return filteredData || [];
 };
 export default treeFilter;

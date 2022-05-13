@@ -21,15 +21,17 @@ import {
 const EMPTY_OBJECT = {};
 
 type TypeConfig = {
+  nodesName: string;
   idProperty?: string;
   expandedNodes?: { [key: string]: boolean };
   pathSeparator?: string;
-  nodesName: string;
   generateIdFromPath?: boolean;
-  filterValueArray: TypeSingleFilterValue[];
-  filterTypes: any;
-  columnsMap: { [key: string]: TypeColumn };
+  filterValueArray?: TypeSingleFilterValue[];
+  filterTypes?: any;
+  columnsMap?: { [key: string]: TypeColumn };
 };
+
+type TypeFilterFn = (item: any) => boolean;
 
 const doFilter = (
   item: any,
@@ -65,7 +67,7 @@ const doFilter = (
 };
 
 let newParentNode: {} = EMPTY_OBJECT;
-const filterData = (
+const xfilterData = (
   dataArray: any[],
   config: TypeConfig,
   parentNode?: any,
@@ -107,7 +109,7 @@ const filterData = (
       }
 
       if (Array.isArray(itemNodes)) {
-        filterData(itemNodes, config, item, result);
+        xfilterData(itemNodes, config, item, result);
       } else {
         if (!parentNode) {
           newParentNode = {};
@@ -129,6 +131,66 @@ const filterData = (
   return result;
 };
 
+function arrayTreeFilter<T>(
+  data: T[],
+  filterFn: (item: T, level: number) => boolean,
+  options?: {
+    childrenKeyName?: string;
+  }
+) {
+  options = options || {};
+  options.childrenKeyName = options.childrenKeyName || 'nodes';
+
+  var children = data || [];
+  var result: T[] = [];
+  var level = 0;
+
+  do {
+    var foundItem: T = children.filter(function(item) {
+      return filterFn(item, level);
+    })[0];
+    if (!foundItem) {
+      break;
+    }
+    result.push(foundItem);
+    children = (foundItem as any)[options.childrenKeyName] || [];
+    level += 1;
+  } while (children.length > 0);
+
+  return result;
+}
+
+const filterData = (
+  dataArray: any[],
+  filterFn: TypeFilterFn,
+  config: TypeConfig
+): any[] => {
+  const nodesName = config.nodesName;
+
+  return dataArray
+    .filter((item: any) => {
+      const itemNodes = item[nodesName];
+
+      if (!itemNodes) {
+        const filteredItem = filterFn(item);
+        console.log('filtered', filteredItem, item);
+        return filteredItem;
+      } else {
+        return true;
+      }
+    })
+    .map((item: any) => {
+      item = Object.assign({}, item);
+      const itemNodes = item[nodesName];
+      if (Array.isArray(itemNodes)) {
+        filterData(itemNodes, filterFn, config);
+      }
+
+      // console.log('item', item);
+      return item;
+    });
+};
+
 const treeFilter = (
   data: any[],
   filterValueArray: TypeSingleFilterValue[],
@@ -141,12 +203,25 @@ const treeFilter = (
 
   const config: TypeConfig = {
     nodesName,
-    filterValueArray,
-    filterTypes,
-    columnsMap,
   };
 
-  const filteredData = filterData(data, config);
+  const filterFn = (item: any) => {
+    const filterItem: boolean = doFilter(
+      item,
+      filterValueArray,
+      filterTypes,
+      columnsMap
+    );
+
+    return filterItem;
+  };
+
+  // const config = { childrenKeyName: nodesName };
+  // const filteredData = arrayTreeFilter(data, filterFn, config);
+
+  const filteredData = filterData(data, filterFn, config);
+
+  console.log('FILTER DATA', filteredData);
 
   return filteredData || [];
 };
