@@ -63,11 +63,12 @@ const treeData = [
 
 const columns = [
   { name: 'name', header: 'Name', defaultFlex: 1 },
-  { name: 'size', header: 'Size', defaultWidth: 70 },
+  { name: 'size', header: 'Size', defaultWidth: 120 },
 ];
 
 const defaultFilterValue = [
   { name: 'name', operator: 'startsWith', type: 'string', value: '' },
+  { name: 'size', operator: 'startsWith', type: 'string', value: '' },
 ];
 
 const App = () => {
@@ -76,8 +77,8 @@ const App = () => {
     2: true,
     3: true,
     '3/1': true,
-    '3/1/3': true,
-    '3/1/3/2': true,
+    // '3/1/3': true,
+    // '3/1/3/2': true,
   });
   const [
     treeGridChildrenSelectionEnabled,
