@@ -14,11 +14,7 @@ import {
 } from 'react';
 
 import { IS_IE } from '../../../detect-ua';
-import {
-  TypeComputedProps,
-  TypeRowProps,
-  TypeCellProps,
-} from '../../../src/types';
+import { TypeComputedProps, TypeRowProps, TypeCellProps } from '../../../types';
 
 import Region from '../../../packages/region';
 import { getGlobal } from '../../../getGlobal';
@@ -178,7 +174,7 @@ export default (
       }
 
       computedProps.setColumnContextMenuProps(cellProps);
-      computedProps.setColumnContextMenuInstanceProps(cellInstance);
+      computedProps.setColumnContextMenuInstanceProps!(cellInstance);
     },
     []
   );
@@ -191,7 +187,7 @@ export default (
 
     let filtersHeight = 0;
     if (computedProps.computedIsFilterable) {
-      const filterNode: HTMLElement = computedProps
+      const filterNode: HTMLElement | null = computedProps
         .getDOMNode()
         .querySelector('.InovuaReactDataGrid__column-header__filter-wrapper');
 

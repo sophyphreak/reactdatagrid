@@ -153,7 +153,7 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
             cellRegion,
             dragBoxInitialRegion,
         });
-        this.setScrollRegionVisibility();
+        this.setScrollRegionVisibility(props);
         dragProxy.setHeight(dragRowHeight);
         dragProxy.setTop(dragProxyPosition.top);
         dragProxy.setLeft(dragProxyPosition.left);
@@ -531,10 +531,14 @@ export default class InovuaDataGridEnterpriseColumnLayout extends InovuaDataGrid
         const dragRowHeight = dragBoxInitialRegion.getHeight();
         return { dragBoxInitialRegion, dragRowHeight };
     };
-    setScrollRegionVisibility = () => {
+    setScrollRegionVisibility = (props) => {
         if (this.scrollTopRegionRef.current) {
             this.scrollTopRegionRef.current.setVisible(true);
-            const height = this.headerLayout && this.headerLayout.headerNode.offsetHeight;
+            const height = (this.headerLayout &&
+                this.headerLayout.headerNode &&
+                this.headerLayout.headerNode.offsetHeight) ||
+                props.rowHeight / 2 ||
+                0;
             this.scrollTopRegionRef.current.setHeight(height);
         }
         if (this.scrollBottomRegionRef.current) {

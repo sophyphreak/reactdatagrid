@@ -32,7 +32,7 @@ import Menu from '../../../packages/Menu';
 import renderGridMenu from '../../../renderGridMenu';
 import React from 'react';
 
-const emptyArray = [];
+const emptyArray: any[] = [];
 
 const COLUMN_MENU_ALIGN_POSITIONS = [
   'tl-bl',
@@ -94,7 +94,7 @@ export const renderColumnFilterContextMenu = (
   const isFiltered = computedProps.computedFiltered;
 
   const items = (() => {
-    const activationItems = [
+    const activationItems: any = [
       '-',
       {
         label: computedProps.i18n('enable', 'Enable'),
@@ -163,7 +163,7 @@ export const renderColumnFilterContextMenu = (
       },
     ];
 
-    const items = columnOperators.map(operator => {
+    const items = columnOperators.map((operator: any) => {
       return {
         label:
           computedProps.i18n(operator.label, operator.label) ||
@@ -178,7 +178,7 @@ export const renderColumnFilterContextMenu = (
     return items;
   })();
 
-  const onSelectionChange = selected => {
+  const onSelectionChange = (selected: any) => {
     const operator = selected.operator;
 
     const { current: computedProps } = computedPropsRef;
@@ -337,25 +337,27 @@ const useFilters = (
     'enableFiltering'
   );
 
-  const isColumnFiltered = useCallback((col: TypeGetColumnByParam): boolean => {
-    const { current: computedProps } = computedPropsRef;
-    if (!computedProps) {
-      return false;
-    }
-    const column = computedProps.getColumnBy(col);
+  const isColumnFiltered = useCallback(
+    (col: TypeGetColumnByParam & { id: string | number }): boolean => {
+      const { current: computedProps } = computedPropsRef;
+      if (!computedProps) {
+        return false;
+      }
 
-    const filterValue = computedProps.getColumnFilterValue(col.id!);
-    if (!filterValue) {
-      return false;
-    }
-    const filterType = computedProps.initialProps.filterTypes![
-      filterValue.type
-    ];
-    return filterValue.value !== filterType.emptyValue;
-  }, []);
+      const filterValue = computedProps.getColumnFilterValue(col.id!);
+      if (!filterValue) {
+        return false;
+      }
+      const filterType = computedProps.initialProps.filterTypes![
+        filterValue.type
+      ];
+      return filterValue.value !== filterType.emptyValue;
+    },
+    []
+  );
 
   const columnsMap = useMemo(() => {
-    return mapColumns(props.columns, { showWarnings: false });
+    return mapColumns((props as any).columns, { showWarnings: false });
   }, [props.columns]);
 
   const [computedFilterValue, setFilterValue] = useFilterValue(
@@ -374,7 +376,7 @@ const useFilters = (
     }
     let filtersHeight = 0;
     if (computedProps.computedFilterable) {
-      const filterNode = computedProps
+      const filterNode: any = computedProps
         .getDOMNode()
         .querySelector('.InovuaReactDataGrid__column-header__filter-wrapper');
       if (filterNode) {

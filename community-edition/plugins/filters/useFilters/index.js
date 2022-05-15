@@ -129,7 +129,7 @@ export const renderColumnFilterContextMenu = (computedProps, computedPropsRef) =
                 },
             },
         ];
-        const items = columnOperators.map(operator => {
+        const items = columnOperators.map((operator) => {
             return {
                 label: computedProps.i18n(operator.label, operator.label) ||
                     computedProps.i18n(operator.name, operator.name),
@@ -141,7 +141,7 @@ export const renderColumnFilterContextMenu = (computedProps, computedPropsRef) =
         items.push(...activationItems);
         return items;
     })();
-    const onSelectionChange = selected => {
+    const onSelectionChange = (selected) => {
         const operator = selected.operator;
         const { current: computedProps } = computedPropsRef;
         if (!computedProps) {
@@ -246,7 +246,6 @@ const useFilters = (props, computedProps, computedPropsRef) => {
         if (!computedProps) {
             return false;
         }
-        const column = computedProps.getColumnBy(col);
         const filterValue = computedProps.getColumnFilterValue(col.id);
         if (!filterValue) {
             return false;

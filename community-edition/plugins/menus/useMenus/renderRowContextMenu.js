@@ -67,7 +67,8 @@ export default (computedProps, computedPropsRef) => {
             position: computedProps.initialProps.rowContextMenuPosition || 'absolute',
         },
         items,
-        constrainTo: constrainToComputedProps.columnContextMenuInfoRef.current.getMenuConstrainTo(),
+        constrainTo: constrainToComputedProps.columnContextMenuInfoRef.current
+            .getMenuConstrainTo(),
         alignPositions: computedProps.initialProps.rowContextMenuAlignPositions ||
             computedProps.rtl
             ? ROW_MENU_ALIGN_POSITIONS_RTL
