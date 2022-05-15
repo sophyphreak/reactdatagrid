@@ -150,7 +150,7 @@ const useTreeColumn = (
     TypeExpandedNodes | undefined
   >(props, 'expandedNodes', undefined, {
     onChange: (expandedNodes, ...args: any[]) => {
-      const fn = computedProps.initialProps.onExpandedNodesChange;
+      const fn: any = computedProps.initialProps.onExpandedNodesChange;
 
       if (fn) {
         fn({ expandedNodes }, ...args);

@@ -35,7 +35,7 @@ const doFilter = (
   item: any,
   filterValueArray: TypeSingleFilterValue[],
   filterTypes: any = DEFAULT_FILTER_TYPES,
-  columnsMap: { [key: string]: TypeColumn }
+  columnsMap?: { [key: string]: TypeColumn }
 ): boolean => {
   const typeOperators: any = buildTypeOperators(filterTypes);
 
@@ -101,11 +101,13 @@ const treeFilter = (
   data: any[],
   filterValueArray: TypeSingleFilterValue[],
   filterTypes: any = DEFAULT_FILTER_TYPES,
-  columnsMap: { [key: string]: TypeColumn },
-  options: { props: TypeComputedProps }
+  columnsMap?: { [key: string]: TypeColumn },
+  options?: { props: TypeComputedProps }
 ): any[] | ((item: any) => boolean) => {
-  const computedProps: TypeComputedProps = options.props || {};
-  const nodesName: string = computedProps.nodesProperty || 'nodes';
+  const computedProps: TypeComputedProps | {} =
+    (options && options.props) || {};
+  const nodesName: string =
+    (computedProps && (computedProps as any).nodesProperty) || 'nodes';
 
   const config: TypeConfig = {
     nodesName,

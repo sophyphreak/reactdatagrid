@@ -46,8 +46,8 @@ const filterData = (dataArray, filterFn, config) => {
     }));
 };
 const treeFilter = (data, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, columnsMap, options) => {
-    const computedProps = options.props || {};
-    const nodesName = computedProps.nodesProperty || 'nodes';
+    const computedProps = (options && options.props) || {};
+    const nodesName = (computedProps && computedProps.nodesProperty) || 'nodes';
     const config = {
         nodesName,
     };
