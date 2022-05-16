@@ -110,7 +110,10 @@ const App = () => {
 
       return [
         <span key="before">{str.slice(0, index)}</span>,
-        <span key="match" style={{ background: 'yellow', fontWeight: 'bold' }}>
+        <span
+          key="match"
+          style={{ background: 'yellow', fontWeight: 'bold', color: 'black' }}
+        >
           {str.slice(index, index + lowerFilterText.length)}
         </span>,
         <span key="after">{str.slice(index + lowerFilterText.length)}</span>,
@@ -121,7 +124,7 @@ const App = () => {
 
   const columns = [
     { name: 'name', header: 'Name', render, defaultFlex: 1 },
-    { name: 'size', header: 'Size', render, defaultWidth: 120 },
+    { name: 'size', header: 'Size', defaultWidth: 120 },
   ];
 
   const onExpandedNodesChange = useCallback(({ expandedNodes }) => {

@@ -73,7 +73,8 @@ const filterData = (
 
   return (
     dataArray
-      // the map fn is here only to make sure filtered results are not kept in the initial datasource
+      // the map fn is here only to make sure filtered results
+      // are not kept in the initial datasource
       .map(item => {
         return {
           ...item,
@@ -92,7 +93,7 @@ const filterData = (
           return true;
         }
 
-        return false;
+        return filterFn(item);
       })
   );
 };

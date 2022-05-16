@@ -26,7 +26,8 @@ const doFilter = (item, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, co
 const filterData = (dataArray, filterFn, config) => {
     const nodesName = config.nodesName;
     return (dataArray
-        // the map fn is here only to make sure filtered results are not kept in the initial datasource
+        // the map fn is here only to make sure filtered results
+        // are not kept in the initial datasource
         .map(item => {
         return {
             ...item,
@@ -42,7 +43,7 @@ const filterData = (dataArray, filterFn, config) => {
             item[nodesName] = filteredItemNodes;
             return true;
         }
-        return false;
+        return filterFn(item);
     }));
 };
 const treeFilter = (data, filterValueArray, filterTypes = DEFAULT_FILTER_TYPES, columnsMap, options) => {
