@@ -6,7 +6,7 @@
  */
 import Region from '../../../packages/region';
 export default (cells, getIndex) => {
-    return cells.map((c, i) => {
+    return (cells || []).map((c, i) => {
         const node = c.domRef ? c.domRef.current : null;
         const reg = Region.from(node);
         const isCell = typeof c.getProps === 'function';

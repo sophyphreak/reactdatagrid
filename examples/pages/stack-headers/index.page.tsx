@@ -98,7 +98,7 @@ const dataSource = [
 const gridStyle = { minHeight: 550 };
 
 export default () => {
-  const [stackedHeaders, setStackedHeaders] = useState(false);
+  const [stackedHeaders, setStackedHeaders] = useState(true);
 
   return (
     <div>
@@ -117,6 +117,7 @@ export default () => {
         dataSource={dataSource}
         pagination
         defaultGroupBy={[]}
+        disableGroupByToolbar
       />
     </div>
   );
