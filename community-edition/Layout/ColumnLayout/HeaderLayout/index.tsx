@@ -869,7 +869,9 @@ export default class InovuaDataGridHeaderLayout extends Component {
 
   getDragBoxInstance(dragIndex, dragTarget, dragTargetDepth, dragTargetLength) {
     if (dragTarget === 'group') {
-      return this.getGroupToolbar().getCells()[dragIndex];
+      return (
+        this.getGroupToolbar() && this.getGroupToolbar().getCells()[dragIndex]
+      );
     }
     const dragCell = this.getHeaderCells()[dragIndex];
 
