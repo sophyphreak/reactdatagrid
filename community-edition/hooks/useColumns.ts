@@ -494,7 +494,7 @@ export default (
 
     if (!computedColumnOrder || !computedColumnOrder.length) {
       return computedProps.initialProps.columns.map(
-        cId => computedProps.getColumnBy(cId) as TypeComputedColumn
+        (cId: any) => computedProps.getColumnBy(cId) as TypeComputedColumn
       );
     }
     return computedColumnOrder.map(
