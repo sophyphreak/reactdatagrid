@@ -19,7 +19,7 @@ const filterIcon = className => {
   return (
     <svg
       className={className}
-      enable-background="new 0 0 24 24"
+      enableBackground="new 0 0 24 24"
       height="24px"
       viewBox="0 0 24 24"
       width="24px"
