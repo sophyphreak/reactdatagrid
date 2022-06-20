@@ -6,9 +6,9 @@
  */
 
 import React, { cloneElement } from 'react';
+
 import PropTypes from 'prop-types';
 import Region from '../../../packages/region';
-
 import shallowequal, { equalReturnKey } from '../../../packages/shallowequal';
 
 import autoBind from '../../../packages/react-class/autoBind';
@@ -28,7 +28,7 @@ import TextEditor from './editors/Text';
 import Renderable from '../../../types/TypeRenderable';
 import { EnhancedCellProps, CellRenderObject, CellProps } from './CellProps';
 // import { setupResizeObserver } from '../../../utils/setupResizeObserver';
-import diff from '../../../packages/shallow-changes';
+// import diff from '../../../packages/shallow-changes';
 
 const cellBem = bemFactory('InovuaReactDataGrid__cell');
 const headerBem = bemFactory('InovuaReactDataGrid__column-header');
@@ -175,15 +175,13 @@ export default class InovuaDataGridCell extends React.Component {
 
     const equalProps = areEqual.result;
     if (!areEqual.result) {
-      console.log(
-        'UPDATE CELL',
-        areEqual.key,
-        // this.props[areEqual.key!],
-        // nextProps[areEqual.key!],
-        nextProps.columnIndex,
-        this.props.columnIndex,
-        diff(nextProps, this.props)
-      );
+      // console.log(
+      //   'UPDATE CELL',
+      //   areEqual.key,
+      //   // this.props[areEqual.key!],
+      //   // nextProps[areEqual.key!],
+      //   // diff(nextProps, this.props)
+      // );
       return true;
     }
 
@@ -532,7 +530,6 @@ export default class InovuaDataGridCell extends React.Component {
     this.setState(state, () => {
       this.updating = false;
       if (callback && typeof callback === 'function') {
-        console.log('callback', callback);
         callback();
       }
     });
@@ -1082,7 +1079,6 @@ export default class InovuaDataGridCell extends React.Component {
   }
 
   getCurrentEditValue() {
-    console.log('PORPS EDIT VALUE', this.props, this.getProps());
     return this.getProps().editValue;
   }
 
@@ -1543,7 +1539,13 @@ export default class InovuaDataGridCell extends React.Component {
 
   renderGroupTool() {
     const props = this.getProps();
-    const { rtl, collapsed, groupProps } = props;
+    const {
+      rtl,
+      collapsed,
+      groupProps,
+      renderGroupCollapseTool,
+      renderGroupExpandTool,
+    } = props;
 
     return renderGroupTool({
       render: groupProps.renderGroupTool,
@@ -1551,6 +1553,8 @@ export default class InovuaDataGridCell extends React.Component {
       rtl,
       size: 20,
       toggleGroup: this.toggleGroup,
+      renderGroupCollapseTool,
+      renderGroupExpandTool,
     });
   }
 

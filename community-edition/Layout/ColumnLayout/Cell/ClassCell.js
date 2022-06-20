@@ -20,7 +20,7 @@ import renderSortTool from './renderSortTool';
 import { id as REORDER_COLUMN_ID } from '../../../normalizeColumns/defaultRowReorderColumnId';
 import TextEditor from './editors/Text';
 // import { setupResizeObserver } from '../../../utils/setupResizeObserver';
-import diff from '../../../packages/shallow-changes';
+// import diff from '../../../packages/shallow-changes';
 const cellBem = bemFactory('InovuaReactDataGrid__cell');
 const headerBem = bemFactory('InovuaReactDataGrid__column-header');
 const emptyObject = Object.freeze ? Object.freeze({}) : {};
@@ -134,10 +134,13 @@ export default class InovuaDataGridCell extends React.Component {
         });
         const equalProps = areEqual.result;
         if (!areEqual.result) {
-            console.log('UPDATE CELL', areEqual.key, 
-            // this.props[areEqual.key!],
-            // nextProps[areEqual.key!],
-            nextProps.columnIndex, this.props.columnIndex, diff(nextProps, this.props));
+            // console.log(
+            //   'UPDATE CELL',
+            //   areEqual.key,
+            //   // this.props[areEqual.key!],
+            //   // nextProps[areEqual.key!],
+            //   // diff(nextProps, this.props)
+            // );
             return true;
         }
         if (equalProps && !this.updating) {
@@ -327,7 +330,6 @@ export default class InovuaDataGridCell extends React.Component {
         this.setState(state, () => {
             this.updating = false;
             if (callback && typeof callback === 'function') {
-                console.log('callback', callback);
                 callback();
             }
         });
@@ -725,7 +727,6 @@ export default class InovuaDataGridCell extends React.Component {
         }
     }
     getCurrentEditValue() {
-        console.log('PORPS EDIT VALUE', this.props, this.getProps());
         return this.getProps().editValue;
     }
     getEditCompleteValue(value = this.getCurrentEditValue()) {
@@ -1060,13 +1061,15 @@ export default class InovuaDataGridCell extends React.Component {
     }
     renderGroupTool() {
         const props = this.getProps();
-        const { rtl, collapsed, groupProps } = props;
+        const { rtl, collapsed, groupProps, renderGroupCollapseTool, renderGroupExpandTool, } = props;
         return renderGroupTool({
             render: groupProps.renderGroupTool,
             collapsed,
             rtl,
             size: 20,
             toggleGroup: this.toggleGroup,
+            renderGroupCollapseTool,
+            renderGroupExpandTool,
         });
     }
     toggleGroup = event => {
