@@ -44,9 +44,10 @@ type TypeParamObject = TypeParam & {
   rowExpandColumn?: IColumn | boolean;
   rowIndexColumn?: IColumn | boolean;
   onRowReorder?: TypeRowReorder;
-  rowReorderColumn?: IColumn;
+  rowReorderColumn?: IColumn | boolean;
   renderRowDetailsExpandIcon?: () => void;
   renderRowDetailsCollapsedIcon?: () => void;
+  checkboxColumn?: boolean | TypeColumn;
 };
 
 type TypeUseGroupByColumns = {

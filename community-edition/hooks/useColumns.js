@@ -276,7 +276,7 @@ export default (props, { maxAvailableWidthForColumns, lockedColumnsState, comput
         }
         const { computedColumnOrder } = computedProps;
         if (!computedColumnOrder || !computedColumnOrder.length) {
-            return computedProps.initialProps.columns.map(cId => computedProps.getColumnBy(cId));
+            return computedProps.initialProps.columns.map((cId) => computedProps.getColumnBy(cId));
         }
         return computedColumnOrder.map(cId => computedProps.getColumnBy(cId));
     };

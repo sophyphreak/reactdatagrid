@@ -869,7 +869,9 @@ export default class InovuaDataGridHeaderLayout extends Component {
 
   getDragBoxInstance(dragIndex, dragTarget, dragTargetDepth, dragTargetLength) {
     if (dragTarget === 'group') {
-      return this.getGroupToolbar().getCells()[dragIndex];
+      return (
+        this.getGroupToolbar() && this.getGroupToolbar().getCells()[dragIndex]
+      );
     }
     const dragCell = this.getHeaderCells()[dragIndex];
 
@@ -934,9 +936,12 @@ export default class InovuaDataGridHeaderLayout extends Component {
       totalLockedEndWidth: this.props.totalLockedEndWidth,
     });
 
+    const groupToolbarCells =
+      this.getGroupToolbar() && this.getGroupToolbar().getCells();
+
     const groupByRanges =
       this.props.computedGroupBy && this.props.computedGroupBy.length
-        ? getRangesForBoxes(this.getGroupToolbar().getCells())
+        ? getRangesForBoxes(groupToolbarCells) || []
         : [];
 
     const dragProxy =
@@ -1123,11 +1128,19 @@ export default class InovuaDataGridHeaderLayout extends Component {
           parseInt(groupComputedStyle.paddingBottom),
       },
       header: {
-        top: this.props.computedGroupBy ? groupTargetNode.offsetHeight : 0,
+        top: this.props.computedGroupBy
+          ? groupToolbarNode
+            ? groupTargetNode.offsetHeight
+            : this.headerDomNode.current.offsetTop
+          : 0,
         bottom: headerGroupTargetNode.offsetHeight - filterRowHeight,
       },
       headergroup: {
-        top: this.props.computedGroupBy ? groupTargetNode.offsetHeight : 0,
+        top: this.props.computedGroupBy
+          ? groupToolbarNode
+            ? groupTargetNode.offsetHeight
+            : this.headerDomNode.current.offsetTop
+          : 0,
         bottom: headerGroupTargetNode.offsetHeight - filterRowHeight,
       },
     };

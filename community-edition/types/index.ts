@@ -19,7 +19,7 @@ import {
 } from './TypeColumn';
 import { MutableRefObject, ReactNode, CSSProperties } from 'react';
 export { TypeSortInfo, TypeSingleSortInfo } from './TypeSortInfo';
-export { TypeGroupBy } from './TypeGroupBy';
+export { TypeGroupBy, TypeGroupTool } from './TypeGroupBy';
 export { TypeSize } from './TypeSize';
 export { TypeDataSource } from './TypeDataSource';
 export {

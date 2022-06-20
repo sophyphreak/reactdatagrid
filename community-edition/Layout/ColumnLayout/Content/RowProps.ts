@@ -10,6 +10,7 @@ import { CellProps } from '../Cell/CellProps';
 import { CSSProperties } from 'react';
 import Renderable from '../../../types/TypeRenderable';
 import { TypeDataGridProps } from '../../../types/TypeDataGridProps';
+import { TypeGroupTool } from '../../../types';
 
 type func = (...args: any[]) => any;
 
@@ -238,6 +239,8 @@ export type RowProps = {
   computedEnableColumnHover?: boolean;
   renderRowDetailsExpandIcon?: () => void;
   renderRowDetailsCollapsedIcon?: () => void;
+  renderGroupCollapseTool?: TypeGroupTool;
+  renderGroupExpandTool?: TypeGroupTool;
 };
 
 export type EnhancedRowProps = RowProps & {

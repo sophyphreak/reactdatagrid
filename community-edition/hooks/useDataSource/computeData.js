@@ -5,10 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import filter from '../../filter';
+import treeFilter from '../../treeFilter';
 import paginate from '../../utils/paginate';
 import getFilterValueForColumns from './getFilterValueForColumns';
 import getSortInfoForColumns from './getSortInfoForColumns';
-const filterData = (data, { filterValue, remoteFilter, filterTypes, columnsMap, }) => {
+const filterData = (data, { filterValue, remoteFilter, filterTypes, columnsMap, }, config) => {
     if (!Array.isArray(filterValue) || !filterValue.length) {
         return data;
     }
@@ -18,6 +19,11 @@ const filterData = (data, { filterValue, remoteFilter, filterTypes, columnsMap, 
     const filterValueForColumns = getFilterValueForColumns(filterValue, columnsMap);
     if (!filterValueForColumns.length) {
         return data;
+    }
+    if (config.treeEnabled) {
+        return treeFilter(data, filterValueForColumns, filterTypes, columnsMap, {
+            props: config.computedProps,
+        });
     }
     return filter(data, filterValueForColumns, filterTypes, columnsMap);
 };
@@ -90,7 +96,7 @@ const computeData = (config, computedProps, batchUpdateQueue) => {
                 filterTypes,
                 remoteFilter,
                 columnsMap,
-            });
+            }, { treeEnabled, computedProps });
         }
         dataCountAfterFilter = config.data.length;
         return config;

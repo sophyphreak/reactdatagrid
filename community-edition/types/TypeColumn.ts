@@ -33,7 +33,7 @@ export interface IColumn {
   name?: string;
   id?: string;
 
-  readonly checkboxColumn?: boolean;
+  readonly checkboxColumn?: boolean | IColumn;
   readonly groupSpacerColumn?: boolean;
 
   // size related
@@ -122,6 +122,7 @@ export interface IColumn {
   readonly renderEditor?: (editorProps: any) => ReactNode;
   readonly editor?: ReactNode;
   readonly renderHeader?: (cellProps: CellProps) => string | ReactNode;
+  renderCheckbox?: (...args: any[]) => any;
 }
 
 export interface TypeColWithNameProperty extends IColumn {

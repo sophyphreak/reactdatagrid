@@ -11,7 +11,7 @@ import {
   TypeComputedProps,
   TypeComputedColumn,
   TypeSingleSortInfo,
-} from '../../types';
+} from '../../../types';
 
 import { IS_IE, IS_MS_BROWSER } from '../../../detect-ua';
 import { getCellHeader } from '../../../Layout/ColumnLayout/HeaderLayout/Header';

@@ -52,7 +52,7 @@ const getNextSortInfoForColumn = (
   }
 
   if (sortFn) {
-    newSortInfo.fn = (one, two) => sortFn!(one, two, column);
+    newSortInfo.fn = (one: any, two: any) => sortFn!(one, two, column);
   }
 
   if (forceDir !== undefined) {

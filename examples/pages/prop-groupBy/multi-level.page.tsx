@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 
 import DataGrid from '@inovua/reactdatagrid-enterprise';
+import CheckBox from '@inovua/reactdatagrid-community/packages/CheckBox';
 import { TypeColumn } from '@inovua/reactdatagrid-community/types';
 import { getGlobal } from '@inovua/reactdatagrid-community/getGlobal';
 
@@ -44,12 +45,21 @@ const App = () => {
   const [expandedGroups, setExpandedGroups] = useState({
     usa: true,
   });
+  const [disableGroupByToolbar, setDisableGroupByToolbar] = useState(true);
+
+  const checkboxProps = {
+    checked: disableGroupByToolbar,
+    onChange: setDisableGroupByToolbar,
+  };
+
   return (
     <div>
-      {JSON.stringify(expandedGroups)}
+      <div style={{ marginBottom: 20 }}>
+        <CheckBox {...checkboxProps}>disableGroupByToolbar</CheckBox>
+      </div>
       <DataGrid
         idProperty="id"
-        defaultGroupBy={['country', 'age']}
+        defaultGroupBy={['country']}
         defaultCollapsedGroups={{ usa: true }}
         licenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
         columns={columns}
@@ -58,6 +68,7 @@ const App = () => {
         onReady={api => {
           (globalObject as any).api = api;
         }}
+        disableGroupByToolbar={disableGroupByToolbar}
       />
     </div>
   );

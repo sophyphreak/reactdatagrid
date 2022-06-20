@@ -11,7 +11,7 @@ import {
   TypeComputedProps,
   TypeComputedColumn,
   TypeSingleSortInfo,
-} from '../../types';
+} from '../../../types';
 
 import { IS_IE, IS_MS_BROWSER } from '../../../detect-ua';
 
@@ -94,7 +94,8 @@ export default (
       position: computedProps.initialProps.rowContextMenuPosition || 'absolute',
     },
     items,
-    constrainTo: constrainToComputedProps.columnContextMenuInfoRef.current.getMenuConstrainTo(),
+    constrainTo: constrainToComputedProps.columnContextMenuInfoRef.current
+      .getMenuConstrainTo!(),
     alignPositions:
       computedProps.initialProps.rowContextMenuAlignPositions ||
       computedProps.rtl

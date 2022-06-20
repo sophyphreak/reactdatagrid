@@ -7,8 +7,11 @@
 
 import Region from '../../../packages/region';
 
-export default (cells, getIndex) => {
-  return cells.map((c, i) => {
+export default (
+  cells: any[],
+  getIndex?: (i: number, c: any, props: any) => void
+) => {
+  return (cells || []).map((c, i) => {
     const node = c.domRef ? c.domRef.current : null;
     const reg = Region.from(node);
 

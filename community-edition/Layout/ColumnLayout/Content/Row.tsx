@@ -614,6 +614,8 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
       setActiveIndex,
       renderTreeCollapseTool,
       renderTreeExpandTool,
+      renderGroupCollapseTool,
+      renderGroupExpandTool,
       renderTreeLoadingTool,
       onColumnMouseEnter,
       onColumnMouseLeave,
@@ -797,6 +799,8 @@ const DataGridRow = React.forwardRef((props: RowProps, ref: any) => {
         setActiveIndex,
         renderTreeCollapseTool,
         renderTreeExpandTool,
+        renderGroupCollapseTool,
+        renderGroupExpandTool,
         renderTreeLoadingTool,
         onColumnMouseEnter,
         onColumnMouseLeave,
@@ -2250,6 +2254,8 @@ DataGridRow.propTypes = {
   columnIndexHovered: PropTypes.number,
   renderRowDetailsExpandIcon: PropTypes.func,
   renderRowDetailsCollapsedIcon: PropTypes.func,
+  renderGroupCollapseTool: PropTypes.func,
+  renderGroupExpandTool: PropTypes.func,
 } as any;
 
 export default React.memo(
