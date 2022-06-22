@@ -730,6 +730,7 @@ export default class InovuaDataGridList extends Component<ListProps> {
       // protect against SAFARI inertial scroling reporting negative values when bouncing
       scrollLeft = 0;
     }
+
     scrollLeft = Math.round(scrollLeft);
     this._scrollLeft = scrollLeft;
 

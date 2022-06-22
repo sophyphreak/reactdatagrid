@@ -19,7 +19,7 @@ import people from '../people';
 
 const gridStyle = { minHeight: '80vh' };
 
-const times = (arr, n, fn?) => {
+const times = (arr: any[], n: number, fn?: (x: any, i: number) => void) => {
   const result = [];
 
   for (var i = 0; i < n; i++) {
@@ -42,7 +42,7 @@ const defaultGroupBy = ['country'];
 
 const defaultCellSelection = { '0-4,id': true, '0-4,desc': true };
 class App extends React.Component<any, any> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
 
     (this as any).COLS = 28;
@@ -63,7 +63,7 @@ class App extends React.Component<any, any> {
     this.state = {
       rtl: false,
       columns,
-      rows: 1,
+      rows: 2,
       dataSource: [],
     };
   }
@@ -72,7 +72,7 @@ class App extends React.Component<any, any> {
     this.loadDataSource(this.state.rows);
   }
 
-  loadDataSource = n => {
+  loadDataSource = (n: number) => {
     const data = times(
       [
         [...new Array((this as any).COLS)].reduce(
@@ -89,7 +89,7 @@ class App extends React.Component<any, any> {
     this.setState({ dataSource: data });
   };
 
-  onRowsChange = rows => {
+  onRowsChange = (rows: any) => {
     this.setState({ rows });
   };
 
@@ -110,7 +110,7 @@ class App extends React.Component<any, any> {
         <div style={{ marginBottom: 20 }}>
           <CheckBox
             checked={this.state.rtl}
-            onChange={value => this.setState({ rtl: value })}
+            onChange={(value: boolean) => this.setState({ rtl: value })}
           >
             RTL
           </CheckBox>
