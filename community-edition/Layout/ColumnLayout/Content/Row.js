@@ -1308,7 +1308,11 @@ const DataGridRow = React.forwardRef((props, ref) => {
         }
         if (rowProps.memorizedScrollLeft &&
             rowDetailsWidth !== 'min-viewport-width') {
-            detailsStyle.transform = `translate3d(${rowProps.memorizedScrollLeft}px, 0px, 0px)`;
+            const scrollLeftMax = rowProps.getScrollLeftMax && rowProps.getScrollLeftMax();
+            const scrollLeft = !rtl
+                ? rowProps.memorizedScrollLeft
+                : -(scrollLeftMax - rowProps.memorizedScrollLeft);
+            detailsStyle.transform = `translate3d(${scrollLeft}px, 0px, 0px)`;
         }
         if (rowDetailsStyle) {
             if (typeof rowDetailsStyle === 'function') {

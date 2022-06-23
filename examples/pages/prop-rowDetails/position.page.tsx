@@ -48,6 +48,7 @@ export default function App() {
         dataSource={dataSource}
         style={gridStyle}
         rowDetailsWidth="viewport-width"
+        rtl
       />
     </div>
   );
